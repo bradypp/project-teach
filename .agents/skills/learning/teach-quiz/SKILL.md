@@ -17,6 +17,7 @@ Read [writing guidance](../teach/references/writing.md) before drafting teaching
 Use [teaching guidance](../teach/references/teaching.md) and [artifact guidance](../teach/references/artifacts.md).
 
 - Prefer prediction, reasoning, debugging and application over definition recall.
+- Keep questions and feedback easy to scan: use bullets for parallel points and steps, with short paragraphs for worked reasoning instead of dense text blocks.
 - Choose a format that fits: choice questions, written reflection, a visual puzzle or a small interactive experiment.
 - Reuse the bundled controls where useful; author custom widgets when they better teach the idea.
 - Give explanatory feedback and relevant lesson links. Reveal answer-bearing links with feedback.

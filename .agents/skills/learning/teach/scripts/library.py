@@ -9,7 +9,7 @@ import shutil
 from urllib.parse import quote
 
 ASSETS = Path(__file__).resolve().parent.parent / 'assets'
-KINDS = {'lesson': 'lessons', 'quiz': 'quizzes', 'reference': 'references', 'glossary': 'references'}
+KINDS = {'lesson': 'lessons', 'quiz': 'quizzes', 'reference': 'references', 'glossary': 'references', 'topic': 'topics'}
 
 
 def copy_assets(root):
@@ -56,6 +56,8 @@ def index(root):
             title = ''.join(parser.parts).strip() or page.stem
             href = quote(page.relative_to(root).as_posix(), safe='/')
             entries.append(f'<li><a href="{escape(href, quote=True)}">{escape(title)}</a></li>')
+        if folder == 'topics' and not entries:
+            continue
         content = '<ul class="page-list">' + ''.join(entries) + '</ul>' if entries else '<p class="muted">Nothing here yet.</p>'
         sections.append(f'<section class="card"><h2>{folder.capitalize()}</h2>{content}</section>')
     template = (ASSETS / 'templates/index.html').read_text(encoding='utf-8')

@@ -3,32 +3,42 @@ name: teach
 description: Teach in project context when requested, reached by a learning-aware workflow, or enabled by project passive-teaching settings.
 ---
 
-Help the user finish useful work while understanding the systems they are building.
+Help the user understand the project they are planning or building, including the prerequisites behind its decisions.
 
-Read [writing guidance](references/writing.md) before drafting teaching content.
+## 1. Inspect the work and learning context
 
-## Find the learning opportunity
+- Read the current question, relevant project files and the whole active plan or spec. Identify conceptual dependencies across the work, not just the next task.
+- Read [project context](references/learning-system.md#project-context) for storage and evidence rules. Use the mission as overall direction, scope and constraints; use the active work to identify teaching opportunities.
+- Consult `LEARNING_STATE.md` and relevant records, lessons and topic pages. Distinguish demonstrated understanding, exposure and uncertainty. Current reasoning or confusion can outweigh an older summary.
+- Apply explicit teaching-style overrides when present. Without setup, briefly note that it has not run and teach immediately; setup is not a prerequisite.
 
-1. Read [project context](references/learning-system.md#project-context), the current question and relevant project files. Consult the mission, current understanding and related records/lessons. Apply any explicit project teaching-style overrides; this skill and its references supply the baseline when no style file exists.
-2. If setup has not run, say so briefly at the top and teach immediately from available context. Saving useful material can initialise minimal local defaults; setup is not a prerequisite.
-3. Follow an explicit topic. Otherwise choose one worthwhile concept that connects project reality, learning intent, existing understanding and valuable unknown unknowns. Prefer a transferable idea that changes a decision or debugging approach. If context provides no useful candidate, ask what work to explore.
+## 2. Select prerequisites and depth
 
-## Teach and apply
+- Follow an explicit topic. Otherwise identify prerequisites across the active plan/spec: teach upcoming concepts broadly and go deeply into what is needed next.
+- Read [teaching guidance](references/teaching.md) for depth, explanation methods, practice and presentation. Supply missing prerequisites for the current planning stage, even when they form a substantial topic.
+- Retain later prerequisites as deferred topics with a reason and revisit condition. Keep valuable unknown unknowns as opportunities, without creating a compulsory curriculum.
+- Refresh known material at the actual weak point. If context provides no useful topic, ask what work to explore.
 
-Read [teaching guidance](references/teaching.md). Use [research guidance](references/research.md) when checking sources; the optional [transcript helper](scripts/transcript.py) retrieves video captions. The [library helper](scripts/library.py) creates HTML shells.
+## 3. Research and ground the explanation
 
-- Present the original question alongside its decision-relevant explanation.
-- Refresh or deepen known material at the actual weak point. Current confusion outweighs an older summary.
-- Teach generously in explicit learning and exploration workflows. Supplement delivery workflows without displacing their purpose.
-- Use chat for small explanations, with a diagram when helpful. Substantial gaps earn linked HTML automatically, following [artifact guidance](references/artifacts.md).
-- Ask one contextual application question. A pending planning or design question can serve as the exercise. The user can answer or continue without completing the artifact.
+- For substantive teaching, complete the research stage in [research guidance](references/research.md): inspect existing sources, read relevant primary material and verify claims that need checking.
+- Verify core topics against trustworthy sources; check current primary documentation for fast-moving or version-sensitive behaviour. Stable explanations can reuse previously verified sources.
+- Select useful further reading from sources actually consulted, explaining what each adds. State access or verification limits rather than inventing support.
+- For video material, the optional [transcript helper](scripts/transcript.py) retrieves captions; research guidance explains verification and limitations.
 
-## Retain what matters
+## 4. Teach and apply
 
-- Save reusable teaching and its sources; reuse an existing lesson before recreating an introduction.
-- Retain useful opportunities in project learning state, including valuable unknown unknowns beyond current scope unless the user prefers otherwise.
-- When the user provides meaningful evidence, use the `teach-update` skill. Producing a lesson or working code is not evidence of their understanding.
-- Finish with the relevant question, any lesson link and a clear return to the original work.
+- Read [writing guidance](references/writing.md) before drafting. Use readable headings, bullets for parallel points and steps, and short paragraphs for connected reasoning.
+- Prefer a substantial HTML lesson over a long chat explanation. Read [artifact guidance](references/artifacts.md) for creating, connecting, exporting and delivering pages with the [library helper](scripts/library.py).
+- In chat, present the original question, a brief orientation and the lesson link. Small clarifications can stay inline. Reuse or deepen an existing lesson where appropriate.
+- Cover the mechanism, necessary prerequisites, worked examples, alternatives, failure cases and application to the current work. The user can ask to drill down further or follow the reading links.
+- Teach generously during exploration; supplement delivery workflows without displacing their purpose. Ask a contextual application question; the pending planning question can serve as practice.
+- Let the user answer or continue without finishing the artifact.
+
+## 5. Reconcile and return to the work
+
+- Use the `teach-update` skill after teaching to reconcile artifacts, useful exposure, gaps and any actual user evidence. No changes are required when nothing meaningful changed; producing a lesson or working code does not demonstrate understanding.
+- Finish with the relevant question, lesson link and a clear return to the original workflow.
 
 ## Passive teaching
 

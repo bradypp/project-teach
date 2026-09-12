@@ -1,6 +1,6 @@
 ---
 name: teach-update
-description: Reconcile meaningful learning from project work, discussion or external study when requested or reached by a teaching workflow.
+description: Reconcile learning files after teaching or review, or manually from project work, discussion or external study.
 ---
 
 Answer: what meaningful learning happened, and how should it change future teaching?
@@ -18,9 +18,13 @@ Read [project context and evidence](../teach/references/learning-system.md). Ins
 
 ## Reconcile
 
-1. Find the relevant record and current state entry before writing.
-2. Use the [record guidance](../teach/references/learning-system.md#learning-records) for a meaningful insight, corrected misconception or stated prior knowledge. Repeated information needs no new record.
-3. Update the thin `LEARNING_STATE.md` summary and links. Keep uncertainty visible; move detailed evidence into its record rather than duplicating it.
-4. Maintain useful glossary definitions, opportunities and existing synthesis where justified. Confirm changes to the mission or user-stated goals.
+Run after teaching and reviews, or when requested manually. Quizzes do not automatically invoke this skill; answers brought back for discussion can supply evidence.
 
-Research only claims needing verification, following [research guidance](../teach/references/research.md). Report what changed and what the evidence supports, or why no change was needed. This workflow reconciles learning; it does not primarily teach.
+1. Identify what changed: artifacts created, concepts encountered, demonstrated reasoning, self-report, corrected misconceptions or newly discovered gaps. Find related entries before writing.
+2. Apply the [update decisions](../teach/references/learning-system.md#what-to-update-and-when). A lesson alone can justify a useful exposure link with understanding unverified, but cannot justify an understanding claim or evidence record.
+3. Create, enrich or supersede a record only when the [record criteria](../teach/references/learning-system.md#learning-records) are met. Preserve the user's actual contribution and remaining uncertainty.
+4. Reconcile the thin state summary, deferred prerequisites and opportunities. Update relevant glossary terms and links only where useful; do not rewrite every file after every session.
+5. Create or revise a topic synthesis when accumulated material warrants it, following [topic guidance](../teach/references/learning-system.md#topic-synthesis) and its linked HTML template. Keep the explanation current while retaining evidence in records.
+6. Repair affected internal links and rebuild the library index after HTML changes. Confirm any unresolved change to the mission or user-stated goals; preserve authorised choices and manual content.
+
+Research claims or synthesis needing verification using [research guidance](../teach/references/research.md). Report what changed and what the evidence supports, or why no change was needed. This workflow reconciles learning; it does not primarily teach.

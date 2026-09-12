@@ -59,6 +59,21 @@ class LibraryTests(unittest.TestCase):
         self.assertEqual(index.count('<h2>References</h2>'), 1)
         self.assertFalse((self.root / 'GLOSSARY.md').exists())
 
+    def test_topics_section_tracks_actual_pages_and_preserves_synthesis(self):
+        library.index(self.root)
+        self.assertNotIn('<h2>Topics</h2>', (self.root / 'index.html').read_text())
+        page = library.new(self.root, 'topic', 'queues', 'Understanding queues')
+        self.assertEqual(page, self.root / 'topics/queues.html')
+        self.assertIn('../assets/index.js', page.read_text())
+        self.assertIn('href="topics/queues.html"', (self.root / 'index.html').read_text())
+        page.write_text('<title>My queue model</title><main>Authored synthesis</main>')
+        library.index(self.root)
+        self.assertIn('Authored synthesis', page.read_text())
+        self.assertIn('My queue model', (self.root / 'index.html').read_text())
+        page.unlink()
+        library.index(self.root)
+        self.assertNotIn('<h2>Topics</h2>', (self.root / 'index.html').read_text())
+
     def test_slug_cannot_escape_library(self):
         for slug in ('../escape', '/absolute', 'two words', 'a/b', ''):
             with self.subTest(slug=slug), self.assertRaises(ValueError):

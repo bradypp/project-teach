@@ -25,15 +25,19 @@ Everything lives under `.learning/`:
 - `references/glossary.html`: useful vocabulary, created when needed.
 - `lessons/`, `quizzes/`, `references/`, `assets/`, `index.html`: the browsable local library.
 
-Research, topic synthesis and resource lists appear only when useful. There is no global store or automatic cross-project synchronisation.
+Topic syntheses live in `topics/*.html`, with their own home-page section once one exists. Research and resource lists appear only when useful. There is no global store or automatic cross-project synchronisation.
 
 ## Teaching and presentation
 
-Short explanations can stay in chat. Substantial gaps produce HTML automatically; worthwhile short explanations can also be retained as compact HTML. Tiny clarifications need not become artifacts.
+Teaching inspects prerequisites across the active plan/spec, teaches upcoming concepts broadly and goes deeply into what is needed next. The mission guides direction; state and records guide known understanding and gaps. Substantive teaching includes research and useful further reading.
+
+Detailed HTML lessons are the default for substantial topics, with readable headings, bullets, worked examples and application. Short explanations can stay in chat. Substantial gaps produce HTML automatically; worthwhile short explanations can also be retained as compact HTML. Tiny clarifications need not become artifacts.
 
 The bundled HTML/CSS supplies a lean base. Lessons can use diagrams, visualisations, simulations and custom widgets suited to the concept. Shared components keep the library consistent without imposing fixed layouts. Every page offers Markdown copy/download and system/light/dark themes. Export preserves teaching content and current responses; custom visuals can supply textual summaries. Theme storage is best-effort for local files, with the choice carried through internal navigation. Exports do not automatically update learning state.
 
 Setup offers optional customisation through the [teaching-style template](.agents/skills/learning/teach/references/TEACHING_STYLE.md). Skipping the questions creates no style file; you can add your own later. The skills and references supply the full baseline. Preferences can override teacher personality, depth, pace and presentation. Optional integration adds a brief project purpose, learning-oriented development rules and a marked passive-teaching block together in `AGENTS.md`. Removing that block disables passive teaching. User-selected workflows can receive small new wrappers; original skills remain untouched.
+
+Teaching and reviews finish by using the `teach-update` skill to reconcile affected learning files; no changes are needed when nothing meaningful changed. Quizzes retain their optional, manual follow-up. Artifacts alone never demonstrate understanding.
 
 ## Install elsewhere
 

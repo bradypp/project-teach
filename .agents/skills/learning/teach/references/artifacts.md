@@ -27,6 +27,16 @@ The shell provides typography, navigation and a content region. Design that regi
 
 A worthwhile chat explanation can be saved as a compact HTML lesson using the same shell. This keeps one browsable version without a Markdown-rendering pipeline. Tiny clarifications need not be saved; consolidate related material only when it improves the explanation.
 
+## Topic pages
+
+Create a current synthesis with the [topic shell](../assets/templates/topic.html):
+
+```sh
+python3 /path/to/teach/scripts/library.py new /project/.learning topic queues --title "Understanding queues"
+```
+
+It lives under `topics/` with shared theme/export controls and a notebook link. The index shows a Topics section only while topic pages exist. Follow [topic synthesis guidance](learning-system.md#topic-synthesis) for content and maintenance; update the existing page rather than generating competing summaries.
+
 ## Glossary
 
 Create the vocabulary page with the [library helper](../scripts/library.py):
@@ -59,6 +69,6 @@ The [browser controls](../assets/index.js) perform conversion; the Python helper
 - Include a recommended primary resource and an invitation to ask follow-up questions.
 - Quickly check content, answer keys and local links. Routine artifacts need no exhaustive browser test procedure.
 - Rebuild the index and link useful lessons from learning state or their supporting record.
-- Return an absolute clickable file link; open it with an available host tool or suitable CLI when possible.
+- Return an absolute clickable file link that can be opened from the chat; open it automatically with an available host/browser tool if possible; try launching into an extrenal browser via cli if possible.
 
 The user can continue the conversation without completing the artifact. Tests for changes to shared helper code are separate from routine lesson creation.

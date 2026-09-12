@@ -5,13 +5,20 @@ Research should improve the mental model, not become a prerequisite project of i
 ## When and how much
 
 - Setup: inspect project reality first; research an unfamiliar field or current landscape enough to propose useful opportunities.
-- Teaching: gather/check evidence for the exact concept and project decision. A substantial lesson needs trustworthy grounding; a brief stable explanation can reuse established sources. Verify uncertain, niche and changeable claims rather than relying on memory.
+- Teaching: research is a required stage for substantive lessons. Inspect existing sources, then read primary material grounding the core concepts and project decision. Stable material can reuse previously verified sources; fresh browsing is needed for uncertain, niche, fast-moving or version-sensitive claims.
 - Updates: usually reconcile the user's account; research only claims or synthesis needing verification.
 - Reviews/quizzes: prefer existing evidence and lessons; research current changes only when they affect the answer.
 
 Search existing resources and prior lessons before repeating discovery. For APIs, frameworks, model services, cloud products and package behaviour, check current primary documentation, installed versions, release notes or source. Older canonical sources remain useful for stable fundamentals. Label stable mechanisms, version-specific behaviour, opinionated practices and unresolved claims distinctly.
 
 Prefer official documentation, specifications, original papers, source repositories and reproducible experiments. Practitioner material, talks and reputable community discussion can supply explanation and experience where the environment permits; follow technical factual claims back to their primary source. Retain the date/version when it matters. Conflicting sources call for scope/version checking, not a majority vote. Never present a source as read when only a search snippet or title is available.
+
+## Sources and further reading
+
+- Cite important factual claims near the explanation, distinguishing source-supported facts from project inference.
+- Include useful further reading for substantial lessons, especially core topics and fast-moving spaces. Choose sources actually consulted and explain what each adds.
+- Verify current primary documentation for changeable behaviour and retain relevant versions or dates.
+- If suitable sources cannot be accessed, state the limitation and narrow unsupported claims; never invent citations or claim to have read unavailable material.
 
 ## Retention
 

@@ -6,7 +6,7 @@ A maintenance guide for the local learning files: their purpose, ownership and l
 
 All learning material lives under the project's `.learning/` directory. There is no global store or automatic cross-project synchronisation.
 
-Read the current question and relevant project files first, then:
+Read the current question, relevant project files and whole active plan/spec first. Identify its prerequisite dependencies, then consult:
 
 - `MISSION.md` for purpose, goals and scope.
 - `TEACHING_STYLE.md`, when present, for explicit preference overrides. Baseline behaviour lives in the skills and [teaching guidance](teaching.md); the [style template](TEACHING_STYLE.md) is supplementary.
@@ -66,13 +66,36 @@ Keep useful unknown unknowns in the state's Opportunities section unless the use
 
 `references/glossary.html` is the authoritative vocabulary aid. Add a term once the user can use it meaningfully; definitions introduced by a lesson can remain there until then. Give a concise definition, project-specific meaning or ambiguity where useful, and a lesson link. Maintain it as one navigable HTML reference page with a term list linking to stable term anchors, lesson links and the shared theme and Markdown-export controls. Use the glossary shell described in [artifact guidance](artifacts.md). Revise definitions in place; do not maintain a parallel Markdown glossary. A glossary entry is not a duplicate record of its evidence.
 
-When an older `GLOSSARY.md` exists, migrate its useful content and repair inbound links before retiring it; preserve manual additions.
-
 ## Retain and connect
 
 - **Lessons:** Keep reusable teaching as HTML snapshots with sources and context. Save a worthwhile short chat explanation as compact HTML; skip tiny clarifications unless the user prefers otherwise. Correct factual errors visibly or link a replacement when the model changes materially.
-- **Topics:** Create a current synthesis only when repeated lessons/application make it useful. Summarise the mental model and trade-offs, linking supporting material.
+- **Topics:** Maintain browsable HTML syntheses following [topic guidance](#topic-synthesis).
 - **Research:** Retain an investigation when it will improve future understanding or decisions. Small lookups remain ephemeral.
 - **Resources:** Keep a small annotated collection when sources will be reused. Practitioner suggestions are optional and respect preferences.
 
-Use descriptive Markdown links and relative paths. HTML can target real anchors in related lessons and reference pages. Repair links when moving material; rebuild the HTML index after artifact changes. Keep detail in its authoritative file rather than copying it across state, records and glossary.
+Use descriptive Markdown links and relative paths. HTML can target real anchors in related lessons, quizzes and reference pages. Repair links when moving material; rebuild the HTML index after artifact changes. Keep detail in its authoritative file rather than copying it across state, records and glossary.
+
+## What to update and when
+
+| Destination | Update trigger and action |
+| --- | --- |
+| `records/` | Meaningful user insight, corrected misconception or useful self-report: create/enrich evidence using the record criteria. Artifact creation alone does not qualify. |
+| `LEARNING_STATE.md` | Changed understanding, useful exposure or a discovered gap: revise a brief assessment and link its evidence or lesson. Keep exposure explicitly unverified. |
+| Deferred / Opportunities | Later prerequisites: record why deferred and when to revisit. Useful related ideas: retain as optional opportunities. Reconcile existing entries when context changes. |
+| `references/glossary.html` | Useful vocabulary the user can use meaningfully: add or refine the definition and lesson link. |
+| `topics/*.html` | Related lessons/application need consolidation or the current synthesis has materially changed: create or update one topic page. |
+| Lessons and references | Correct an error, add a useful cross-link or connect new material; avoid rewriting unrelated historical lessons. |
+| `RESOURCES.md` / `research/` | Sources or an investigation warrant repeated use: retain an annotated collection or focused synthesis, not every lookup. |
+| `index.html` | HTML pages added, moved, renamed or removed: rebuild navigation. |
+| `MISSION.md` | User goals or scope change: confirm unresolved changes before editing. |
+
+Run reconciliation after teaching and reviews even when the result is no change. Preserve manual content, deduplicate by concept and aliases, and update only affected destinations. Quiz creation, completion and export remain outside automatic reconciliation.
+
+## Topic synthesis
+
+- Create `topics/<concept>.html` when several lessons, records or applications benefit from one current explanation. Do not create one for every lesson or unexplored prerequisite.
+- Use the [topic HTML template](../assets/templates/topic.html) through the [artifact helper instructions](artifacts.md#topic-pages). Topics get their own home-page section once one exists.
+- Include a summary, mental model, key takeaways, project implications and trade-offs, useful internal links, annotated external sources, and unresolved questions or next learning. Adapt the layout and omit empty sections.
+- Link to lesson anchors for detail and records for evidence; synthesise rather than copy their contents. A topic explains the concept and does not become a second assessment ledger.
+- Revise when accumulated learning, a corrected model or relevant technical changes materially affect the explanation. Verify new factual claims and mark relevant date/version scope.
+- If an older Markdown topic exists, preserve its useful content in the HTML page and repair links before retiring it; maintain one current synthesis.

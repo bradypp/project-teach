@@ -11,9 +11,13 @@
     const inputs = original.querySelectorAll("textarea,input,select");
     copy.querySelectorAll("textarea,input,select").forEach((node, index) => {
       const live = inputs[index];
-      const replacement = doc.createElement(live.tagName === "TEXTAREA" ? "blockquote" : "span");
+      const replacement = doc.createElement(
+        live.tagName === "TEXTAREA" ? "blockquote" : "span",
+      );
       replacement.textContent = ["radio", "checkbox"].includes(live.type)
-        ? (live.checked ? "[selected] " : "[ ] ")
+        ? live.checked
+          ? "[selected] "
+          : "[ ] "
         : live.value || "Not answered";
       if (live.tagName === "TEXTAREA") {
         replacement.textContent = "";
@@ -27,31 +31,56 @@
     const questions = original.querySelectorAll("[data-question]");
     copy.querySelectorAll("[data-question]").forEach((question, index) => {
       const source = questions[index];
-      if (source.disabled) { question.remove(); return; }
+      if (source.disabled) {
+        question.remove();
+        return;
+      }
       const viewed = source.dataset.checked === "true";
       const hintSeen = source.dataset.hintSeen === "true";
-      if (!viewed) question.querySelectorAll("[data-explanation]").forEach(node => node.remove());
-      if (!hintSeen) question.querySelectorAll("[data-hint]").forEach(node => node.remove());
+      if (!viewed)
+        question
+          .querySelectorAll("[data-explanation]")
+          .forEach((node) => node.remove());
+      if (!hintSeen)
+        question
+          .querySelectorAll("[data-hint]")
+          .forEach((node) => node.remove());
       const status = doc.createElement("p");
       status.textContent = `Feedback viewed: ${viewed ? "yes" : "no"}; Hint revealed: ${hintSeen ? "yes" : "no"}`;
       question.append(status);
       const legend = question.querySelector("legend");
-      if (legend) { const heading = doc.createElement("h2"); heading.textContent = text(legend); legend.replaceWith(heading); }
+      if (legend) {
+        const heading = doc.createElement("h2");
+        heading.textContent = text(legend);
+        legend.replaceWith(heading);
+      }
     });
-    copy.querySelectorAll("[hidden], [data-export-ui], [data-export-ignore], nav, button, script, style").forEach(node => node.remove());
-    copy.querySelectorAll("[data-export-text], svg, canvas").forEach(node => {
+    copy
+      .querySelectorAll(
+        "[hidden], [data-export-ui], [data-export-ignore], nav, button, script, style",
+      )
+      .forEach((node) => node.remove());
+    copy.querySelectorAll("[data-export-text], svg, canvas").forEach((node) => {
       if (!copy.contains(node)) return;
       const paragraph = doc.createElement("p");
-      paragraph.textContent = node.getAttribute("data-export-text") || node.getAttribute("aria-label") || "Interactive visual: see the original HTML page.";
+      paragraph.textContent =
+        node.getAttribute("data-export-text") ||
+        node.getAttribute("aria-label") ||
+        "Interactive visual: see the original HTML page.";
       node.replaceWith(paragraph);
     });
-    copy.querySelectorAll("a[href],img[src]").forEach(node => {
+    copy.querySelectorAll("a[href],img[src]").forEach((node) => {
       const attribute = node.tagName === "A" ? "href" : "src";
       const url = new URL(node.getAttribute(attribute), doc.baseURI);
-      if (url.protocol === "file:" || url.origin === location.origin) url.searchParams.delete("theme");
+      if (url.protocol === "file:" || url.origin === location.origin)
+        url.searchParams.delete("theme");
       node.setAttribute(attribute, url.href);
     });
-    const converter = new TurndownService({headingStyle:"atx", codeBlockStyle:"fenced", bulletListMarker:"-"});
+    const converter = new TurndownService({
+      headingStyle: "atx",
+      codeBlockStyle: "fenced",
+      bulletListMarker: "-",
+    });
     converter.use(turndownPluginGfm.gfm);
     const title = copy.querySelector("h1") ? "" : `# ${doc.title}\n\n`;
     return title + converter.turndown(copy) + "\n";
@@ -82,10 +111,17 @@
   function showTheme() {
     const dark = document.documentElement.dataset.theme === "dark";
     toggle.textContent = dark ? "Light mode" : "Dark mode";
-    toggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+    toggle.setAttribute(
+      "aria-label",
+      dark ? "Switch to light theme" : "Switch to dark theme",
+    );
     system.hidden = window.teachTheme.get() === "system";
   }
-  toggle.addEventListener("click", () => window.teachTheme.set(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
+  toggle.addEventListener("click", () =>
+    window.teachTheme.set(
+      document.documentElement.dataset.theme === "dark" ? "light" : "dark",
+    ),
+  );
   system.addEventListener("click", () => window.teachTheme.set("system"));
   window.addEventListener("teach-theme-change", showTheme);
   showTheme();
@@ -157,7 +193,11 @@
       );
       const link = document.createElement("a");
       link.href = url;
-      link.download = (document.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "learning-notes") + ".md";
+      link.download =
+        (document.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "") || "learning-notes") + ".md";
       link.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
       status.textContent = "Markdown download requested.";

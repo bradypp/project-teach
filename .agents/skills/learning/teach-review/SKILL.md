@@ -19,6 +19,6 @@ Read [project context and evidence](../teach/references/learning-system.md), the
 
 Offer a small amount of recall or application grounded in this project's actual work. Test transfer with a new context when useful. Use spacing and interleaving without imposing a review schedule.
 
-Evaluate the user's reasoning and use the `teach-update` skill for meaningful new evidence. Questions alone do not change learning state. Use the `teach-quiz` skill for optional HTML practice; quiz completion is not an automatic update pipeline.
+Evaluate the user's reasoning. At the end of the review, use the `teach-update` skill to reconcile findings and links, allowing no changes when warranted. Questions alone do not demonstrate understanding. Use the `teach-quiz` skill for optional HTML practice; quiz completion is not an automatic update pipeline.
 
 Finish with supported strengths, uncertainty and a few useful next directions linked to existing material. If reviewing records without live answers, say recall was not checked. Fresh research is needed only when current facts affect the assessment.
