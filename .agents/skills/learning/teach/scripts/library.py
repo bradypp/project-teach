@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Create a portable static learning library. Existing authored pages are preserved."""
 import argparse
+from datetime import datetime, timezone
 from html import escape
 from html.parser import HTMLParser
 from pathlib import Path
@@ -10,6 +11,15 @@ from urllib.parse import quote
 
 ASSETS = Path(__file__).resolve().parent.parent / 'assets'
 KINDS = {'lesson': 'lessons', 'quiz': 'quizzes', 'reference': 'references', 'glossary': 'references', 'topic': 'topics'}
+
+
+def date_label(value):
+    if not value: return 'Undated'
+    date = datetime.fromisoformat(value)
+    day = date.day
+    suffix = 'th' if 10 <= day % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
+    month = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec')[date.month - 1]
+    return f'{day}{suffix} {month} {date.year} · {date:%H:%M}'
 
 
 def copy_assets(root):
@@ -37,8 +47,12 @@ class TitleParser(HTMLParser):
         super().__init__()
         self.inside = False
         self.parts = []
+        self.metadata = {}
     def handle_starttag(self, tag, attrs):
         if tag == 'title': self.inside = True
+        if tag == 'meta':
+            values = dict(attrs)
+            self.metadata[values.get('name')] = values.get('content', '')
     def handle_endtag(self, tag):
         if tag == 'title': self.inside = False
     def handle_data(self, data):
@@ -48,25 +62,40 @@ class TitleParser(HTMLParser):
 def index(root):
     root = copy_assets(root)
     sections = []
-    for folder in dict.fromkeys(KINDS.values()):
+    tags = set()
+    for folder in ('lessons', 'topics', 'quizzes', 'references', 'glossary'):
         entries = []
-        for page in sorted((root / folder).glob('*.html')):
+        pages = [root / 'references/glossary.html'] if folder == 'glossary' else sorted((root / folder).glob('*.html'))
+        for page in pages:
+            if not page.is_file() or (folder == 'references' and page.name == 'glossary.html'):
+                continue
             parser = TitleParser()
             parser.feed(page.read_text(encoding='utf-8'))
             title = ''.join(parser.parts).strip() or page.stem
+            created = parser.metadata.get('created', '')
+            page_tags = sorted({tag.strip().lower() for tag in parser.metadata.get('tags', '').split(',') if tag.strip()})
+            if folder != 'glossary': tags.update(page_tags)
             href = quote(page.relative_to(root).as_posix(), safe='/')
-            entries.append(f'<li><a href="{escape(href, quote=True)}">{escape(title)}</a></li>')
-        if folder == 'topics' and not entries:
-            continue
-        content = '<ul class="page-list">' + ''.join(entries) + '</ul>' if entries else '<p class="muted">Nothing here yet.</p>'
-        sections.append(f'<section class="card"><h2>{folder.capitalize()}</h2>{content}</section>')
+            label = date_label(created)
+            pills = ''.join(f'<button type="button" class="secondary tag-pill" data-tag="{escape(tag, quote=True)}" aria-pressed="false">{escape(tag)}</button>' for tag in page_tags)
+            attrs = f'data-created="{escape(created, quote=True)}" data-title="{escape(title, quote=True)}" data-tags="{escape(",".join(page_tags), quote=True)}"'
+            entry = f'<li class="library-entry" {attrs}><a href="{escape(href, quote=True)}">{escape(title)}</a><div class="entry-meta"><time datetime="{escape(created, quote=True)}">{escape(label)}</time><span class="entry-tags">{pills}</span></div></li>'
+            entries.append((created, title, entry))
+        if not entries: continue
+        entries.sort(key=lambda item: (item[0], item[1]), reverse=True)
+        filterable = ' data-library-section' if folder != 'glossary' else ''
+        sections.append(f'<section class="library-section"{filterable}><h2>{folder.capitalize()}</h2><ul class="library-entries">' + ''.join(item[2] for item in entries) + '</ul></section>')
+    filters = '<div class="library-controls" data-export-ui><div class="filter-row"><div class="tag-filters" aria-label="Filter by subject">'
+    filters += '<button class="secondary tag-pill" data-tag="" aria-pressed="true">All subjects</button>'
+    filters += ''.join(f'<button class="secondary tag-pill" data-tag="{escape(tag, quote=True)}" aria-pressed="false">{escape(tag)}</button>' for tag in sorted(tags))
+    filters += '</div><select id="library-sort" aria-label="Sort entries"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="title">Alphabetical</option></select></div><p data-filter-status role="status"></p></div>'
     template = (ASSETS / 'templates/index.html').read_text(encoding='utf-8')
     root.mkdir(parents=True, exist_ok=True)
-    (root / 'index.html').write_text(template.replace('{{ENTRIES}}', '\n'.join(sections)), encoding='utf-8')
+    (root / 'index.html').write_text(template.replace('{{ENTRIES}}', (filters if sections else '<p class="muted">Nothing here yet.</p>') + '\n'.join(sections)), encoding='utf-8')
     return root / 'index.html'
 
 
-def new(root, kind, slug, title):
+def new(root, kind, slug, title, tags=""):
     if not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', slug):
         raise ValueError('Use a lowercase hyphen-separated slug, e.g. queue-backpressure.')
     root = Path(root)
@@ -77,7 +106,8 @@ def new(root, kind, slug, title):
     page.parent.mkdir(parents=True, exist_ok=True)
     template = (ASSETS / 'templates' / f'{kind}.html').read_text(encoding='utf-8')
     with page.open('x', encoding='utf-8') as stream:
-        stream.write(template.replace('{{TITLE}}', escape(title, quote=True)))
+        created = datetime.now(timezone.utc).replace(microsecond=0)
+        stream.write(template.replace('{{TITLE}}', escape(title, quote=True)).replace('{{CREATED}}', created.isoformat()).replace('{{CREATED_LABEL}}', date_label(created.isoformat())).replace('{{TAGS}}', escape(tags, quote=True)))
     index(root)
     return page
 
@@ -92,9 +122,10 @@ def main():
     create.add_argument('kind', choices=KINDS)
     create.add_argument('slug')
     create.add_argument('--title', required=True)
+    create.add_argument('--tags', default='', help='Comma-separated subject tags')
     args = parser.parse_args()
     try:
-        if args.command == 'new': result = new(args.root, args.kind, args.slug, args.title)
+        if args.command == 'new': result = new(args.root, args.kind, args.slug, args.title, args.tags)
         elif args.command == 'init': result = init(args.root)
         else: result = index(args.root)
     except (ValueError, OSError) as error:

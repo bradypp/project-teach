@@ -15,6 +15,34 @@ python3 /path/to/teach/scripts/library.py index /project/.learning
 
 `new` copies missing shared assets and creates a shell; existing pages and assets are preserved. `init ROOT` creates an empty library. `index ROOT` regenerates navigation from actual HTML files. Generated index content is replaceable; keep authored material in lessons/reference pages.
 
+## Dates, tags and home navigation
+
+- The helper automatically records creation time in UTC and displays it beneath the page title. Keep this timestamp stable when editing; there is no updated-time field.
+- Add subject tags with `--tags "queues,reliability"`; maintain the comma-separated `tags` meta value when content changes. Reuse a small set of existing tags.
+- The home page lists Lessons, Topics, Quizzes, References, then Glossary, omitting empty sections. Tags and newest/oldest/alphabetical sorting apply to the first four; the glossary stays accessible below.
+- Keep descriptive filenames stable. Rebuild the index after changing titles, tags or pages.
+
+## Optional page opening
+
+Use the [page-intro component](../assets/templates/page-intro.html) after the title and creation date when it helps orientation:
+
+- Show optional subject tags that match the page metadata.
+- Give a short summary connecting the idea to the project or current decision.
+- For longer pages, add optional contents linking to real section IDs. Keep labels descriptive and the layout flexible.
+- Omit unused parts. Quiz summaries and contents must preserve the challenge; answer-bearing links belong with feedback.
+
+Shared CSS owns language-label styling, pointer cursors, home dividers and quiz-action spacing. Apply presentation fixes there and in reusable components, then synchronise example assets; avoid example-only style patches.
+
+## Code and visual components
+
+- Use the [code block component](../assets/templates/code-block.html) for explicitly labelled languages. Locally bundled Highlight.js supplies syntax highlighting; shared controls add a language label and Copy code button. Use `language-text` for plain text or ASCII.
+- Prefer the [Mermaid component](../assets/templates/diagram.html) for supported diagrams: flowcharts, sequences, classes, states, git graphs, pie/bar charts and related structures. Keep the source in `pre.mermaid` inside `figure.diagram`, with a useful caption.
+- The [component script](../assets/components.js) applies the shared theme tokens and re-renders diagrams on theme changes. Keep diagram colours in the shared integration rather than embedding light-only styles or Mermaid theme directives.
+- Use ASCII when a small text diagram communicates better. Use custom SVG/canvas for visuals Mermaid cannot express well; use CSS theme tokens for fills, lines, backgrounds and labels.
+- Reuse the existing quiz controls, native revealable explanations and semantic comparison tables. Layout remains flexible; components do not require surrounding cards.
+- Follow explicit visualisation frequency/style preferences in `PREFERENCES.md`. Select visuals for explanatory value rather than adding one to every section.
+- Markdown export retains Mermaid source and captions. Give other visuals meaningful textual export descriptions; verify code exports preserve their language and content.
+
 ## Choose the form
 
 The shell provides typography, navigation and a content region. Design that region around the lesson: short prose, a worked example, diagram, comparison, simulator or custom quiz widget. Sections, cards and text boxes are optional components, not a required recipe.
@@ -55,7 +83,7 @@ The shared script offers feedback, hints and optional Markdown copy/download for
 
 ## Theme and Markdown export
 
-Every page loads the shared controls for system/light/dark themes and Copy/Save Markdown. Theme storage is best-effort for local files; internal HTML links carry the choice. The default follows the system preference.
+Every page loads shared theme controls. Content pages also show footer navigation and Copy/Save Markdown; the home page omits that toolbar. Theme storage is best-effort for local files; internal HTML links carry the choice. The default follows the system preference.
 
 Export converts the main content using locally bundled Turndown and its GFM plugin. It preserves headings, lists, code, tables, sources and current responses, omits controls and unrevealed exercise feedback, and resolves relative links against the original page. Exported local links refer to that machine's files; moving the Markdown alone does not copy those assets.
 
@@ -65,10 +93,12 @@ The [browser controls](../assets/index.js) perform conversion; the Python helper
 
 ## Connect and deliver
 
-- Add meaningful sources, related lesson links and real section anchors where useful.
+- Inspect related lessons, topics, quizzes and references when adding material. Add useful links in both directions where the relationship warrants it, and repair affected links over time.
+- Link the first meaningful occurrence of a known glossary term to its stable anchor. Keep answer-revealing quiz links inside feedback.
+- Add meaningful sources and real section anchors where useful.
 - Include a recommended primary resource and an invitation to ask follow-up questions.
 - Quickly check content, answer keys and local links. Routine artifacts need no exhaustive browser test procedure.
 - Rebuild the index and link useful lessons from learning state or their supporting record.
 - Return an absolute clickable file link that can be opened from the chat; open it automatically with an available host/browser tool if possible; try launching into an extrenal browser via cli if possible.
 
-The user can continue the conversation without completing the artifact. Tests for changes to shared helper code are separate from routine lesson creation.
+When delivering an HTML artifact, give a short summary, link and relevant pending question in chat; let the artifact carry the detailed explanation. The user can continue the conversation without completing the artifact. Tests for changes to shared helper code are separate from routine lesson creation.

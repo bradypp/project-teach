@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="{{CREATED}}" />
+    <meta name="tags" content="{{TAGS}}" />
     <title>{{TITLE}}</title>
     <link rel="stylesheet" href="../assets/index.css" />
 
@@ -10,6 +12,9 @@
     <script src="../assets/vendor/turndown.js" defer></script>
     <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
     <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -20,8 +25,10 @@
     <main id="main">
       <header>
         <p class="eyebrow">quiz</p>
-        <h1>{{TITLE}}</h1>
+        <h1>{{TITLE}}</h1><p class="page-date">Created <time datetime="{{CREATED}}">{{CREATED_LABEL}}</time></p>
       </header>
+      <!-- Optional: insert the useful parts of page-intro.html here: subject tags,
+           a short summary, and contents linking to real sections. Omit unused parts. -->
       <!-- AUTHOR: Duplicate question fieldsets. Replace prompts/options/reasoning, mark exactly one radio data-correct="true" per question, use unique name/id values. Mark any optional hint details data-hint. Add lesson links inside data-explanation (revealed after checking). -->
       <p class="lede">
         A little practice, at your own pace. Try an answer, explore the

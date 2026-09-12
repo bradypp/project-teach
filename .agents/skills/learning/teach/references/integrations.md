@@ -13,7 +13,7 @@ This is a learning project: {{brief project purpose and learning goals}}.
 
 - Build for learning and clear understanding. Prefer simple, inspectable designs over unnecessary abstractions or backwards compatibility unless the project actually requires it.
 - Use current project decisions and code as teaching context; preserve the requested workflow and deliverables.
-- Consult `.learning/MISSION.md` and relevant `.learning/LEARNING_STATE.md` entries when present. Apply explicit preferences in `.learning/TEACHING_STYLE.md` if it exists.
+- Consult `.learning/MISSION.md` and relevant `.learning/LEARNING_STATE.md` entries when present. Apply explicit preferences in `.learning/PREFERENCES.md` if it exists.
 
 <!-- teach:passive:start -->
 During ordinary development, use the `teach` skill when a significant transferable conceptual gap affects an imminent decision or failure. Keep routine syntax, API usage and boilerplate quiet. Apply the project's teaching preferences after the opportunity qualifies.

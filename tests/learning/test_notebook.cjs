@@ -42,7 +42,7 @@ const assert=require('node:assert/strict');
   await page.screenshot({path:'/tmp/teach-notebook-dark.png',fullPage:true});
   await page.locator('nav a').click();
   assert.match(page.url(),/theme=dark/);assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
-  assert.equal(await page.locator('[data-copy]').count(),1);
+  assert.equal(await page.locator('[data-copy]').count(),0);
   assert.match(await page.evaluate(()=>learningExportMarkdown(document)),/A small experiment/);
   await page.getByRole('link',{name:'A small experiment'}).click();
   assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');

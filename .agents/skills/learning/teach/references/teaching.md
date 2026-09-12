@@ -1,6 +1,6 @@
 # Teaching guidance
 
-Shape learning around the active project, plan or spec and the user's current understanding. The mission guides direction, scope and constraints. These are the baseline teaching practices. Apply explicit preferences from a project `TEACHING_STYLE.md` when present; teaching works fully without that file. Preferences do not change accuracy or evidence standards.
+Shape learning around the active project, plan or spec and the user's current understanding. The mission guides direction, scope and constraints. These are the baseline teaching practices. Apply explicit preferences from a project `PREFERENCES.md` when present; teaching works fully without that file. Preferences do not change accuracy or evidence standards.
 
 ## Teacher personality
 
@@ -28,7 +28,7 @@ A lesson should be **beautiful**, with clean, readable typography and layout. Th
 - State where an analogy stops matching the system.
 - Give the user a relevant application or reasoning question.
 
-Prefer a detailed HTML lesson over a detailed chat explanation. Keep chat to orientation, the original question and a link for substantial teaching. Choose the presentation for the idea. A worked example, annotated diagram, simulation, comparison or visual puzzle may be better than conventional sections. Small explanations can stay in chat with Mermaid or another useful inline visual. Follow [artifact guidance](artifacts.md) when saving a lesson.
+Prefer a detailed HTML lesson over a detailed chat explanation. Keep chat to orientation, the original question and a link for substantial teaching. Choose the presentation for the idea. A worked example, annotated diagram, simulation, comparison or visual puzzle may be better than conventional sections. Small explanations can stay in chat with Mermaid or another useful inline visual. Prefer themed Mermaid for supported diagrams and ASCII for simple text relationships; follow artifact guidance for the reusable integration. Follow [artifact guidance](artifacts.md) when saving a lesson.
 
 For each saved lesson:
 

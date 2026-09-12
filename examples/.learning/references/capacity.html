@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-12T18:11:50+00:00" />
+    <meta name="tags" content="queues,systems" />
+    <title>Capacity at a glance</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">← My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header><h1>Capacity at a glance</h1><p class="page-date">Created <time datetime="2026-09-12T18:11:50+00:00">12th Sept 2026 · 18:11</time></p></header>
+<p class="muted">Fieldnotes export service · fictional learning project</p>
+<p class="lede">Use this while deciding whether the export service should accept another job. The numbers below are illustrative, not measurements.</p>
+<h2 id="model">A small capacity model</h2><p>For an interval of length <code>t</code>, estimate the change in pending work as <code>(arrival rate − completion rate) × t</code>, while work remains queued. Clamp the pending count at zero. This model ignores job-size variation, failures and changes in concurrency.</p>
+<figure class="diagram"><pre class="mermaid">xychart-beta
+  x-axis [Quiet, Burst, Recovery]
+  y-axis &quot;Arrivals per second&quot; 0 --&gt; 10
+  bar [2, 8, 2]
+</pre><figcaption>Invented traffic phases. Compare each phase to a hypothetical constant capacity of five jobs per second.</figcaption></figure>
+<table><thead><tr><th>Phase</th><th>Arrivals</th><th>Capacity</th><th>Backlog change</th></tr></thead><tbody><tr><td>Quiet</td><td>2/s</td><td>5/s</td><td>Stays empty after prior work drains</td></tr><tr><td>Burst for 10 s</td><td>8/s</td><td>5/s</td><td>About 30 additional jobs</td></tr><tr><td>Recovery at 2/s</td><td>2/s</td><td>5/s</td><td>About 10 s to drain those 30 jobs</td></tr></tbody></table>
+<h2 id="responses">When the queue is full</h2><ul><li><strong>Wait:</strong> the producer waits for room. Useful when the caller can tolerate that wait.</li><li><strong>Reject:</strong> return an explicit temporary refusal. Useful when acceptance must remain quick.</li><li><strong>Drop or replace:</strong> appropriate only when the product permits losing or superseding that work; not the proposed export contract.</li><li><strong>Add capacity:</strong> useful only if the constrained dependency can actually support more concurrent work.</li></ul>
+<h2>Observe before tuning</h2><ul><li>Age of the oldest pending job: how long has someone waited?</li><li>Completion rate and duration distribution: are a few huge exports dominating?</li><li>Rejections and retry attempts: how much work is arriving beyond fresh submissions?</li><li>Failures by cause: are retries addressing recoverable failures or repeating invalid requests?</li></ul>
+<h2>Return to the decision</h2><p>Use <a href="../lessons/queues.html#experiment">the bounded queue experiment</a> to compare waiting and rejection. Refer to <a href="glossary.html#backpressure">backpressure</a> when describing the chosen behaviour in the plan.</p>
+</main>
+  </body>
+</html>

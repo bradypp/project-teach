@@ -21,7 +21,7 @@ Help the user understand the project they are planning or building, including th
 
 ## 3. Research and ground the explanation
 
-- For substantive teaching, complete the research stage in [research guidance](references/research.md): inspect existing sources, read relevant primary material and verify claims that need checking.
+- For substantive teaching, complete the workflow and readiness check in [research guidance](references/research.md). It defines source discovery, freshness, verification, comparison and discovery workers; proceed when the explanation and relevant alternatives are grounded and important uncertainty is identified.
 - Verify core topics against trustworthy sources; check current primary documentation for fast-moving or version-sensitive behaviour. Stable explanations can reuse previously verified sources.
 - Select useful further reading from sources actually consulted, explaining what each adds. State access or verification limits rather than inventing support.
 - For video material, the optional [transcript helper](scripts/transcript.py) retrieves captions; research guidance explains verification and limitations.

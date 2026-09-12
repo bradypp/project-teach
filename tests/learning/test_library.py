@@ -56,7 +56,7 @@ class LibraryTests(unittest.TestCase):
             self.assertTrue((self.root / 'assets' / asset).is_file())
         index = (self.root / 'index.html').read_text()
         self.assertEqual(index.count('href="references/glossary.html"'), 1)
-        self.assertEqual(index.count('<h2>References</h2>'), 1)
+        self.assertEqual(index.count('<h2>Glossary</h2>'), 1)
         self.assertFalse((self.root / 'GLOSSARY.md').exists())
 
     def test_topics_section_tracks_actual_pages_and_preserves_synthesis(self):
@@ -73,6 +73,22 @@ class LibraryTests(unittest.TestCase):
         page.unlink()
         library.index(self.root)
         self.assertNotIn('<h2>Topics</h2>', (self.root / 'index.html').read_text())
+
+    def test_metadata_and_newest_order_are_preserved(self):
+        older = library.new(self.root, 'lesson', 'older', 'Older', 'queues, systems')
+        newer = library.new(self.root, 'lesson', 'newer', 'Newer', 'reliability')
+        import re
+        for page, date in ((older, '2025-01-01T10:00:00+00:00'), (newer, '2026-01-01T10:00:00+00:00')):
+            content = page.read_text()
+            self.assertNotIn('{{CREATED', content)
+            self.assertIn('<time datetime=', content)
+            page.write_text(re.sub(r'name="created" content="[^"]+"', f'name="created" content="{date}"', content))
+        library.index(self.root)
+        html = (self.root / 'index.html').read_text()
+        self.assertLess(html.index('href="lessons/newer.html"'), html.index('href="lessons/older.html"'))
+        self.assertIn('data-tag="queues"', html)
+        self.assertNotIn('<h2>Quizzes</h2>', html)
+        self.assertIn('2025-01-01T10:00:00+00:00', older.read_text())
 
     def test_slug_cannot_escape_library(self):
         for slug in ('../escape', '/absolute', 'two words', 'a/b', ''):

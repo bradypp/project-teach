@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="{{CREATED}}" />
+    <meta name="tags" content="{{TAGS}}" />
     <title>{{TITLE}}</title>
     <link rel="stylesheet" href="../assets/index.css" />
 
@@ -10,6 +12,9 @@
     <script src="../assets/vendor/turndown.js" defer></script>
     <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
     <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -17,7 +22,9 @@
       <a href="../index.html">← My learning notebook</a>
     </nav>
     <main id="main">
-      <header><h1>{{TITLE}}</h1></header>
+      <header><h1>{{TITLE}}</h1><p class="page-date">Created <time datetime="{{CREATED}}">{{CREATED_LABEL}}</time></p></header>
+      <!-- Optional: insert the useful parts of page-intro.html here: subject tags,
+           a short summary, and contents linking to real sections. Omit unused parts. -->
       <!-- Maintain one current synthesis. Replace prompts with supported content;
            adapt the layout and omit sections that add nothing. -->
       <section id="summary"><h2>Summary</h2><!-- Scope and the central idea. --></section>

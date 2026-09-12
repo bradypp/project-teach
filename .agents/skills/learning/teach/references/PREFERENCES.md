@@ -1,4 +1,4 @@
-# Teaching style
+# Preferences
 
 Optional project preferences. Create this file only when customising; keep the entries you change. The skills and references contain the full teaching guidance; `default` inherits it. Change only the preferences you want to override. Missing entries or a missing file leave baseline behaviour intact. Accuracy and learning-evidence rules still apply.
 
@@ -7,6 +7,7 @@ Optional project preferences. Create this file only when customising; keep the e
 - **Depth:** default
 - **Pace:** default
 - **Format and visuals:** default
+- **Visualisation frequency and style:** default
 - **Teacher personality:** default
 
 ## Practice and retention

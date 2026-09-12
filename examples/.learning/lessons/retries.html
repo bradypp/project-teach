@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-12T18:11:50+00:00" />
+    <meta name="tags" content="reliability" />
+    <title>When a retry repeats a side effect</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">← My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header><h1>When a retry repeats a side effect</h1><p class="page-date">Created <time datetime="2026-09-12T18:11:50+00:00">12th Sept 2026 · 18:11</time></p></header>
+<p class="muted">Fieldnotes export service · fictional learning project</p>
+<div class="page-tags" aria-label="Subjects"><span class="subject-tag">reliability</span></div>
+<p class="lede">A timeout tells us that an answer did not arrive in time. It does not tell us whether the export was created. Retrying safely requires a definition of “the same job.”</p>
+<nav aria-label="Lesson sections"><a href="#window">Failure window</a> · <a href="#identity">Identity</a> · <a href="#experiment">Experiment</a> · <a href="#contract">Contract</a></nav>
+<h2 id="window">The next planning decision</h2><p>A worker writes <code>exports/job-42.csv</code>, then crashes before reporting completion. Another worker retries the job. Should it create a second file, overwrite the first, return the existing result, or refuse to run?</p>
+<p>We need a policy for that uncertainty before adding automatic retries. <a href="../references/glossary.html#idempotency">Idempotency</a> describes the effect of repetition. The goal here is one logical export result even if processing is attempted more than once.</p>
+<figure class="diagram"><pre class="mermaid">sequenceDiagram
+  participant Client
+  participant Service
+  Client-&gt;&gt;Service: Request export with key job-42
+  Service-&gt;&gt;Service: Create result
+  Service--xClient: Reply lost
+  Client-&gt;&gt;Service: Retry key job-42
+  Service--&gt;&gt;Client: Return the recorded result
+</pre><figcaption>The proposed contract ties repeated requests to a stable identity; a missing reply does not prove a missing result.</figcaption></figure>
+<h2 id="identity">Identical input is not always identical intent</h2><ul><li>“Retry my export request” should keep the same operation key.</li><li>“Create another export with the same filters” should use a new key.</li><li>Reusing a key with different filters should be rejected, not silently return an unrelated file.</li></ul>
+<p>AWS’s idempotency design describes caller-provided request identifiers, parameter validation and recording the identifier together with the mutation. That provides a useful reference for this proposed contract; it does not make our implementation atomic automatically. <a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">Making retries safe with idempotent APIs</a>.</p>
+<h2 id="experiment">Separate operation identity from an attempt</h2><p>The following toy model makes repeat detection visible. It is deliberately synchronous and in memory. Predict what each call returns, then change the second call’s filters.</p>
+<pre><code class="language-python">results = {}
+
+def request_export(key, filters):
+    signature = tuple(sorted(filters.items()))
+    if key in results:
+        previous_signature, path = results[key]
+        if previous_signature != signature:
+            raise ValueError(&quot;Key reused with different filters&quot;)
+        return path
+    path = f&quot;exports/{key}.csv&quot;
+    results[key] = (signature, path)
+    return path
+
+print(request_export(&quot;job-42&quot;, {&quot;month&quot;: &quot;September&quot;}))
+print(request_export(&quot;job-42&quot;, {&quot;month&quot;: &quot;September&quot;}))</code></pre>
+<details><summary>Check the reasoning</summary><p>Both calls return the same path. A changed month with the same key raises an error. This model records a path; it does not write a file or survive a restart. Two concurrent processes would not share this dictionary.</p></details>
+<h2>The dangerous gap between two writes</h2><p>Imagine replacing the toy assignment with two real actions: write the file, then mark the database row complete. A crash between them leaves a result with no completion marker. Reversing the order leaves a different gap: a completed row with no result. Changing the order does not remove the gap.</p>
+<ul><li>For this project, investigate a deterministic output path plus verification that the expected file is complete before reusing it.</li><li>Define how workers claim jobs so two workers do not both publish an unfinished result.</li><li>Keep email notification outside the first milestone; it adds another external effect with its own duplicate policy.</li></ul>
+<p>These are design directions for the fictional project, not a claim that deterministic filenames alone provide exactly-once execution. The <a href="../topics/reliable-work.html#open">topic’s open questions</a> keep the unresolved boundary visible.</p>
+<h2 id="contract">Write the retry contract before the loop</h2><table><thead><tr><th>Situation</th><th>Proposed behaviour</th><th>Why</th></tr></thead><tbody><tr><td>Same key, same request, complete</td><td>Return its result</td><td>Preserve one logical export</td></tr><tr><td>Same key, changed request</td><td>Reject the mismatch</td><td>Make changed intent explicit</td></tr><tr><td>Still running</td><td>Report running status</td><td>A repeat need not start fresh work</td></tr><tr><td>Uncertain after crash</td><td>Reconcile stored state and output</td><td>A timeout is not proof of failure</td></tr></tbody></table>
+<p>A queue’s temporary ownership mechanism is another boundary. SQS visibility timeout hides received work temporarily; it is not a permanent completion acknowledgement. Read the <a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html">visibility timeout documentation</a> before translating this plan into that service.</p>
+<h2>Test the idea</h2><p>The browser retries a submission after a timeout with a new key. Why might that create two logical jobs even if the server deduplicates perfectly? Explain which component must preserve the original key. Then try the <a href="../quizzes/queue-practice.html">failure-window questions</a>.</p>
+<h2>Next reading</h2><ul><li><a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS’s idempotent API design</a>: study request identity and the boundary around recording effects.</li><li><a href="queues.html">Queue lesson</a>: revisit why accepting work and finishing it are separate events.</li></ul><p>Ask the agent to drill into transactions, file publication or job leases before choosing a durable implementation.</p>
+</main>
+  </body>
+</html>

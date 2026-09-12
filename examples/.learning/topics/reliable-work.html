@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-12T18:11:50+00:00" />
+    <meta name="tags" content="queues,reliability" />
+    <title>Reliable work</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">← My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header><h1>Reliable work</h1><p class="page-date">Created <time datetime="2026-09-12T18:11:50+00:00">12th Sept 2026 · 18:11</time></p></header>
+<p class="muted">Fieldnotes export service · fictional learning project</p>
+<p class="lede">Accepting a job, executing an attempt and publishing a result are separate events. A reliable export service defines what happens between them.</p>
+<h2>Current synthesis</h2><ul><li><a href="../lessons/queues.html#capacity">Capacity</a> governs whether we should accept more work.</li><li><a href="../lessons/retries.html#identity">Identity</a> governs whether two requests mean one export or two.</li><li>Recovery governs what a new worker may safely do after the previous one disappears.</li></ul>
+<figure class="diagram"><pre class="mermaid">stateDiagram-v2
+  [*] --&gt; Pending: Accepted
+  Pending --&gt; Running: Claimed
+  Running --&gt; Ready: Result published
+  Running --&gt; Pending: Recoverable attempt failure
+  Running --&gt; Failed: Terminal failure
+  Ready --&gt; [*]
+  Failed --&gt; [*]
+</pre><figcaption>A proposed job lifecycle. Real recovery must distinguish a failed attempt from an already-published result.</figcaption></figure>
+<h2>Decisions we can make now</h2><table><thead><tr><th>Decision</th><th>Current proposal</th><th>Reason</th></tr></thead><tbody><tr><td>Overload</td><td>Bound waiting work and report saturation</td><td>A queue is not extra processing capacity</td></tr><tr><td>Request identity</td><td>Keep one stable key per export intent</td><td>Repeated submissions must be recognisable</td></tr><tr><td>UI status</td><td>Distinguish accepted, running and ready</td><td>Acceptance is not a completed file</td></tr></tbody></table>
+<h2>How the ideas connect</h2><p>Retries add attempts to the workload. A capacity plan that counts only fresh user requests may underestimate the work. Conversely, rejecting a saturated request needs an explicit client response; an immediate endless retry would simply add pressure.</p>
+<p>For the learning prototype, use the bounded-queue experiment to expose saturation before selecting infrastructure. For durable acceptance, investigate storage and claiming as a separate decision. This keeps the first experiment small while keeping the missing guarantee visible.</p>
+<h2 id="open">Still unresolved</h2><ul><li>How will job state survive a process restart?</li><li>How can a worker publish a complete file and expose ready status safely?</li><li>When can another worker reclaim a stalled job?</li><li>What retry budget and delay fit the observed failure modes?</li></ul>
+<h2>Supporting learning</h2><ul><li><a href="../lessons/queues.html">Why queues help</a> and <a href="../records/0001-capacity-is-not-storage.md">sample capacity reasoning</a>.</li><li><a href="../lessons/retries.html">Retry identity</a> and <a href="../records/0002-timeout-is-uncertainty.md">sample uncertainty correction</a>.</li><li><a href="../references/capacity.html">Capacity reference</a> and <a href="../quizzes/queue-practice.html">practice</a>.</li></ul>
+<h2>Sources and further reading</h2><p><a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues-at-least-once-delivery.html">SQS delivery semantics</a> and <a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html">visibility timeout</a> provide concrete service boundaries to compare against this proposed lifecycle. Consult them if choosing SQS; this notebook has not selected it as the implementation.</p>
+</main>
+  </body>
+</html>
