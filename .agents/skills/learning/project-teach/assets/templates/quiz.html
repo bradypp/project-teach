@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{{TITLE}}</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+    <script src="../assets/index.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">← Learning library</a
+      ><span>Make the idea your own</span>
+    </nav>
+    <main id="main">
+      <header>
+        <p class="eyebrow">quiz</p>
+        <h1>{{TITLE}}</h1>
+      </header>
+      <!-- AUTHOR: Duplicate question fieldsets. Replace prompts/options/reasoning, mark exactly one radio data-correct="true" per question, use unique name/id values. Mark any optional hint details data-hint. Add lesson links inside data-explanation (revealed after checking). -->
+      <p class="lede">
+        A little practice, at your own pace. Try an answer, explore the
+        explanation, and follow the lesson links when you want more.
+      </p>
+      <p class="muted">
+        Answers are temporary. Optionally copy or download them below; this page
+        does not update your learning records.
+      </p>
+      <form data-quiz>
+        <!-- AUTHOR: This disabled scaffold is not a finished quiz. Replace it with authored enabled questions before delivery. -->
+        <fieldset class="card" data-question disabled>
+          <legend>Author a question tied to the current context</legend>
+          <label class="option"
+            ><input
+              type="radio"
+              name="q1"
+              value="a"
+              data-correct="true"
+            />Replace with the correct option</label
+          >
+          <label class="option"
+            ><input type="radio" name="q1" value="b" />Replace with a plausible
+            alternative</label
+          >
+          <details data-hint>
+            <summary>A hint</summary>
+            <p>Replace with a useful nudge that preserves the challenge.</p>
+          </details>
+          <button type="button" data-check>Check answer</button>
+          <p class="feedback" data-feedback aria-live="polite" hidden></p>
+          <div data-explanation hidden>
+            <h3>Why this works</h3>
+            <p>Replace with reasoning that explains both options.</p>
+            <!-- Add relative lesson link, e.g. ../lessons/queue-backpressure.html -->
+          </div>
+        </fieldset>
+      </form>
+      <section class="card">
+        <h2>Keep your answers, if you like</h2>
+        <div class="actions">
+          <button type="button" data-copy>Copy as Markdown</button
+          ><button type="button" class="secondary" data-download>
+            Download Markdown
+          </button>
+        </div>
+        <p data-export-status role="status"></p>
+        <div class="export-fallback" hidden>
+          <label for="export-text">Select and copy these answers</label
+          ><textarea id="export-text" readonly></textarea>
+        </div>
+      </section>
+      <footer>Personal learning resource · Explore at your own pace.</footer>
+    </main>
+  </body>
+</html>

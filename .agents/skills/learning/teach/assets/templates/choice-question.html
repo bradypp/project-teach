@@ -1,0 +1,27 @@
+<!-- Author this optional question component and enable it before delivery. -->
+<fieldset class="card" data-question disabled>
+          <legend>Author a question tied to the current context</legend>
+          <label class="option"
+            ><input
+              type="radio"
+              name="q1"
+              value="a"
+              data-correct="true"
+            />Replace with the correct option</label
+          >
+          <label class="option"
+            ><input type="radio" name="q1" value="b" />Replace with a plausible
+            alternative</label
+          >
+          <details data-hint>
+            <summary>A hint</summary>
+            <p>Replace with a useful nudge that preserves the challenge.</p>
+          </details>
+          <button type="button" data-check>Check answer</button>
+          <p class="feedback" data-feedback aria-live="polite" hidden></p>
+          <div data-explanation hidden>
+            <h3>Why this works</h3>
+            <p>Replace with reasoning that explains both options.</p>
+            <!-- Add relative lesson link, e.g. ../lessons/queue-backpressure.html -->
+          </div>
+        </fieldset>

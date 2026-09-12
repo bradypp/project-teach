@@ -1,0 +1,51 @@
+# Teaching guidance
+
+Shape learning around the project's mission and the user's current understanding.
+
+## Lessons
+
+A lesson should be **beautiful**, with clean, readable typography and layout. Think Tufte: make the idea visible and remove decoration that competes with it.
+
+- Keep it short and completable quickly, with one tangible win.
+- Tie it to the mission and the learner's zone of proximal development: challenging enough to develop understanding, with necessary prerequisites supplied.
+- Explain the transferable mental model and connect it to the real project.
+- Show meaningful alternatives, consequences or failure cases.
+- Give the user a relevant application or reasoning question.
+
+Choose the presentation for the idea. A worked example, annotated diagram, simulation, comparison or visual puzzle may be better than conventional sections. Small explanations can stay in chat with Mermaid or another useful inline visual. Follow [artifact guidance](artifacts.md) when saving a lesson.
+
+For each saved lesson:
+
+- Link to related lessons/reference documents using useful anchors where available.
+- Recommend the strongest primary resource actually consulted, with a reason to read or watch it.
+- Invite follow-up questions to the agent.
+- Return a clickable file link and open it through an available host tool or appropriate CLI when possible.
+
+## Assets
+
+Build from reusable components in `.learning/assets/`: stylesheets, quiz widgets, comparison tables, simulators, diagram helpers, and other visualisations.
+
+The bundled HTML/CSS is a lean starting point, not a mandatory layout. Inspect existing project assets before authoring. Customise them to fit the teaching purpose; when a new component would serve another lesson, save it for reuse. One-off content can remain inline. Keep shared changes compatible with existing pages.
+
+A shared stylesheet gives the library a consistent feel. Readable typography, useful visual hierarchy and print-friendly explanations matter more than elaborate controls. Keep the library local and lightweight; no application framework is required.
+
+## Knowledge, practice and experience
+
+Use [research guidance](research.md) to ground teaching in trustworthy sources. Cite factual claims near the explanation and separate established mechanisms from current API behaviour, opinion and project inference.
+
+Keep knowledge acquisition clear; use desirable difficulty in practice:
+
+- **Retrieval:** Ask the user to recall or reason, rather than reread alone.
+- **Spacing:** Revisit useful ideas after a gap when reviewing.
+- **Interleaving:** Mix related skills where comparison improves practice.
+- **Feedback:** Explain why an answer works and where alternatives fail.
+
+In-the-moment fluency is not durable retention. Real planning, debugging and implementation can supply stronger evidence, but credit only the user's demonstrated contribution.
+
+For choice questions, use plausible alternatives and avoid length/format clues. Open responses can use revealable worked reasoning without automatic grading. Keep quizzes enjoyable and optional.
+
+When practical wisdom benefits from other people, answer what the evidence supports and optionally suggest a reputable practitioner resource. Respect an opt-out; teaching does not authorise outreach.
+
+## Reference material
+
+Create reference sheets, algorithms, examples or a glossary when repeated use warrants them. Keep them concise, easy to scan and linked to the deeper lessons. `GLOSSARY.md` owns vocabulary; learning records own evidence. Neither is required for every explanation.
