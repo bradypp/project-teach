@@ -46,6 +46,19 @@ class LibraryTests(unittest.TestCase):
         self.assertIn('a%20%23%20%26%20%22%20b.html', content)
         self.assertIn('Less &lt; more &amp; safe', content)
 
+    def test_glossary_shares_reference_navigation_and_assets(self):
+        page = library.new(self.root, 'glossary', 'glossary', 'My glossary')
+        self.assertEqual(page, self.root / 'references/glossary.html')
+        content = page.read_text()
+        self.assertIn('aria-label="Terms"', content)
+        for asset in ('index.css', 'theme.js', 'index.js', 'vendor/turndown.js'):
+            self.assertIn('../assets/' + asset, content)
+            self.assertTrue((self.root / 'assets' / asset).is_file())
+        index = (self.root / 'index.html').read_text()
+        self.assertEqual(index.count('href="references/glossary.html"'), 1)
+        self.assertEqual(index.count('<h2>References</h2>'), 1)
+        self.assertFalse((self.root / 'GLOSSARY.md').exists())
+
     def test_slug_cannot_escape_library(self):
         for slug in ('../escape', '/absolute', 'two words', 'a/b', ''):
             with self.subTest(slug=slug), self.assertRaises(ValueError):

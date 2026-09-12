@@ -5,6 +5,8 @@ description: Reconcile meaningful learning from project work, discussion or exte
 
 Answer: what meaningful learning happened, and how should it change future teaching?
 
+Read [writing guidance](../teach/references/writing.md) before maintaining Markdown or explaining an update.
+
 ## Find the evidence
 
 Read [project context and evidence](../teach/references/learning-system.md). Inspect the supplied account or recent accessible conversation, relevant project changes and existing records. If no account or evidence is available, ask for a short account rather than inventing history.

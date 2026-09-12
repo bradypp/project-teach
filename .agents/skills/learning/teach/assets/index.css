@@ -294,3 +294,7 @@ select { color: var(--ink); background: var(--card); border: 1px solid var(--lin
   :root, :root[data-theme] { color-scheme: light; --ink:#000; --muted:#444; --paper:#fff; --card:#fff; --line:#ccc; --accent:#000; --soft:#eee; }
   .notebook-tools { display: none; }
 }
+
+.theme-controls { display: flex; gap: .5rem; margin-left: auto; flex-wrap: wrap; justify-content: flex-end; }
+.theme-controls button { padding: .35rem .7rem; font-size: .8rem; }
+.site-nav { align-items: center; flex-wrap: wrap; }

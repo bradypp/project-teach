@@ -27,6 +27,16 @@ The shell provides typography, navigation and a content region. Design that regi
 
 A worthwhile chat explanation can be saved as a compact HTML lesson using the same shell. This keeps one browsable version without a Markdown-rendering pipeline. Tiny clarifications need not be saved; consolidate related material only when it improves the explanation.
 
+## Glossary
+
+Create the vocabulary page with the [library helper](../scripts/library.py):
+
+```sh
+python3 /path/to/teach/scripts/library.py new /project/.learning glossary glossary --title "My glossary"
+```
+
+The [glossary shell](../assets/templates/glossary.html) lives at `references/glossary.html`, appears in the library index and uses the shared theme and Copy/Save Markdown controls. Fill its term navigation and stable term sections with actual vocabulary. Update that page in place and link directly to term anchors from lessons or learning state.
+
 ## Optional quiz components
 
 `assets/templates/choice-question.html` and `open-question.html` can be inserted into the quiz form and customised. Choice questions need unique radio names, exactly one `data-correct="true"` option, feedback and an explanation. Enable the choice scaffold after authoring it. Written questions need unique textarea IDs and a revealable worked answer.

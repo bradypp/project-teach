@@ -9,7 +9,7 @@ import shutil
 from urllib.parse import quote
 
 ASSETS = Path(__file__).resolve().parent.parent / 'assets'
-KINDS = {'lesson': 'lessons', 'quiz': 'quizzes', 'reference': 'references'}
+KINDS = {'lesson': 'lessons', 'quiz': 'quizzes', 'reference': 'references', 'glossary': 'references'}
 
 
 def copy_assets(root):
@@ -48,7 +48,7 @@ class TitleParser(HTMLParser):
 def index(root):
     root = copy_assets(root)
     sections = []
-    for kind, folder in KINDS.items():
+    for folder in dict.fromkeys(KINDS.values()):
         entries = []
         for page in sorted((root / folder).glob('*.html')):
             parser = TitleParser()

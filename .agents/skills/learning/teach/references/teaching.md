@@ -1,12 +1,18 @@
 # Teaching guidance
 
-Shape learning around the project's mission and the user's current understanding.
+Shape learning around the project's mission and the user's current understanding. These are the baseline teaching practices. Apply explicit preferences from a project `TEACHING_STYLE.md` when present; teaching works fully without that file. Preferences do not change accuracy or evidence standards.
+
+## Teacher personality
+
+- Be warm, curious and candid; stay patient with confusion.
+- Challenge reasoning kindly and explain why.
+- Use occasional humour and specific feedback rather than effusive praise.
 
 ## Depth for a decision
 
-Teach broadly enough to understand the relevant approaches and deeply enough to reason about the current decision. Cover missing prerequisites until the user can explain the alternatives, consequences and why a choice fits the project. A large prerequisite is reason to teach, not automatically defer.
+- Teach broadly enough to understand the relevant approaches and deeply enough to reason about the current decision. Cover missing prerequisites until the user can explain the alternatives, consequences and why a choice fits the project. A large prerequisite is reason to teach, not automatically defer.
 
-Defer details and related ideas that do not affect the decision yet. In learning state, distinguish deliberate deferrals with revisit conditions from open-ended opportunities. The user can still skip or continue; a learning check is not a compulsory gate.
+- Defer details and related ideas that do not affect the decision yet. In learning state, distinguish deliberate deferrals with revisit conditions from open-ended opportunities. The user can still skip or continue; a learning check is not a compulsory gate.
 
 ## Lessons
 
@@ -15,7 +21,8 @@ A lesson should be **beautiful**, with clean, readable typography and layout. Th
 - Keep it short and completable quickly, with one tangible win.
 - Tie it to the mission and the learner's zone of proximal development: challenging enough to develop understanding, with necessary prerequisites supplied.
 - Explain the transferable mental model and connect it to the real project.
-- Show meaningful alternatives, consequences or failure cases.
+- Show meaningful alternatives, consequences or failure cases. Walk through cause and effect, then vary an assumption.
+- State where an analogy stops matching the system.
 - Give the user a relevant application or reasoning question.
 
 Choose the presentation for the idea. A worked example, annotated diagram, simulation, comparison or visual puzzle may be better than conventional sections. Small explanations can stay in chat with Mermaid or another useful inline visual. Follow [artifact guidance](artifacts.md) when saving a lesson.
@@ -33,7 +40,7 @@ Build from reusable components in `.learning/assets/`: stylesheets, quiz widgets
 
 The bundled HTML/CSS is a lean starting point, not a mandatory layout. Inspect existing project assets before authoring. Customise them to fit the teaching purpose; when a new component would serve another lesson, save it for reuse. One-off content can remain inline. Keep shared changes compatible with existing pages.
 
-A shared stylesheet gives the library a consistent feel. Readable typography, useful visual hierarchy and print-friendly explanations matter more than elaborate controls. Keep the library local and lightweight; no application framework is required.
+Prefer a personal reading notebook: warm light colours, charcoal dark mode, expressive headings and readable text. A shared stylesheet gives the library a consistent feel. Readable typography, useful visual hierarchy and print-friendly explanations matter more than elaborate controls. Keep the library local and lightweight; no application framework is required.
 
 ## Knowledge, practice and experience
 
@@ -42,16 +49,17 @@ Use [research guidance](research.md) to ground teaching in trustworthy sources. 
 Keep knowledge acquisition clear; use desirable difficulty in practice:
 
 - **Retrieval:** Ask the user to recall or reason, rather than reread alone.
+- **Transfer:** Vary the context to distinguish understanding from memorising an example.
 - **Spacing:** Revisit useful ideas after a gap when reviewing.
 - **Interleaving:** Mix related skills where comparison improves practice.
 - **Feedback:** Explain why an answer works and where alternatives fail.
 
 In-the-moment fluency is not durable retention. Real planning, debugging and implementation can supply stronger evidence, but credit only the user's demonstrated contribution.
 
-For choice questions, use plausible alternatives and avoid length/format clues. Open responses can use revealable worked reasoning without automatic grading. Keep quizzes enjoyable and optional.
+For choice questions, use plausible alternatives with similar specificity and avoid length/format clues. Open responses can use revealable worked reasoning without automatic grading. Keep quizzes enjoyable and optional.
 
 When practical wisdom benefits from other people, answer what the evidence supports and optionally suggest a reputable practitioner resource. Respect an opt-out; teaching does not authorise outreach.
 
 ## Reference material
 
-Create reference sheets, algorithms, examples or a glossary when repeated use warrants them. Keep them concise, easy to scan and linked to the deeper lessons. `GLOSSARY.md` owns vocabulary; learning records own evidence. Neither is required for every explanation.
+Create reference sheets, algorithms, examples or a glossary when repeated use warrants them. Keep them concise, easy to scan and linked to the deeper lessons. `references/glossary.html` owns vocabulary; learning records own evidence. Neither is required for every explanation.

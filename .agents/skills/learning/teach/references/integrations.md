@@ -2,23 +2,30 @@
 
 Add learning awareness or new workflow wrappers only when the user chooses them.
 
-## Project awareness
+## Learning-project integration
 
-Explicit teach commands work without `AGENTS.md`. Setup can propose this small awareness block:
+Explicit teach commands work without `AGENTS.md`. Setup offers one integration containing project purpose, learning-oriented development rules and passive teaching. Tailor the purpose and rules to the agreed mission; replace the placeholder before writing:
 
 ```md
 ## Project learning
 
-For learning requests and learning-aware workflows, consult `.learning/MISSION.md`, `.learning/LEARNING_STATE.md` and the teach skill. Follow `.learning/TEACHING_STYLE.md` for explanation preferences.
+This is a learning project: {{brief project purpose and learning goals}}.
+
+- Build for learning and clear understanding. Prefer simple, inspectable designs over unnecessary abstractions or backwards compatibility unless the project actually requires it.
+- Use current project decisions and code as teaching context; preserve the requested workflow and deliverables.
+- Consult `.learning/MISSION.md` and relevant `.learning/LEARNING_STATE.md` entries when present. Apply explicit preferences in `.learning/TEACHING_STYLE.md` if it exists.
+
+<!-- teach:passive:start -->
+During ordinary development, use the `teach` skill when a significant transferable conceptual gap affects an imminent decision or failure. Keep routine syntax, API usage and boilerplate quiet. Apply the project's teaching preferences after the opportunity qualifies.
+<!-- teach:passive:end -->
 ```
 
-Offer passive teaching separately. If enabled, set `passive_teaching: true` in `manifest.yaml` and propose:
+## Passive teaching
 
-```md
-When `.learning/manifest.yaml` enables passive teaching, use teach for significant transferable conceptual gaps affecting an imminent decision or failure. Keep routine implementation quiet.
-```
-
-Show proposed blocks and preserve unrelated instructions. Existing authorisation need not be requested again.
+- The marked block in the project's active `AGENTS.md` is the sole passive-teaching switch. Explicit teaching requests and wrappers do not depend on it.
+- Setup adds the purpose, development rules and passive block together when this integration is enabled.
+- To turn passive teaching off later, remove just the marked block, preserving the project context. To disable the entire integration, remove its project-learning section while preserving unrelated instructions.
+- Reuse an existing project-learning section and avoid duplicate blocks. Show unresolved integration choices before applying them; existing authorisation suffices.
 
 ## User-selected wrappers
 
@@ -27,8 +34,10 @@ Ask which existing skills the user wants supplemented. Read the selected source 
 - **Explore:** Brainstorming, planning and grilling get generous prerequisite teaching alongside the original questions. Preserve their question grouping and productive struggle.
 - **Deliver:** Specifications, tickets and implementation get supplementary teaching before an unfamiliar consequential decision is fixed. Keep deliverables in their normal form.
 
+Apply explicit project preferences where provided.
+
 Resolve missing knowledge-dependent decisions before synthesis-only phases, then resume the original process. Preserve the workflow's completion criteria and requirements around publishing, committing or other external actions. Teaching adds no permissions.
 
-Use portable relative locators or supported skill discovery. A user-selected workflow can be followed by reading its instructions when direct invocation is unavailable. If its source is missing, request the location rather than inventing a replacement. Core teach commands remain standalone.
+Refer to other skills by name: “Use the `teach` skill.” Use supported skill discovery rather than embedding SKILL.md file links. If its source is missing, request the location rather than inventing a replacement. Core teach commands remain standalone.
 
 For a user-only wrapper on hosts supporting it, add `agents/openai.yaml` with `policy: {allow_implicit_invocation: false}`. Other hosts use their supported invocation mechanism. Keep the five teach skills as siblings so shared references resolve.

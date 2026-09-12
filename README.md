@@ -18,12 +18,11 @@ Use your host's skill syntax or point the agent at the relevant `SKILL.md` in [.
 
 Everything lives under `.learning/`:
 
-- `manifest.yaml`: setup and integration settings.
 - `MISSION.md`: purpose, goals and scope.
-- `TEACHING_STYLE.md`: readable, editable preferences.
+- `TEACHING_STYLE.md`: optional, editable preference overrides.
 - `LEARNING_STATE.md`: current understanding, uncertainty, opportunities and links.
 - `records/`: selective learning insights with evidence.
-- `GLOSSARY.md`: useful vocabulary, created when needed.
+- `references/glossary.html`: useful vocabulary, created when needed.
 - `lessons/`, `quizzes/`, `references/`, `assets/`, `index.html`: the browsable local library.
 
 Research, topic synthesis and resource lists appear only when useful. There is no global store or automatic cross-project synchronisation.
@@ -34,7 +33,7 @@ Short explanations can stay in chat. Substantial gaps produce HTML automatically
 
 The bundled HTML/CSS supplies a lean base. Lessons can use diagrams, visualisations, simulations and custom widgets suited to the concept. Shared components keep the library consistent without imposing fixed layouts. Every page offers Markdown copy/download and system/light/dark themes. Export preserves teaching content and current responses; custom visuals can supply textual summaries. Theme storage is best-effort for local files, with the choice carried through internal navigation. Exports do not automatically update learning state.
 
-Setup offers customisation of the [default teaching style](.agents/skills/learning/teach/references/TEACHING_STYLE.md). Skipping the questions keeps the defaults. Preferences include teacher personality and depth: understand the relevant approaches, learn enough for the current decision, and defer the rest. Optional integration adds project awareness or passive teaching. User-selected workflows can receive small new wrappers; original skills remain untouched.
+Setup offers optional customisation through the [teaching-style template](.agents/skills/learning/teach/references/TEACHING_STYLE.md). Skipping the questions creates no style file; you can add your own later. The skills and references supply the full baseline. Preferences can override teacher personality, depth, pace and presentation. Optional integration adds a brief project purpose, learning-oriented development rules and a marked passive-teaching block together in `AGENTS.md`. Removing that block disables passive teaching. User-selected workflows can receive small new wrappers; original skills remain untouched.
 
 ## Install elsewhere
 

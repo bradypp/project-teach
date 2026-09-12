@@ -12,6 +12,7 @@
     document.documentElement.dataset.theme = preference === "system"
       ? (media.matches ? "dark" : "light") : preference;
     try { localStorage.setItem("teach-theme", preference); } catch (_) {}
+    window.dispatchEvent(new Event("teach-theme-change"));
   }
   window.teachTheme = { get: () => preference, set: value => {
     apply(value);

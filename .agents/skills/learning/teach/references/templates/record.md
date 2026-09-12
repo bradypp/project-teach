@@ -1,6 +1,6 @@
 # {{Learning insight}}
 
-A meaningful insight that changes future teaching, with its supporting evidence. Keep one insight per record; omit sections that add nothing.
+A learning insight and its supporting evidence. Replace the prompts and omit unused sections.
 
 Date: {{date}}
 

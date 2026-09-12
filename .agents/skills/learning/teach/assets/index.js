@@ -62,13 +62,33 @@
   toolbar.className = "notebook-tools";
   toolbar.dataset.exportUi = "";
   toolbar.setAttribute("aria-label", "Notebook tools");
-  toolbar.innerHTML = `<label>Theme <select data-theme-choice aria-label="Theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
-    <div class="actions"><button type="button" data-copy>Copy Markdown</button><button type="button" class="secondary" data-download>Save Markdown</button></div>
+  toolbar.innerHTML = `<div class="actions"><button type="button" data-copy>Copy Markdown</button><button type="button" class="secondary" data-download>Save Markdown</button></div>
     <p data-export-status role="status"></p><div class="export-fallback" hidden><label for="export-text">Select and copy</label><textarea id="export-text" readonly></textarea></div>`;
   document.body.append(toolbar);
-  const theme = toolbar.querySelector("select");
-  theme.value = window.teachTheme.get();
-  theme.addEventListener("change", () => window.teachTheme.set(theme.value));
+  let navigation = document.querySelector(".site-nav");
+  if (!navigation) {
+    navigation = document.createElement("nav");
+    navigation.className = "site-nav";
+    navigation.setAttribute("aria-label", "Notebook");
+    document.body.insertBefore(navigation, document.querySelector("main"));
+  }
+  const themes = document.createElement("div");
+  themes.className = "theme-controls";
+  themes.dataset.exportUi = "";
+  themes.innerHTML = `<button type="button" class="secondary" data-theme-toggle></button><button type="button" class="secondary" data-theme-system>Use system</button>`;
+  navigation.append(themes);
+  const toggle = themes.querySelector("[data-theme-toggle]");
+  const system = themes.querySelector("[data-theme-system]");
+  function showTheme() {
+    const dark = document.documentElement.dataset.theme === "dark";
+    toggle.textContent = dark ? "Light mode" : "Dark mode";
+    toggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+    system.hidden = window.teachTheme.get() === "system";
+  }
+  toggle.addEventListener("click", () => window.teachTheme.set(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
+  system.addEventListener("click", () => window.teachTheme.set("system"));
+  window.addEventListener("teach-theme-change", showTheme);
+  showTheme();
   document.querySelectorAll("[data-self-check]").forEach((reveal) =>
     reveal.addEventListener("toggle", () => {
       if (reveal.open)
