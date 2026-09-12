@@ -242,3 +242,55 @@ footer {
     color: inherit;
   }
 }
+
+/* A quiet notebook palette; topic-specific components inherit these tokens. */
+:root {
+  --ink: #302d29;
+  --muted: #6c6257;
+  --paper: #faf6ed;
+  --card: #fffcf5;
+  --line: #dbd1c1;
+  --accent: #86502f;
+  --soft: #f0e7d8;
+  --button-ink: #fffaf0;
+  --focus: #97540f;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #ece4d8;
+  --muted: #b9ae9e;
+  --paper: #211f1c;
+  --card: #292622;
+  --line: #4f473d;
+  --accent: #e5b183;
+  --soft: #363027;
+  --button-ink: #211f1c;
+  --focus: #f0c17b;
+}
+body { font-size: 18px; }
+main, .site-nav, .notebook-tools { max-width: 850px; }
+main { padding-top: 2.5rem; padding-bottom: 2rem; }
+h1, h2, h3 { font-family: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, serif; font-weight: 500; }
+h1 { font-size: clamp(2.2rem, 6vw, 3.3rem); line-height: 1.1; }
+h2 { margin-top: 1.7em; }
+.card h2 { margin-top: 0; }
+p, li { overflow-wrap: anywhere; }
+.card { border-radius: 7px; }
+pre { background: var(--soft); }
+button { color: var(--button-ink); }
+button.secondary { color: var(--accent); }
+:focus-visible { outline-color: var(--focus); }
+img, svg, canvas { max-width: 100%; }
+table { border-collapse: collapse; width: 100%; margin: 1.5rem 0; }
+th, td { text-align: left; padding: .6rem; border-bottom: 1px solid var(--line); }
+.notebook-tools { margin: 0 auto 2rem; padding: 1rem 1.5rem; border-top: 1px solid var(--line); font-size: .85rem; }
+.notebook-tools label { font-weight: normal; }
+.notebook-tools .actions { display: inline-flex; margin: .5rem 0 .5rem 1rem; }
+select { color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 5px; padding: .3rem; font: inherit; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) { color-scheme: dark; --ink:#ece4d8; --muted:#b9ae9e; --paper:#211f1c; --card:#292622; --line:#4f473d; --accent:#e5b183; --soft:#363027; --button-ink:#211f1c; }
+}
+@media print {
+  :root, :root[data-theme] { color-scheme: light; --ink:#000; --muted:#444; --paper:#fff; --card:#fff; --line:#ccc; --accent:#000; --soft:#eee; }
+  .notebook-tools { display: none; }
+}

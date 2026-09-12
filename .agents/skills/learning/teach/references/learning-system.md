@@ -55,6 +55,8 @@ Before creating a record, find existing entries by concept and aliases. Enrich t
 
 `LEARNING_STATE.md` is a thin current assessment, not a second evidence ledger. Summarise each relevant concept in a sentence and link to its record. Keep uncertainty and questions that should steer future teaching visible. Understanding is revisable; records are not moved away when “done.” Re-read before editing to preserve manual changes.
 
+Use a Deferred section for deliberately postponed learning, with the reason and a revisit condition. Opportunities are possibilities without a commitment. Reconcile entries between these sections as context changes.
+
 Keep useful unknown unknowns in the state's Opportunities section according to teaching style. Each names the concept, discovery context, why it could matter and a useful link if available—even when outside this project's current scope. Deduplicate them; there are no deadlines or implied obligations. The mission owns user-stated goals.
 
 `GLOSSARY.md` is the authoritative vocabulary aid. Add a term once the user can use it meaningfully; definitions introduced by a lesson can remain there until then. Give a concise definition, project-specific meaning or ambiguity where useful, and a lesson link. Revise definitions in place. A glossary entry is not a duplicate record of its evidence.

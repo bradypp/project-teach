@@ -4,6 +4,8 @@ description: Review project learning, uncertain understanding and useful next pr
 disable-model-invocation: true
 ---
 
+Read [writing guidance](../teach/references/writing.md) before drafting teaching content.
+
 ## Review the project
 
 Read [project context and evidence](../teach/references/learning-system.md), the mission and teaching style. Start with `LEARNING_STATE.md`, then follow relevant records, lessons and glossary links.

@@ -5,6 +5,8 @@ description: Teach in project context when requested, reached by a learning-awar
 
 Help the user finish useful work while understanding the systems they are building.
 
+Read [writing guidance](references/writing.md) before drafting teaching content.
+
 ## Find the learning opportunity
 
 1. Read [project context](references/learning-system.md#project-context), the current question and relevant project files. Consult the mission, teaching style, current understanding and related records/lessons.
@@ -13,7 +15,7 @@ Help the user finish useful work while understanding the systems they are buildi
 
 ## Teach and apply
 
-Read [teaching guidance](references/teaching.md). Use [research guidance](references/research.md) when checking sources.
+Read [teaching guidance](references/teaching.md). Use [research guidance](references/research.md) when checking sources; the optional [transcript helper](scripts/transcript.py) retrieves video captions. The [library helper](scripts/library.py) creates HTML shells.
 
 - Present the original question alongside its decision-relevant explanation.
 - Refresh or deepen known material at the actual weak point. Current confusion outweighs an older summary.

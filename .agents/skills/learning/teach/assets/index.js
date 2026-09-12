@@ -1,55 +1,74 @@
-/* Plain HTML controls: no storage, network requests, or learning-state writes. */
+/* Shared notebook controls. Only theme preference is stored; learning files stay untouched. */
 (function () {
   "use strict";
   function text(node) {
     return node ? node.textContent.trim().replace(/\s+/g, " ") : "";
   }
-  function markdown(value) {
-    return value.replace(/[\\`*_{}\[\]<>#|]/g, "\\$&");
-  }
   function exportMarkdown(doc) {
-    const lines = [
-      "# " + markdown(doc.title),
-      "",
-      "Optional practice notes; these are not a learning assessment.",
-      "",
-    ];
-    doc
-      .querySelectorAll("[data-question]:not(:disabled)")
-      .forEach((question, index) => {
-        const selected = question.querySelector('input[type="radio"]:checked');
-        const written = question.querySelector("textarea");
-        const answer = selected
-          ? text(selected.closest("label"))
-          : written
-            ? written.value.trim()
-            : "";
-        const checked = question.dataset.checked === "true";
-        lines.push(
-          "## " +
-            (index + 1) +
-            ". " +
-            markdown(text(question.querySelector("legend"))),
-          "",
-          "- Answer: " +
-            (answer ? markdown(answer).replace(/\n/g, "\n  ") : "Not answered"),
-          "- Feedback viewed: " + (checked ? "yes" : "no"),
-          "- Hint revealed: " +
-            (question.dataset.hintSeen === "true" ? "yes" : "no"),
-        );
-        if (checked)
-          lines.push(
-            "- Feedback: " +
-              markdown(text(question.querySelector("[data-feedback]"))),
-            "",
-            markdown(text(question.querySelector("[data-explanation]"))),
-          );
-        lines.push("");
-      });
-    return lines.join("\n");
+    const original = doc.querySelector("main") || doc.body;
+    const copy = original.cloneNode(true);
+    // Clone the live values before removing any controls from the export.
+    const inputs = original.querySelectorAll("textarea,input,select");
+    copy.querySelectorAll("textarea,input,select").forEach((node, index) => {
+      const live = inputs[index];
+      const replacement = doc.createElement(live.tagName === "TEXTAREA" ? "blockquote" : "span");
+      replacement.textContent = ["radio", "checkbox"].includes(live.type)
+        ? (live.checked ? "[selected] " : "[ ] ")
+        : live.value || "Not answered";
+      if (live.tagName === "TEXTAREA") {
+        replacement.textContent = "";
+        (live.value || "Not answered").split("\n").forEach((line, index) => {
+          if (index) replacement.append(doc.createElement("br"));
+          replacement.append(doc.createTextNode(line));
+        });
+      }
+      node.replaceWith(replacement);
+    });
+    const questions = original.querySelectorAll("[data-question]");
+    copy.querySelectorAll("[data-question]").forEach((question, index) => {
+      const source = questions[index];
+      if (source.disabled) { question.remove(); return; }
+      const viewed = source.dataset.checked === "true";
+      const hintSeen = source.dataset.hintSeen === "true";
+      if (!viewed) question.querySelectorAll("[data-explanation]").forEach(node => node.remove());
+      if (!hintSeen) question.querySelectorAll("[data-hint]").forEach(node => node.remove());
+      const status = doc.createElement("p");
+      status.textContent = `Feedback viewed: ${viewed ? "yes" : "no"}; Hint revealed: ${hintSeen ? "yes" : "no"}`;
+      question.append(status);
+      const legend = question.querySelector("legend");
+      if (legend) { const heading = doc.createElement("h2"); heading.textContent = text(legend); legend.replaceWith(heading); }
+    });
+    copy.querySelectorAll("[hidden], [data-export-ui], [data-export-ignore], nav, button, script, style").forEach(node => node.remove());
+    copy.querySelectorAll("[data-export-text], svg, canvas").forEach(node => {
+      if (!copy.contains(node)) return;
+      const paragraph = doc.createElement("p");
+      paragraph.textContent = node.getAttribute("data-export-text") || node.getAttribute("aria-label") || "Interactive visual: see the original HTML page.";
+      node.replaceWith(paragraph);
+    });
+    copy.querySelectorAll("a[href],img[src]").forEach(node => {
+      const attribute = node.tagName === "A" ? "href" : "src";
+      const url = new URL(node.getAttribute(attribute), doc.baseURI);
+      if (url.protocol === "file:" || url.origin === location.origin) url.searchParams.delete("theme");
+      node.setAttribute(attribute, url.href);
+    });
+    const converter = new TurndownService({headingStyle:"atx", codeBlockStyle:"fenced", bulletListMarker:"-"});
+    converter.use(turndownPluginGfm.gfm);
+    const title = copy.querySelector("h1") ? "" : `# ${doc.title}\n\n`;
+    return title + converter.turndown(copy) + "\n";
   }
-  // Exposed for small automated browser checks and optional topic-specific controls.
   window.learningExportMarkdown = exportMarkdown;
+
+  const toolbar = document.createElement("aside");
+  toolbar.className = "notebook-tools";
+  toolbar.dataset.exportUi = "";
+  toolbar.setAttribute("aria-label", "Notebook tools");
+  toolbar.innerHTML = `<label>Theme <select data-theme-choice aria-label="Theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+    <div class="actions"><button type="button" data-copy>Copy Markdown</button><button type="button" class="secondary" data-download>Save Markdown</button></div>
+    <p data-export-status role="status"></p><div class="export-fallback" hidden><label for="export-text">Select and copy</label><textarea id="export-text" readonly></textarea></div>`;
+  document.body.append(toolbar);
+  const theme = toolbar.querySelector("select");
+  theme.value = window.teachTheme.get();
+  theme.addEventListener("change", () => window.teachTheme.set(theme.value));
   document.querySelectorAll("[data-self-check]").forEach((reveal) =>
     reveal.addEventListener("toggle", () => {
       if (reveal.open)
@@ -118,7 +137,7 @@
       );
       const link = document.createElement("a");
       link.href = url;
-      link.download = "quiz-answers.md";
+      link.download = (document.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "learning-notes") + ".md";
       link.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
       status.textContent = "Markdown download requested.";

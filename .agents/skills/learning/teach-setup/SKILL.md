@@ -10,7 +10,7 @@ Make a new or existing project learning-aware with a small local setup.
 
 1. Read [project storage](../teach/references/learning-system.md) and inspect the project and any existing learning files.
 2. Establish the starting point: topic-first, project-first, or both. Propose a concrete mission and a few observable capabilities. When no project exists yet, agree on a small real outcome or experiment.
-3. Offer teaching-style customisation: depth, format, pacing, practice and opportunity retention. Skipping these questions uses the [default style](../teach/references/TEACHING_STYLE.md).
+3. Offer teaching-style customisation: depth, format, pacing, practice, opportunity retention and an optional free-text teacher-personality preference. Skipping these questions uses the [default style](../teach/references/TEACHING_STYLE.md).
 4. Ask whether `.learning/` should be tracked or ignored. Offer awareness and passive teaching separately. Ask which existing skills the user wants supplemented; inspect the supplied workflows and propose small new wrappers using [integration guidance](../teach/references/integrations.md).
 
 Use focused [research](../teach/references/research.md) only when it helps establish the mission, domain or current opportunities. Avoid turning setup into a curriculum.

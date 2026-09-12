@@ -16,9 +16,10 @@ def copy_assets(root):
     root = Path(root)
     target = root / 'assets'
     target.mkdir(parents=True, exist_ok=True)
-    for source in ASSETS.iterdir():
+    for source in [*ASSETS.iterdir(), *(ASSETS / "vendor").glob("*")]:
         if source.is_file():
-            destination = target / source.name
+            destination = target / source.relative_to(ASSETS)
+            destination.parent.mkdir(parents=True, exist_ok=True)
             if not destination.exists():
                 shutil.copyfile(source, destination)
     return root

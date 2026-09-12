@@ -2,6 +2,12 @@
 
 Shape learning around the project's mission and the user's current understanding.
 
+## Depth for a decision
+
+Teach broadly enough to understand the relevant approaches and deeply enough to reason about the current decision. Cover missing prerequisites until the user can explain the alternatives, consequences and why a choice fits the project. A large prerequisite is reason to teach, not automatically defer.
+
+Defer details and related ideas that do not affect the decision yet. In learning state, distinguish deliberate deferrals with revisit conditions from open-ended opportunities. The user can still skip or continue; a learning check is not a compulsory gate.
+
 ## Lessons
 
 A lesson should be **beautiful**, with clean, readable typography and layout. Think Tufte: make the idea visible and remove decoration that competes with it.

@@ -88,7 +88,7 @@ const assert = require("node:assert/strict");
     const downloading = page.waitForEvent("download");
     await page.locator("[data-download]").click();
     const download = await downloading;
-    assert.equal(download.suggestedFilename(), "quiz-answers.md");
+    assert.equal(download.suggestedFilename(), "practice-feedback.md");
     assert.match(readFileSync(await download.path(), "utf8"), /correct option/);
     // Open questions are self-checks; their actual writing is still exportable.
     const openQuestion = readFileSync(
@@ -114,7 +114,7 @@ const assert = require("node:assert/strict");
     markdown = await page.evaluate(() =>
       window.learningExportMarkdown(document),
     );
-    assert.match(markdown, /Retry after a crash\n  Reuse the operation key\./);
+    assert.match(markdown, /Retry after a crash[^\S\r\n]*\n> Reuse the operation key\./);
     assert.match(markdown, /worked explanation/);
     assert.equal(
       await page.evaluate(

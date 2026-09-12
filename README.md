@@ -32,9 +32,9 @@ Research, topic synthesis and resource lists appear only when useful. There is n
 
 Short explanations can stay in chat. Substantial gaps produce HTML automatically; worthwhile short explanations can also be retained as compact HTML. Tiny clarifications need not become artifacts.
 
-The bundled HTML/CSS supplies a lean base. Lessons can use diagrams, visualisations, simulations and custom widgets suited to the concept. Shared components keep the library consistent without imposing fixed layouts. Quizzes offer optional Markdown copy/download; they do not automatically update learning state.
+The bundled HTML/CSS supplies a lean base. Lessons can use diagrams, visualisations, simulations and custom widgets suited to the concept. Shared components keep the library consistent without imposing fixed layouts. Every page offers Markdown copy/download and system/light/dark themes. Export preserves teaching content and current responses; custom visuals can supply textual summaries. Theme storage is best-effort for local files, with the choice carried through internal navigation. Exports do not automatically update learning state.
 
-Setup offers customisation of the [default teaching style](.agents/skills/learning/teach/references/TEACHING_STYLE.md). Skipping the questions keeps the defaults. Optional integration adds project awareness or passive teaching. User-selected workflows can receive small new wrappers; original skills remain untouched.
+Setup offers customisation of the [default teaching style](.agents/skills/learning/teach/references/TEACHING_STYLE.md). Skipping the questions keeps the defaults. Preferences include teacher personality and depth: understand the relevant approaches, learn enough for the current decision, and defer the rest. Optional integration adds project awareness or passive teaching. User-selected workflows can receive small new wrappers; original skills remain untouched.
 
 ## Install elsewhere
 
@@ -53,6 +53,5 @@ Python 3 runs the artifact helper; the generated library opens directly in a bro
 - [State and records](.agents/skills/learning/teach/references/learning-system.md)
 - [Teaching guidance](.agents/skills/learning/teach/references/teaching.md)
 - [Artifacts and components](.agents/skills/learning/teach/references/artifacts.md)
-- [Validation](validation.md)
 
-Helper tests: `python3 -m unittest discover -s tests/learning -p 'test_*.py'`. Routine lessons need only a quick content/link check; browser tests are available for changes to shared controls.
+Helper tests: `python3 -m unittest discover -s tests/learning -p 'test_*.py'`. Routine lessons need only a quick content/link check; browser tests in `tests/learning/test_browser.cjs` and `test_notebook.cjs` cover shared controls, exports and themes (Playwright and a Chromium browser required).

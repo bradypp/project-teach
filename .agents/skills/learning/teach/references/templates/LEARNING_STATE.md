@@ -10,6 +10,10 @@ A concise current view of understanding and worthwhile possibilities. Link to su
 
 - **{{Concept}}:** {{What is unclear or worth checking in context.}}
 
+## Deferred
+
+- **{{Topic}}:** {{Why it is not needed yet and what would make it worth revisiting.}}
+
 ## Opportunities
 
 - **{{Concept}}:** {{What prompted discovery and why it might matter, even beyond this project.}} {{Useful link if available.}}

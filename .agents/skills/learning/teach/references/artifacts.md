@@ -4,7 +4,7 @@ Use the bundled shell and components to make enjoyable, directly browsable learn
 
 ## Start with the lean base
 
-Resolve `scripts/library.py` from the installed teach skill:
+Resolve [library helper](../scripts/library.py) from the installed teach skill:
 
 ```sh
 python3 /path/to/teach/scripts/library.py new /project/.learning lesson queue-backpressure --title "Queues and backpressure"
@@ -32,6 +32,16 @@ A worthwhile chat explanation can be saved as a compact HTML lesson using the sa
 `assets/templates/choice-question.html` and `open-question.html` can be inserted into the quiz form and customised. Choice questions need unique radio names, exactly one `data-correct="true"` option, feedback and an explanation. Enable the choice scaffold after authoring it. Written questions need unique textarea IDs and a revealable worked answer.
 
 The shared script offers feedback, hints and optional Markdown copy/download for these components. Custom widgets may provide their own small feedback loop. No server, persistent answer storage or learning-state synchronisation is required.
+
+## Theme and Markdown export
+
+Every page loads the shared controls for system/light/dark themes and Copy/Save Markdown. Theme storage is best-effort for local files; internal HTML links carry the choice. The default follows the system preference.
+
+Export converts the main content using locally bundled Turndown and its GFM plugin. It preserves headings, lists, code, tables, sources and current responses, omits controls and unrevealed exercise feedback, and resolves relative links against the original page. Exported local links refer to that machine's files; moving the Markdown alone does not copy those assets.
+
+For a custom visual or simulator, add `data-export-text="A useful textual explanation"` to its container, or an accessible label for a simple SVG/canvas. Use `data-export-ignore` for purely decorative content. A textual snapshot cannot preserve an interactive simulation. Keep core content in semantic HTML so layout changes do not affect conversion.
+
+The [browser controls](../assets/index.js) perform conversion; the Python helper only generates pages. Vendor versions and licenses are recorded in [vendor notes](../assets/vendor/README.md). Customised existing assets are preserved by the helper; review and deliberately copy updated shared files when upgrading an existing library.
 
 ## Connect and deliver
 

@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>{{TITLE}}</title>
     <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
     <script src="../assets/index.js" defer></script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <nav class="site-nav" aria-label="Library">
-      <a href="../index.html">← Learning library</a
+      <a href="../index.html">← My learning notebook</a
       ><span>Make the idea your own</span>
     </nav>
     <main id="main">
@@ -31,20 +35,7 @@
         <!-- AUTHOR: This disabled scaffold is not a finished quiz. Replace it with authored enabled questions before delivery. -->
         <!-- Insert authored questions or a custom practice widget here. -->
       </form>
-      <section class="card">
-        <h2>Keep your answers, if you like</h2>
-        <div class="actions">
-          <button type="button" data-copy>Copy as Markdown</button
-          ><button type="button" class="secondary" data-download>
-            Download Markdown
-          </button>
-        </div>
-        <p data-export-status role="status"></p>
-        <div class="export-fallback" hidden>
-          <label for="export-text">Select and copy these answers</label
-          ><textarea id="export-text" readonly></textarea>
-        </div>
-      </section>
+
       <footer>Personal learning resource · Explore at your own pace.</footer>
     </main>
   </body>
