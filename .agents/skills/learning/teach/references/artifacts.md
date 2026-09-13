@@ -50,7 +50,7 @@ The [glossary shell](../assets/templates/glossary.html) lives at `references/glo
 
 ## Theme and Markdown export
 
-Every page loads shared theme controls. Content pages also show footer navigation and Copy/Save Markdown; the home page omits that toolbar. Theme storage is best-effort for local files; internal HTML links carry the choice. The default follows the system preference.
+Every page loads shared theme controls. Content pages also show footer navigation and Copy/Save Markdown; quizzes add Copy for chat. That action copies a discussion prompt and the live responses for the user to paste into chat because a standalone local page cannot submit to its originating conversation. The home page omits the toolbar. Theme storage is best-effort for local files; internal HTML links carry the choice. The default follows the system preference.
 
 Export converts the main content using locally bundled Turndown and its GFM plugin. It preserves headings, lists, code, tables, sources and current responses, omits controls and unrevealed exercise feedback, and resolves relative links against the original page. Exported local links refer to that machine's files; moving the Markdown alone does not copy those assets.
 

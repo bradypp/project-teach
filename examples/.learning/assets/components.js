@@ -61,6 +61,25 @@
     .filter(Boolean);
   let sequence = 0;
   let chain = Promise.resolve();
+  let initialAnchorAligned = false;
+  function fitSingleLineSequenceNotes(view) {
+    view.querySelectorAll('g[data-et="note"]').forEach((group) => {
+      const rect = group.querySelector("rect.note");
+      const lines = group.querySelectorAll("text.noteText");
+      if (!rect || lines.length !== 1) return;
+      try {
+        const textBox = lines[0].getBBox();
+        const padding = 10;
+        const currentWidth = Number(rect.getAttribute("width"));
+        const fittedWidth = textBox.width + padding * 2;
+        if (fittedWidth >= currentWidth) return;
+        rect.setAttribute("x", textBox.x - padding);
+        rect.setAttribute("width", fittedWidth);
+      } catch (_) {
+        // Keep Mermaid's original geometry when SVG measurement is unavailable.
+      }
+    });
+  }
   function renderDiagrams() {
     if (!diagrams.length || !window.mermaid) return;
     chain = chain
@@ -150,6 +169,11 @@
             diagramPadding: 12,
             useMaxWidth: true,
           },
+          sequence: {
+            width: 175,
+            wrap: true,
+            useMaxWidth: true,
+          },
           themeCSS:
             ".node rect, .node circle, .node ellipse, .node polygon, .node path { stroke-width: 1.5px; } .node rect, .cluster rect, .actor { rx: 10px; ry: 10px; } .edgePath path, .flowchart-link { stroke-width: 1.6px; } .label, .nodeLabel { font-weight: 600; }",
         });
@@ -160,6 +184,7 @@
               item.figure.dataset.mermaidSource,
             );
             item.view.innerHTML = svg;
+            fitSingleLineSequenceNotes(item.view);
             const graphic = item.view.querySelector("svg");
             if (graphic) {
               graphic.setAttribute("role", "img");
@@ -177,11 +202,25 @@
             item.source.hidden = false;
           }
         }
+        if (!initialAnchorAligned && location.hash) {
+          initialAnchorAligned = true;
+          requestAnimationFrame(() => {
+            let id;
+            try {
+              id = decodeURIComponent(location.hash.slice(1));
+            } catch (_) {
+              id = location.hash.slice(1);
+            }
+            document.getElementById(id)?.scrollIntoView();
+          });
+        }
       });
   }
   window.addEventListener("teach-theme-change", renderDiagrams);
   renderDiagrams();
 
+  const notebookHome =
+    document.querySelector(".site-nav a")?.getAttribute("href") || "index.html";
   document.querySelectorAll("[data-page-tags]").forEach((container) => {
     const tags = [
       ...new Set(
@@ -193,23 +232,41 @@
     ];
     container.replaceChildren(
       ...tags.map((tag) => {
-        const span = document.createElement("span");
-        span.className = "subject-tag";
-        span.textContent = tag;
-        return span;
+        const link = document.createElement("a");
+        const target = new URL(notebookHome, document.baseURI);
+        target.searchParams.set("tag", tag);
+        target.hash = "";
+        link.href = target.href;
+        link.className = "subject-tag";
+        link.textContent = tag;
+        link.setAttribute("aria-label", `Show ${tag} in my learning notebook`);
+        return link;
       }),
     );
     container.hidden = !tags.length;
   });
-  let selected = "",
-    selectedType = "";
+  const filters = new URL(location.href).searchParams;
+  let selected = filters.get("tag") || "",
+    selectedType = filters.get("type") || "";
   const sort = document.querySelector("#library-sort");
+  const sortMenu = document.querySelector("[data-sort-menu]");
+  const sortOptions = [...document.querySelectorAll("[data-sort-option]")];
+  let sortValue = sort?.dataset.sortValue || "newest";
+  function syncFilterUrl() {
+    if (!sort) return;
+    const current = new URL(location.href);
+    if (selected) current.searchParams.set("tag", selected);
+    else current.searchParams.delete("tag");
+    if (selectedType) current.searchParams.set("type", selectedType);
+    else current.searchParams.delete("type");
+    history.replaceState(null, "", current);
+  }
   function filterLibrary() {
     let count = 0;
     document.querySelectorAll("[data-library-section]").forEach((section) => {
       const entries = [...section.querySelectorAll(".library-entry")];
       entries.sort((a, b) =>
-        sort.value === "title"
+        sortValue === "title"
           ? a.dataset.title.localeCompare(b.dataset.title)
           : !a.dataset.created
             ? !b.dataset.created
@@ -217,7 +274,7 @@
               : 1
             : !b.dataset.created
               ? -1
-              : (sort.value === "oldest" ? 1 : -1) *
+              : (sortValue === "oldest" ? 1 : -1) *
                   a.dataset.created.localeCompare(b.dataset.created) ||
                 a.dataset.title.localeCompare(b.dataset.title),
       );
@@ -252,17 +309,95 @@
   document.querySelectorAll("[data-tag]").forEach((button) =>
     button.addEventListener("click", () => {
       selected = button.dataset.tag;
+      syncFilterUrl();
       filterLibrary();
     }),
   );
   document.querySelectorAll("[data-type]").forEach((button) =>
     button.addEventListener("click", () => {
       selectedType = button.dataset.type;
+      syncFilterUrl();
       filterLibrary();
     }),
   );
   if (sort) {
-    sort.addEventListener("change", filterLibrary);
+    const availableTags = [...document.querySelectorAll("[data-tag]")].map(
+      (button) => button.dataset.tag,
+    );
+    const availableTypes = [...document.querySelectorAll("[data-type]")].map(
+      (button) => button.dataset.type,
+    );
+    if (!availableTags.includes(selected)) selected = "";
+    if (!availableTypes.includes(selectedType)) selectedType = "";
+    syncFilterUrl();
+    const sortRoot = sort.closest(".library-sort");
+    const sortLabel = sort.querySelector("[data-sort-label]");
+    if (!sortRoot || !sortMenu || !sortLabel || !sortOptions.length) {
+      sortValue = sort.value || sortValue;
+      sort.addEventListener("change", () => {
+        sortValue = sort.value;
+        filterLibrary();
+      });
+      filterLibrary();
+      return;
+    }
+    const setSortOpen = (open, focusOption = false) => {
+      sort.setAttribute("aria-expanded", open);
+      sortMenu.hidden = !open;
+      if (open && focusOption)
+        (
+          sortOptions.find(
+            (option) => option.getAttribute("aria-checked") === "true",
+          ) || sortOptions[0]
+        )?.focus();
+    };
+    const chooseSort = (option) => {
+      sortValue = option.dataset.sortValue;
+      sort.dataset.sortValue = sortValue;
+      sortLabel.textContent = option.textContent;
+      sortOptions.forEach((item) =>
+        item.setAttribute("aria-checked", item === option),
+      );
+      setSortOpen(false);
+      filterLibrary();
+      sort.focus();
+    };
+    sort.addEventListener("click", () =>
+      setSortOpen(sort.getAttribute("aria-expanded") !== "true"),
+    );
+    sort.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault();
+        setSortOpen(true, true);
+      } else if (event.key === "Escape") setSortOpen(false);
+    });
+    sortOptions.forEach((option, index) => {
+      option.addEventListener("click", () => chooseSort(option));
+      option.addEventListener("keydown", (event) => {
+        const last = sortOptions.length - 1;
+        const next =
+          event.key === "ArrowDown"
+            ? Math.min(index + 1, last)
+            : event.key === "ArrowUp"
+              ? Math.max(index - 1, 0)
+              : event.key === "Home"
+                ? 0
+                : event.key === "End"
+                  ? last
+                  : -1;
+        if (next >= 0) {
+          event.preventDefault();
+          sortOptions[next].focus();
+        } else if (event.key === "Escape") {
+          event.preventDefault();
+          setSortOpen(false);
+          sort.focus();
+        }
+      });
+    });
+    document.addEventListener("click", (event) => {
+      if (!sortRoot.contains(event.target)) setSortOpen(false);
+    });
     filterLibrary();
   }
 })();

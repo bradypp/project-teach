@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-13T12:48:41+00:00" />
+    <meta name="tags" content="workers,leases,reliability" />
+    <title>Recover abandoned work</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="lesson">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Lesson</p>
+        <h1>Recover abandoned work</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-13T12:48:41+00:00">13th Sept 2026 · 12:48</time>
+        </p>
+      </header>
+      <div class="page-intro">
+        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+        <p>
+          A worker claim must survive long enough to prevent duplicate work,
+          but expire soon enough that a crashed worker cannot strand an event.
+          A lease makes that tension explicit.
+        </p>
+        <nav class="page-contents" aria-label="On this page">
+          <a href="#states">Follow the states</a>
+          <a href="#lease">Read a lease</a>
+          <a href="#claim">Claim atomically</a>
+          <a href="#limits">Know the boundary</a>
+        </nav>
+      </div>
+
+      <section id="states">
+        <h2>Ownership is temporary until completion is durable</h2>
+        <p>
+          Lantern already owns an event once its inbox row is committed. A
+          worker only borrows the right to process that row. The durable state
+          must distinguish available work, a live claim, and completed work so
+          another worker can recover after a crash.
+        </p>
+        <figure class="diagram">
+          <pre class="mermaid">stateDiagram-v2
+    [*] --> Pending
+    Pending --> Claimed: claim with lease
+    Claimed --> Processed: effect and completion recorded
+    Claimed --> Pending: lease expires
+    Claimed --> Failed: attempt limit reached
+    Failed --> Pending: operator retries
+    Processed --> [*]</pre>
+          <figcaption>
+            The lease does not complete the event. It only prevents competing
+            workers from treating the same pending row as immediately available.
+          </figcaption>
+        </figure>
+        <p class="callout">
+          <strong>A lease is a recoverable claim, not permanent ownership.</strong>
+          Its expiry is the planned route from an interrupted attempt back to
+          available work.
+        </p>
+      </section>
+
+      <section id="lease">
+        <h2>A crash trace should end in an actionable row</h2>
+        <p>
+          A useful debugging view keeps the event identity, lease owner, expiry
+          and attempt together. The trace below is deliberately plain text: it
+          is quick to paste into a ticket and still makes sense without a diagram.
+        </p>
+        <pre><code class="language-text">12:00:00  worker-a claims evt_204
+            status=claimed  lease_until=12:00:30  attempt=3
+
+12:00:11  worker-a exits before recording completion
+12:00:29  worker-b scans -> evt_204 is still leased
+12:00:31  worker-b scans -> lease expired; evt_204 is claimable
+
+durable row
+evt_204 | claimed | worker-a | 12:00:30 | attempt 3</code></pre>
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Question it answers</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>status</code></td><td>Is this row available, borrowed, complete or stopped?</td></tr>
+            <tr><td><code>lease_owner</code></td><td>Which worker may renew or complete the current claim?</td></tr>
+            <tr><td><code>lease_until</code></td><td>When may another worker safely attempt a claim?</td></tr>
+            <tr><td><code>attempt_count</code></td><td>Is this broad instability or one repeatedly failing event?</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="claim">
+        <h2>Make “find and claim” one database decision</h2>
+        <p>
+          Selecting a pending row and updating it in unrelated steps leaves a
+          race: two workers can observe the same candidate. In SQLite, begin a
+          write transaction, choose one eligible row, conditionally update it,
+          and only treat a changed row as a successful claim.
+        </p>
+        <pre><code class="language-sql">BEGIN IMMEDIATE;
+
+UPDATE inbox_events
+SET status = 'claimed',
+    lease_owner = :worker_id,
+    lease_until = :now_plus_30_seconds,
+    attempt_count = attempt_count + 1
+WHERE id = (
+    SELECT id FROM inbox_events
+    WHERE status = 'pending'
+       OR (status = 'claimed' AND lease_until &lt;= :now)
+    ORDER BY received_at
+    LIMIT 1
+)
+AND (status = 'pending' OR lease_until &lt;= :now)
+RETURNING *;
+
+COMMIT;</code></pre>
+        <p>
+          The second eligibility check is intentional. It keeps the update
+          honest if the selection rule later moves into a different query or
+          database. After commit, the changed and returned row—not the earlier
+          observation—is proof that this worker acquired the lease.
+        </p>
+      </section>
+
+      <section id="limits">
+        <h2>The remote side effect remains a separate problem</h2>
+        <p>
+          A lease recovers abandoned computation. It cannot prove whether an
+          email or another remote effect succeeded immediately before the worker
+          died. That boundary still needs a downstream idempotency key, a
+          durable receipt, or reconciliation.
+        </p>
+        <aside class="callout">
+          <strong>Your turn.</strong> Lantern takes 45 seconds to send a batch,
+          but its lease lasts 30 seconds. Name the failure that can follow. Would
+          you first extend the lease, renew it, reduce the batch, or change the
+          effect contract—and what measurement informs that choice?
+        </aside>
+      </section>
+
+      <section id="sources">
+        <h2>Sources and further reading</h2>
+        <ul>
+          <li><a href="https://www.sqlite.org/lang_transaction.html">SQLite transactions</a> defines deferred, immediate and exclusive transaction behavior.</li>
+          <li><a href="https://www.sqlite.org/lang_returning.html">SQLite RETURNING</a> documents returning changed rows from top-level writes.</li>
+          <li><a href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html">Amazon SQS visibility timeout</a> provides a production example of temporary message claims and renewal.</li>
+        </ul>
+      </section>
+
+      <footer>
+        Previous: <a href="bound-the-inbox.html">Bound the inbox</a> ·
+        Reference: <a href="../references/lantern-data-model.html#processing">Processing fields</a> ·
+        Synthesis: <a href="../topics/reliable-webhook-delivery.html">Reliable webhook delivery</a>
+      </footer>
+    </main>
+  </body>
+</html>

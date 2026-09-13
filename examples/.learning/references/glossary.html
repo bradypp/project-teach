@@ -31,7 +31,7 @@
       </header>
       <div class="page-intro">
         <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
-        <p class="lede">
+        <p>
           The small vocabulary behind Lantern's reliability design. Each term
           says what it means here and points back to the lesson that develops it.
         </p>
@@ -42,6 +42,8 @@
           <a href="#deduplication">Deduplication</a>
           <a href="#idempotency-key">Idempotency key</a>
           <a href="#inbox">Inbox</a>
+          <a href="#lease">Lease</a>
+          <a href="#oldest-event-age">Oldest-event age</a>
           <a href="#transaction-boundary">Transaction boundary</a>
         </nav>
       </div>
@@ -106,6 +108,25 @@
         <p><a href="../topics/reliable-webhook-delivery.html#project">See the inbox in Lantern's full design →</a></p>
       </section>
 
+      <section id="lease">
+        <h2>Lease</h2>
+        <p>
+          A time-limited worker claim on durable work. While it is live, other
+          workers leave the event alone; after expiry, they may recover work from
+          a crashed or stalled owner.
+        </p>
+        <p><a href="../lessons/recover-abandoned-work.html#states">Follow the claim through its states →</a></p>
+      </section>
+
+      <section id="oldest-event-age">
+        <h2>Oldest-event age</h2>
+        <p>
+          The elapsed time since the oldest unfinished event was received. It
+          exposes lateness that a stable or falling queue count can hide.
+        </p>
+        <p><a href="../lessons/read-backlog-shape.html#snapshot">Interpret age alongside depth and rates →</a></p>
+      </section>
+
       <section id="transaction-boundary">
         <h2>Transaction boundary</h2>
         <p>
@@ -117,7 +138,8 @@
       </section>
 
       <footer>
-        Vocabulary supports the lessons; demonstrated understanding belongs in learning records.
+        Synthesis: <a href="../topics/reliable-webhook-delivery.html">Reliable webhook delivery</a> ·
+        Reference: <a href="lantern-data-model.html">Lantern data model</a>
       </footer>
     </main>
   </body>

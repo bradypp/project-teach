@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-13T12:48:41+00:00" />
+    <meta name="tags" content="queues,observability,reliability" />
+    <title>Read the shape of a backlog</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="lesson">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Lesson</p>
+        <h1>Read the shape of a backlog</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-13T12:48:41+00:00">13th Sept 2026 · 12:48</time>
+        </p>
+      </header>
+      <div class="page-intro">
+        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+        <p>
+          Queue depth is a snapshot. Pair it with arrival rate, completion rate
+          and oldest-event age to tell whether Lantern is absorbing a burst,
+          recovering, or quietly falling behind.
+        </p>
+        <nav class="page-contents" aria-label="On this page">
+          <a href="#curve">Read the curve</a>
+          <a href="#snapshot">Interrogate a snapshot</a>
+          <a href="#alerts">Alert on meaning</a>
+        </nav>
+      </div>
+
+      <section id="curve">
+        <h2>A healthy burst has a descending side</h2>
+        <p>
+          This sample begins empty. For four minutes arrivals exceed completions,
+          then the burst ends and the worker drains the backlog. The peak is not
+          automatically a failure; the recovery slope and age limit decide
+          whether users receive work within the promised time.
+        </p>
+        <figure class="diagram">
+          <pre class="mermaid">xychart-beta
+    title "Pending events during a burst"
+    x-axis "Minutes" [0, 1, 2, 3, 4, 5, 6]
+    y-axis "Pending events" 0 --> 140
+    line [0, 28, 61, 94, 126, 91, 55]</pre>
+          <figcaption>
+            Depth rises while intake wins, peaks after the burst, then falls as
+            spare worker capacity repays the accumulated delay.
+          </figcaption>
+        </figure>
+        <p class="callout">
+          <strong>A flat queue is not necessarily a healthy queue.</strong> Equal
+          arrival and completion rates can hold old work at a permanently late
+          level. Age reveals the promise that depth alone hides.
+        </p>
+      </section>
+
+      <section id="snapshot">
+        <h2>Read rates before inventing a story</h2>
+        <p>
+          At 12:05 the count is lower than a minute ago, yet the oldest event is
+          older. That combination deserves investigation rather than a generic
+          “backlog improving” conclusion.
+        </p>
+        <pre><code class="language-text">lantern backlog --window 60s
+
+                         12:04       12:05       change
+pending depth              126          91          -35
+arrival rate             18/s        14/s         -4/s
+completion rate          50/s        49/s         -1/s
+oldest event age          74s         89s         +15s
+rejected at intake          0            0            0
+attempts over limit          2           17          +15
+
+question: is ordinary work draining while poison events remain?</code></pre>
+        <table>
+          <thead>
+            <tr><th>Pattern</th><th>Likely interpretation</th><th>Next split</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Depth ↑, age ↑, arrivals &gt; completions</td><td>Sustained overload</td><td>Provider, event type and worker pool</td></tr>
+            <tr><td>Depth ↓, age ↑, retries concentrated</td><td>Old or poison work remains</td><td>Attempt count and error class</td></tr>
+            <tr><td>Depth flat, age flat, both near zero</td><td>Steady healthy flow</td><td>Confirm latency percentile and rejects</td></tr>
+            <tr><td>Depth flat, age ↑, no completions</td><td>Intake may have stopped alongside workers</td><td>Traffic rate and health of both paths</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="alerts">
+        <h2>Alert on the contract, then add diagnostic signals</h2>
+        <p>
+          If Lantern promises to begin normal webhook processing within five
+          minutes, oldest-event age is the closest queue signal to that promise.
+          Depth, rate difference, attempts and rejects explain why the promise is
+          threatened; they should not replace the service-level symptom.
+        </p>
+        <ul>
+          <li>Warn when oldest-event age consumes a useful fraction of the five-minute budget.</li>
+          <li>Page when age breaches the budget and continues rising across several samples.</li>
+          <li>Group depth and rate alerts by provider only when that split leads to an operational action.</li>
+          <li>Track discarded, rejected and dead-lettered events separately so a falling queue cannot masquerade as recovery.</li>
+        </ul>
+        <aside class="callout">
+          <strong>Your turn.</strong> Depth falls by half while rejects jump from
+          zero to 200 per minute. Write the one-sentence status update you would
+          give an operator. What has improved, and what has merely moved?
+        </aside>
+      </section>
+
+      <section id="sources">
+        <h2>Sources and further reading</h2>
+        <ul>
+          <li><a href="https://sre.google/sre-book/monitoring-distributed-systems/">Google SRE: Monitoring distributed systems</a> develops symptom-based monitoring and actionable signals.</li>
+          <li><a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/rel_mitigate_interaction_failure_fail_fast.html">AWS Well-Architected: Fail fast and limit queues</a> connects queue management, age and overload behavior.</li>
+          <li><a href="https://prometheus.io/docs/practices/histograms/">Prometheus histogram guidance</a> explains measuring observations against latency targets.</li>
+        </ul>
+      </section>
+
+      <footer>
+        Foundation: <a href="bound-the-inbox.html#signals">Measure the right signals</a> ·
+        Vocabulary: <a href="../references/glossary.html#oldest-event-age">Oldest-event age</a> ·
+        Practice: <a href="../quizzes/inbox-under-failure.html#q4">Sustained overload</a>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -43,6 +43,20 @@ const assert = require("node:assert/strict");
     const errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto(pathToFileURL(file).href);
+    const fieldsetBox = await page.locator("fieldset").first().boundingBox();
+    const legendBox = await page.locator("legend").first().boundingBox();
+    const legendStyle = await page.locator("legend").first().evaluate((node) => {
+      const style = getComputedStyle(node);
+      return {
+        fontSize: parseFloat(style.fontSize),
+        marginBottom: parseFloat(style.marginBottom),
+        rootFontSize: parseFloat(getComputedStyle(document.documentElement).fontSize),
+      };
+    });
+    assert.ok(legendBox.y >= fieldsetBox.y);
+    assert.ok(legendBox.y + legendBox.height <= fieldsetBox.y + fieldsetBox.height);
+    assert.equal(legendStyle.fontSize, legendStyle.rootFontSize);
+    assert.ok(Math.abs(legendStyle.marginBottom / legendStyle.fontSize - 1.8) < 0.01);
     assert.equal(await page.locator("[data-explanation]").isVisible(), false);
     await page.locator("[data-check]").click();
     assert.equal(
@@ -72,6 +86,27 @@ const assert = require("node:assert/strict");
     assert.match(await page.locator("[data-feedback]").textContent(), /Yes/);
     await page.evaluate(() =>
       Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: {
+          writeText: async (value) => {
+            window.copiedQuizForChat = value;
+          },
+        },
+      }),
+    );
+    await page.locator("[data-chat]").click();
+    const chatCopy = await page.evaluate(() => window.copiedQuizForChat);
+    assert.match(chatCopy, /Please review my responses to “Practice & feedback”/);
+    assert.ok(chatCopy.includes("\\[selected\\] Replace with the correct option"));
+    assert.match(chatCopy, /Feedback viewed: yes/);
+    assert.equal(await page.locator("[data-chat] .button-label").textContent(), "Copied");
+    assert.equal(
+      await page.locator("[data-export-status]").textContent(),
+      "Quiz responses copied. Paste them into chat.",
+    );
+    await page.evaluate(() =>
+      Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
         value: {
           writeText: async () => {
             throw new Error("blocked");
@@ -79,11 +114,29 @@ const assert = require("node:assert/strict");
         },
       }),
     );
+    await page.locator("[data-chat]").click();
+    assert.equal(await page.locator("#export-text").isVisible(), true);
+    assert.match(
+      await page.locator("#export-text").inputValue(),
+      /Please review my responses/,
+    );
+    assert.equal(
+      await page.locator(".export-fallback label").textContent(),
+      "Select the text below, copy it, then paste it into chat.",
+    );
+    assert.equal(
+      await page.locator("[data-export-status]").textContent(),
+      "Select the text below, copy it, then paste it into chat.",
+    );
     await page.locator("[data-copy]").click();
     assert.equal(await page.locator("#export-text").isVisible(), true);
     assert.match(
       await page.locator("#export-text").inputValue(),
       /correct option/,
+    );
+    assert.equal(
+      await page.locator(".export-fallback label").textContent(),
+      "Your browser needs a manual copy: use the selected text below.",
     );
     const downloading = page.waitForEvent("download");
     await page.locator("[data-download]").click();
@@ -124,7 +177,7 @@ const assert = require("node:assert/strict");
     );
     assert.deepEqual(errors, []);
     console.log(
-      "Browser checks passed: feedback, hints, lesson disclosure, choice/written export, fallback/download, mobile width.",
+      "Browser checks passed: feedback, hints, lesson disclosure, chat handoff, choice/written export, fallback/download, mobile width.",
     );
   } finally {
     if (browser) await browser.close();

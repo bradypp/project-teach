@@ -13,8 +13,7 @@ Read when authoring learning HTML or changing shared assets. This file owns page
 
 | Primitive | Use |
 | --- | --- |
-| `page-intro` | Opening summary, metadata tags and optional section links. The helper inserts the [page-intro template](../assets/templates/page-intro.html). Keep the summary; omit contents on short pages. |
-| `lede` | A concise opening sentence or paragraph that frames the lesson's central question. |
+| `page-intro` | Opening summary, metadata tags and optional section links. The helper inserts the [page-intro template](../assets/templates/page-intro.html). Write the summary as an ordinary paragraph inside the shared surface; omit contents on short pages. |
 | `callout` | One high-value definition, warning, decision rule or application prompt that deserves a pause in the reading flow. |
 | `blockquote` | A short learner statement or source excerpt whose voice matters. Attribute sources and respect quotation limits. |
 | `table` | A real comparison or repeated field mapping. Use row and column headers that make the relationship explicit. |
@@ -22,12 +21,13 @@ Read when authoring learning HTML or changing shared assets. This file owns page
 | `muted` | Supporting metadata or guidance that should remain readable without competing with the main explanation. |
 | `page-list` | A compact list of navigational links, such as glossary terms or a reference index. |
 | `actions` | A wrapping row of related buttons. Use the `secondary` button class for the less prominent action. |
+| `footer` | End with one to three useful continuation routes: the previous or next lesson, the current topic, the glossary or a working reference. Omit generic and link-dump footers. |
 
 The callout is already a shared CSS component. Keep its simple markup inline:
 
 ```html
 <p class="callout">
-  <strong>Core idea.</strong> State the useful rule and its consequence.
+  Callout text here like a core idea, useful rule, and/or relevant consequences.
 </p>
 ```
 

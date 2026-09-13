@@ -2,18 +2,24 @@
 (function () {
   "use strict";
   const icons = {
+    back: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>',
     copy: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path></svg>',
-    check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4.2 4.2L19 6.5"></path></svg>',
-    download: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"></path><path d="m7.5 11 4.5 4.5 4.5-4.5"></path><path d="M5 20h14"></path></svg>',
+    check:
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4.2 4.2L19 6.5"></path></svg>',
+    chat: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15a3 3 0 0 1-3 3H9l-5 3v-6a3 3 0 0 1-1-2V7a3 3 0 0 1 3-3h11a3 3 0 0 1 3 3Z"></path></svg>',
+    download:
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"></path><path d="m7.5 11 4.5 4.5 4.5-4.5"></path><path d="M5 20h14"></path></svg>',
     moon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z"></path></svg>',
     sun: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2.5v2M12 19.5v2M4.8 4.8l1.4 1.4M17.8 17.8l1.4 1.4M2.5 12h2M19.5 12h2M4.8 19.2l1.4-1.4M17.8 6.2l1.4-1.4"></path></svg>',
-    system: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg>',
   };
   function icon(name) {
     return `<span class="button-icon" aria-hidden="true">${icons[name]}</span>`;
   }
   function iconSwap(defaultName, activeName) {
     return `<span class="icon-swap" aria-hidden="true"><span class="icon-default">${icons[defaultName]}</span><span class="icon-active">${icons[activeName]}</span></span>`;
+  }
+  function linkIcon(name) {
+    return `<span class="notebook-link-icon" aria-hidden="true">${icons[name]}</span>`;
   }
   function setTemporarySuccess(button, label, successText) {
     if (!button) return;
@@ -80,13 +86,15 @@
         legend.replaceWith(heading);
       }
     });
-    copy.querySelectorAll('[data-mermaid-source]').forEach(figure => {
-      const pre = doc.createElement('pre'); const code = doc.createElement('code');
-      code.className = 'language-mermaid'; code.textContent = figure.dataset.mermaidSource;
+    copy.querySelectorAll("[data-mermaid-source]").forEach((figure) => {
+      const pre = doc.createElement("pre");
+      const code = doc.createElement("code");
+      code.className = "language-mermaid";
+      code.textContent = figure.dataset.mermaidSource;
       pre.append(code);
-      const caption = figure.querySelector('figcaption');
+      const caption = figure.querySelector("figcaption");
       figure.replaceChildren(pre, ...(caption ? [caption] : []));
-      figure.removeAttribute('data-export-text');
+      figure.removeAttribute("data-export-text");
     });
     copy
       .querySelectorAll(
@@ -120,17 +128,35 @@
   }
   window.learningExportMarkdown = exportMarkdown;
 
+  function quizChatMarkdown(doc) {
+    return `Please review my responses to “${doc.title}”. Give me feedback on my reasoning, then ask 1-3 useful follow-up questions.\n\n${exportMarkdown(doc)}`;
+  }
+  function showManualCopy(value, message) {
+    const fallback = document.querySelector(".export-fallback");
+    const label = fallback.querySelector("label");
+    const area = fallback.querySelector("textarea");
+    fallback.hidden = false;
+    label.textContent = message;
+    area.value = value;
+    area.focus();
+    area.select();
+    status.textContent = message;
+  }
+
   const toolbar = document.createElement("aside");
   toolbar.className = "notebook-tools";
   toolbar.dataset.exportUi = "";
   toolbar.setAttribute("aria-label", "Notebook tools");
-  toolbar.innerHTML = `<div class="actions"><button type="button" data-copy>${iconSwap("copy", "check")}<span class="button-label" data-default-label="Copy Markdown">Copy Markdown</span></button><button type="button" class="secondary" data-download>${icon("download")}<span class="button-label">Save Markdown</span></button></div>
+  const isQuiz = document.body.dataset.pageKind === "quiz";
+  const chatAction = isQuiz
+    ? `<button type="button" data-chat>${iconSwap("chat", "check")}<span class="button-label" data-default-label="Copy for chat">Copy for chat</span></button>`
+    : "";
+  toolbar.innerHTML = `<div class="actions">${chatAction}<button type="button"${isQuiz ? ' class="secondary"' : ""} data-copy>${iconSwap("copy", "check")}<span class="button-label" data-default-label="Copy Markdown">Copy Markdown</span></button><button type="button" class="secondary" data-download>${icon("download")}<span class="button-label">Save Markdown</span></button></div>
     <p data-export-status role="status"></p><div class="export-fallback" hidden><label for="export-text">Select and copy</label><textarea id="export-text" readonly></textarea></div>`;
   const home = document.createElement("a");
   home.href =
-    document.querySelector(".site-nav a")?.getAttribute("href") ||
-    "index.html";
-  home.textContent = "My learning notebook";
+    document.querySelector(".site-nav a")?.getAttribute("href") || "index.html";
+  home.innerHTML = `${linkIcon("back")}<span>My learning notebook</span>`;
   const row = document.createElement("div");
   row.className = "tools-row";
   row.append(home, toolbar.querySelector(".actions"));
@@ -149,6 +175,8 @@
     existingHome.textContent = existingHome.textContent
       .trim()
       .replace(/^←\s*/, "");
+  if (existingHome && !existingHome.querySelector(".notebook-link-icon"))
+    existingHome.insertAdjacentHTML("afterbegin", linkIcon("back"));
   if (!navigation.querySelector("a, .notebook-mark")) {
     const mark = document.createElement("span");
     mark.className = "notebook-mark";
@@ -158,34 +186,47 @@
   const themes = document.createElement("div");
   themes.className = "theme-controls";
   themes.dataset.exportUi = "";
-  themes.innerHTML = `<button type="button" class="secondary skip-icon-transition" data-theme-toggle>${iconSwap("moon", "sun")}<span class="button-label"></span></button><button type="button" class="secondary" data-theme-system>${icon("system")}<span class="button-label">Use system</span></button>`;
+  themes.innerHTML = `<button type="button" class="secondary skip-icon-transition" data-theme-toggle>${iconSwap("moon", "sun")}</button>`;
   navigation.append(themes);
   const toggle = themes.querySelector("[data-theme-toggle]");
-  const system = themes.querySelector("[data-theme-system]");
   function showTheme() {
     const dark = document.documentElement.dataset.theme === "dark";
     toggle.classList.toggle("is-swapped", dark);
-    toggle.querySelector(".button-label").textContent = dark
-      ? "Light mode"
-      : "Dark mode";
-    toggle.setAttribute(
-      "aria-label",
-      dark ? "Switch to light theme" : "Switch to dark theme",
-    );
-    system.hidden = window.teachTheme.get() === "system";
+    const label = dark ? "Switch to light theme" : "Switch to dark theme";
+    toggle.setAttribute("aria-label", label);
+    toggle.title = label;
   }
   toggle.addEventListener("click", () =>
     window.teachTheme.set(
       document.documentElement.dataset.theme === "dark" ? "light" : "dark",
     ),
   );
-  system.addEventListener("click", () => window.teachTheme.set("system"));
   window.addEventListener("teach-theme-change", showTheme);
   showTheme();
   requestAnimationFrame(() =>
     requestAnimationFrame(() =>
       toggle.classList.remove("skip-icon-transition"),
     ),
+  );
+  let previousScroll = window.scrollY;
+  let scrollFrame = 0;
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (scrollFrame) return;
+      scrollFrame = requestAnimationFrame(() => {
+        const currentScroll = window.scrollY;
+        const change = currentScroll - previousScroll;
+        if (currentScroll <= 24 || change < -6)
+          navigation.classList.remove("is-scroll-hidden");
+        else if (change > 6 && currentScroll > navigation.offsetHeight)
+          navigation.classList.add("is-scroll-hidden");
+        if (Math.abs(change) > 6 || currentScroll <= 24)
+          previousScroll = currentScroll;
+        scrollFrame = 0;
+      });
+    },
+    { passive: true },
   );
   document.querySelectorAll("[data-self-check]").forEach((reveal) =>
     reveal.addEventListener("toggle", () => {
@@ -230,6 +271,25 @@
     }),
   );
   const status = document.querySelector("[data-export-status]");
+  const chat = document.querySelector("[data-chat]");
+  if (chat)
+    chat.addEventListener("click", async () => {
+      const value = quizChatMarkdown(document);
+      try {
+        await navigator.clipboard.writeText(value);
+        status.textContent = "Quiz responses copied. Paste them into chat.";
+        setTemporarySuccess(
+          chat,
+          chat.querySelector(".button-label"),
+          "Copied",
+        );
+      } catch (_) {
+        showManualCopy(
+          value,
+          "Select the text below, copy it, then paste it into chat.",
+        );
+      }
+    });
   const copy = document.querySelector("[data-copy]");
   if (copy)
     copy.addEventListener("click", async () => {
@@ -243,14 +303,10 @@
           "Copied",
         );
       } catch (_) {
-        const fallback = document.querySelector(".export-fallback");
-        const area = fallback.querySelector("textarea");
-        fallback.hidden = false;
-        area.value = value;
-        area.focus();
-        area.select();
-        status.textContent =
-          "Your browser needs a manual copy: use the selected text below.";
+        showManualCopy(
+          value,
+          "Your browser needs a manual copy: use the selected text below.",
+        );
       }
     });
   const download = document.querySelector("[data-download]");

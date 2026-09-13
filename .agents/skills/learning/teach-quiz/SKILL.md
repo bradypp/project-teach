@@ -21,7 +21,7 @@ Use [teaching guidance](../teach/references/teaching.md) and [artifact guidance]
 - Choose a format that fits: choice questions, written reflection, a visual puzzle or a small interactive experiment.
 - Reuse the bundled controls where useful; author custom widgets when they better teach the idea.
 - Give explanatory feedback and relevant lesson links. Reveal answer-bearing links with feedback.
-- Offer optional Markdown copy/download using the shared controls for choice and written answers. Other widgets can provide a simple equivalent when useful.
+- Offer the shared Copy for chat handoff and optional Markdown copy/download for choice and written answers. Copy for chat prepares the responses for the user to paste; it does not submit directly. Other widgets can provide a simple equivalent when useful.
 
 Use the [library helper](../teach/scripts/library.py) to create a shell. Save under `quizzes/`, refresh the index and return an absolute file link. Inspect related lessons, topics, references and glossary entries; add useful reciprocal links while keeping answer-bearing links inside feedback. Run the [link checker](../teach/scripts/check_links.py) on the library and repair its findings before delivery, following artifact guidance. Check content and answer keys; exhaustive browser testing is unnecessary. This link-maintenance pass does not update learning state.
 

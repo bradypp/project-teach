@@ -26,12 +26,20 @@
         <p class="eyebrow">Lesson</p>
         <h1>Make retries boring</h1>
         <p class="page-date">
-          Created <time datetime="2026-09-13T00:47:23+00:00">13th Sept 2026 · 00:47</time>
+          Created
+          <time datetime="2026-09-13T00:47:23+00:00"
+            >13th Sept 2026 · 00:47</time
+          >
         </p>
       </header>
       <div class="page-intro">
-        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
-        <p class="lede">
+        <div
+          class="page-tags"
+          data-page-tags
+          aria-label="Subjects"
+          hidden
+        ></div>
+        <p>
           Retries are normal when the sender cannot observe your commit. Give
           each intent a stable identity, enforce it in storage, and make the
           repeated path an ordinary result.
@@ -53,7 +61,8 @@
           happened, so retrying is the sensible action.
         </p>
         <figure class="diagram">
-          <pre class="mermaid">sequenceDiagram
+          <pre class="mermaid">
+sequenceDiagram
     participant P as Provider
     participant L as Lantern
     participant D as SQLite
@@ -61,14 +70,16 @@
     L->>D: INSERT evt_204
     D-->>L: COMMIT
     L--xP: 202 lost in transit
-    Note over P,L: outcome is unknown to the provider
+    Note right of P: outcome unknown
     P->>L: retry evt_204
     L->>D: INSERT ... ON CONFLICT
     D-->>L: already stored
-    L-->>P: 202 duplicate</pre>
+    L-->>P: 202 duplicate</pre
+          >
           <figcaption>
             At-least-once delivery turns an uncertain outcome into a repeated
-            request. Stable identity turns the repeat into something recognizable.
+            request. Stable identity turns the repeat into something
+            recognizable.
           </figcaption>
         </figure>
       </section>
@@ -151,13 +162,33 @@ def record(connection, provider, event_id, payload):
 
         <table>
           <thead>
-            <tr><th>Attempt</th><th>Constraint result</th><th>Handler result</th></tr>
+            <tr>
+              <th>Attempt</th>
+              <th>Constraint result</th>
+              <th>Handler result</th>
+            </tr>
           </thead>
           <tbody>
-            <tr><td>First <code>evt_204</code></td><td>New unique key</td><td><code>stored</code></td></tr>
-            <tr><td>Same ID, same body</td><td>Conflict; digest matches</td><td><code>duplicate</code></td></tr>
-            <tr><td>Same ID, changed body</td><td>Conflict; digest differs</td><td>Raise and investigate</td></tr>
-            <tr><td>Same body, new ID</td><td>New unique key</td><td><code>stored</code></td></tr>
+            <tr>
+              <td>First <code>evt_204</code></td>
+              <td>New unique key</td>
+              <td><code>stored</code></td>
+            </tr>
+            <tr>
+              <td>Same ID, same body</td>
+              <td>Conflict; digest matches</td>
+              <td><code>duplicate</code></td>
+            </tr>
+            <tr>
+              <td>Same ID, changed body</td>
+              <td>Conflict; digest differs</td>
+              <td>Raise and investigate</td>
+            </tr>
+            <tr>
+              <td>Same body, new ID</td>
+              <td>New unique key</td>
+              <td><code>stored</code></td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -179,8 +210,9 @@ def record(connection, provider, event_id, payload):
           that would make the email retry safe.
         </aside>
         <p>
-          Next, decide what Lantern does when valid new events arrive faster than
-          the worker drains them in <a href="bound-the-inbox.html">Bound the inbox</a>.
+          Next, decide what Lantern does when valid new events arrive faster
+          than the worker drains them in
+          <a href="bound-the-inbox.html">Bound the inbox</a>.
         </p>
       </section>
 
@@ -188,25 +220,38 @@ def record(connection, provider, event_id, payload):
         <h2>Sources and further reading</h2>
         <ul>
           <li>
-            <a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS Builders' Library: Making retries safe with idempotent APIs</a>
-            explains caller-provided identity, atomic recording, and why the same
-            ID with different parameters should be treated as a mismatch.
+            <a
+              href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/"
+              >AWS Builders' Library: Making retries safe with idempotent
+              APIs</a
+            >
+            explains caller-provided identity, atomic recording, and why the
+            same ID with different parameters should be treated as a mismatch.
           </li>
           <li>
-            <a href="https://docs.stripe.com/webhooks#handle-duplicate-events">Stripe: Handle duplicate events</a>
+            <a href="https://docs.stripe.com/webhooks#handle-duplicate-events"
+              >Stripe: Handle duplicate events</a
+            >
             supplies a real webhook example of logging event IDs and skipping
             already processed deliveries.
           </li>
           <li>
             <a href="https://www.sqlite.org/lang_upsert.html">SQLite UPSERT</a>
-            documents <code>ON CONFLICT</code> behavior for uniqueness constraints.
+            documents <code>ON CONFLICT</code> behavior for uniqueness
+            constraints.
           </li>
         </ul>
       </section>
 
       <footer>
-        Previous: <a href="what-an-acknowledgement-promises.html">What an acknowledgement promises</a> ·
-        Reference: <a href="../references/webhook-reliability-checklist.html#identity">Identity checklist</a>
+        Previous:
+        <a href="what-an-acknowledgement-promises.html"
+          >What an acknowledgement promises</a
+        >
+        · Reference:
+        <a href="../references/webhook-reliability-checklist.html#identity"
+          >Identity checklist</a
+        >
       </footer>
     </main>
   </body>

@@ -31,7 +31,7 @@
       </header>
       <div class="page-intro">
         <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
-        <p class="lede">
+        <p>
           Reliable webhook intake is three linked contracts: retain before
           acknowledging, recognize repeated intent, and stop accepting work when
           retention or processing capacity is exhausted.
@@ -125,7 +125,10 @@
           <li><a href="../lessons/what-an-acknowledgement-promises.html#boundary">What an acknowledgement promises</a> develops the commit boundary.</li>
           <li><a href="../lessons/make-retries-boring.html#sqlite">Make retries boring</a> implements stable identity in SQLite.</li>
           <li><a href="../lessons/bound-the-inbox.html#policies">Bound the inbox</a> compares overload policies.</li>
+          <li><a href="../lessons/recover-abandoned-work.html#states">Recover abandoned work</a> models worker claims as expiring leases.</li>
+          <li><a href="../lessons/read-backlog-shape.html#curve">Read the shape of a backlog</a> turns queue signals into operational stories.</li>
           <li><a href="../quizzes/inbox-under-failure.html">Inbox under failure</a> interleaves all three ideas.</li>
+          <li><a href="../references/lantern-data-model.html">Lantern data model</a> maps inbox rows, attempts and effect receipts.</li>
           <li><a href="../references/webhook-reliability-checklist.html">Webhook reliability checklist</a> turns the model into review prompts.</li>
         </ul>
       </section>
@@ -143,7 +146,7 @@
       <section id="questions">
         <h2>Still to explore</h2>
         <ul>
-          <li>How should Lantern lease a row so multiple workers can recover abandoned work?</li>
+          <li>How frequently should Lantern renew a lease, and which worker runtimes need a different duration?</li>
           <li>When the side effect is remote, where should its idempotency key live?</li>
           <li>Which event types become valueless when stale, and who is allowed to discard them?</li>
           <li>How do provider signatures and secret rotation fit before the acknowledgement boundary?</li>
@@ -151,7 +154,9 @@
       </section>
 
       <footer>
-        Current synthesis for the Lantern reliability thread · Last updated 13 September 2026
+        Continue: <a href="../lessons/recover-abandoned-work.html">Recover abandoned work</a> ·
+        Reference: <a href="../references/lantern-data-model.html">Lantern data model</a> ·
+        Practice: <a href="../quizzes/inbox-under-failure.html">Inbox under failure</a>
       </footer>
     </main>
   </body>

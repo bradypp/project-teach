@@ -87,10 +87,20 @@ def index(root):
         filterable = f' data-library-section="{section_type}"'
         sections.append(f'<section class="library-section"{filterable}><h2>{folder.capitalize()}</h2><ul class="library-entries">' + ''.join(item[2] for item in entries) + '</ul></section>')
     types = '<div class="type-filters" aria-label="Filter by type">' + ''.join(f'<button class="secondary tag-pill" data-type="{kind}" aria-pressed="{str(not kind).lower()}">{label}</button>' for kind, label in [('', 'All types'), ('lessons', 'Lessons'), ('topics', 'Topics'), ('quizzes', 'Quizzes'), ('references', 'References')]) + '</div>'
-    filters = '<div class="library-controls" data-export-ui>' + types + '<div class="filter-row"><div class="tag-filters" aria-label="Filter by subject">'
+    sort_control = (
+        '<div class="library-sort">'
+        '<button type="button" class="secondary" id="library-sort" data-sort-value="newest" aria-label="Sort entries" aria-haspopup="menu" aria-expanded="false" aria-controls="library-sort-menu">'
+        '<span data-sort-label>Newest first</span><span class="sort-chevron" aria-hidden="true"></span></button>'
+        '<div class="library-sort-menu" id="library-sort-menu" data-sort-menu role="menu" hidden>'
+        '<button type="button" class="library-sort-option" data-sort-option data-sort-value="newest" role="menuitemradio" aria-checked="true">Newest first</button>'
+        '<button type="button" class="library-sort-option" data-sort-option data-sort-value="oldest" role="menuitemradio" aria-checked="false">Oldest first</button>'
+        '<button type="button" class="library-sort-option" data-sort-option data-sort-value="title" role="menuitemradio" aria-checked="false">Alphabetical</button>'
+        '</div></div>'
+    )
+    filters = '<div class="library-controls" data-export-ui>' + types + '<div class="tag-filters" aria-label="Filter by subject">'
     filters += '<button class="secondary tag-pill" data-tag="" aria-pressed="true">All subjects</button>'
     filters += ''.join(f'<button class="secondary tag-pill" data-tag="{escape(tag, quote=True)}" aria-pressed="false">{escape(tag)}</button>' for tag in sorted(tags))
-    filters += '</div><select id="library-sort" aria-label="Sort entries"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="title">Alphabetical</option></select></div><p data-filter-status role="status"></p></div>'
+    filters += '</div><div class="filter-row"><p data-filter-status role="status"></p>' + sort_control + '</div></div>'
     template = (ASSETS / 'templates/index.html').read_text(encoding='utf-8')
     root.mkdir(parents=True, exist_ok=True)
     (root / 'index.html').write_text(template.replace('{{ENTRIES}}', (filters if sections else '<p class="muted">Nothing here yet.</p>') + '\n'.join(sections)), encoding='utf-8')

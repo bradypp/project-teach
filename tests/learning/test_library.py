@@ -89,6 +89,8 @@ class LibraryTests(unittest.TestCase):
         html = (self.root / 'index.html').read_text()
         self.assertLess(html.index('href="lessons/newer.html"'), html.index('href="lessons/older.html"'))
         self.assertIn('data-tag="queues"', html)
+        self.assertIn('</div><div class="filter-row"><p data-filter-status role="status"></p><div class="library-sort">', html)
+        self.assertIn('id="library-sort" data-sort-value="newest"', html)
         self.assertNotIn('<h2>Quizzes</h2>', html)
         self.assertIn('2025-01-01T10:00:00+00:00', older.read_text())
 

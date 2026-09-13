@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-13T12:48:41+00:00" />
+    <meta name="tags" content="reference,sqlite,reliability" />
+    <title>Lantern data model</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="reference">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Reference</p>
+        <h1>Lantern data model</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-13T12:48:41+00:00">13th Sept 2026 · 12:48</time>
+        </p>
+      </header>
+      <div class="page-intro">
+        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+        <p>
+          A compact map of the records that support durable intake, temporary
+          worker claims and externally observable effects in the Lantern example.
+        </p>
+        <nav class="page-contents" aria-label="On this page">
+          <a href="#relationships">Relationships</a>
+          <a href="#inbox">Inbox identity</a>
+          <a href="#processing">Processing fields</a>
+          <a href="#trace">Example row</a>
+        </nav>
+      </div>
+
+      <section id="relationships">
+        <h2>Keep intake identity separate from attempts and effects</h2>
+        <figure class="diagram">
+          <pre class="mermaid">classDiagram
+    direction LR
+    class InboxEvent {
+      +integer id
+      +text provider
+      +text event_id
+      +text payload_sha256
+      +text status
+      +timestamp received_at
+    }
+    class DeliveryAttempt {
+      +integer id
+      +integer inbox_event_id
+      +text lease_owner
+      +timestamp lease_until
+      +text outcome
+    }
+    class EffectReceipt {
+      +integer id
+      +integer inbox_event_id
+      +text effect_key
+      +text remote_reference
+    }
+    InboxEvent "1" --> "0..*" DeliveryAttempt : records
+    InboxEvent "1" --> "0..*" EffectReceipt : proves</pre>
+          <figcaption>
+            One logical event can have several processing attempts and several
+            distinct effects. The provider-scoped event identity remains stable.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section id="inbox">
+        <h2>Inbox identity and payload</h2>
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Invariant or purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>provider</code> + <code>event_id</code></td><td>Unique together; identifies one provider intent.</td></tr>
+            <tr><td><code>payload</code></td><td>Canonical bytes retained before acknowledgement.</td></tr>
+            <tr><td><code>payload_sha256</code></td><td>Exposes the same identity arriving with changed content.</td></tr>
+            <tr><td><code>received_at</code></td><td>Supports ordering and oldest-event age.</td></tr>
+            <tr><td><code>processed_at</code></td><td>Set only after the chosen completion boundary is durable.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="processing">
+        <h2>Processing fields answer recovery questions</h2>
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Required behavior</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>status</code></td><td>Constrain to named states; do not infer a state from several nullable columns.</td></tr>
+            <tr><td><code>lease_owner</code></td><td>Only the current owner may renew or complete a live claim.</td></tr>
+            <tr><td><code>lease_until</code></td><td>An expired value makes interrupted work eligible again.</td></tr>
+            <tr><td><code>attempt_count</code></td><td>Increment with the claim so every acquired attempt is observable.</td></tr>
+            <tr><td><code>last_error</code></td><td>Keep a bounded diagnostic summary; detailed logs live elsewhere.</td></tr>
+          </tbody>
+        </table>
+        <p class="callout">
+          <strong>Store facts that drive a decision.</strong> A field earns its
+          place when intake, claiming, recovery, reconciliation or an operator
+          can state how it changes behavior.
+        </p>
+      </section>
+
+      <section id="trace">
+        <h2>One event across the tables</h2>
+        <pre><code class="language-text">inbox_events
+42 | stripe | evt_204 | pending | received 12:00:00
+                     |
+                     +-- delivery_attempts
+                     |   91 | worker-a | expired | timeout
+                     |   92 | worker-b | complete | ok
+                     |
+                     +-- effect_receipts
+                         17 | email:evt_204 | msg_8f31</code></pre>
+        <p>
+          The row says the event was captured once, tried twice, and produced an
+          email with a stable effect key. It does not claim that every external
+          service supports this receipt model; that is a contract to verify at
+          the integration boundary.
+        </p>
+      </section>
+
+      <footer>
+        Lesson: <a href="../lessons/recover-abandoned-work.html">Recover abandoned work</a> ·
+        Intake invariant: <a href="../lessons/make-retries-boring.html#identity">Identity belongs to the intent</a> ·
+        Review: <a href="webhook-reliability-checklist.html">Webhook reliability checklist</a>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -10,6 +10,8 @@
 ## Useful exposure — not yet verified
 
 - [Bound the inbox](lessons/bound-the-inbox.html) introduced queue limits, message age and overload policy. No learner explanation or application has been observed yet.
+- [Recover abandoned work](lessons/recover-abandoned-work.html) introduced expiring worker leases and atomic claims. No learner explanation or application has been observed yet.
+- [Read the shape of a backlog](lessons/read-backlog-shape.html) introduced the relationship between depth, age and rates. No learner interpretation has been observed yet.
 - [Reliable webhook delivery](topics/reliable-webhook-delivery.html) connects durable acknowledgement, deduplication and backpressure into one design.
 
 ## Uncertainty and next checks
@@ -21,7 +23,7 @@
 ## Deferred scope
 
 - Provider-specific signature verification and secret rotation.
-- Multi-worker claiming, leases and recovery of abandoned work.
+- Choosing and validating lease duration against real worker runtimes.
 - The transactional outbox pattern for side effects that leave SQLite.
 
 ## Useful lessons
