@@ -23,6 +23,6 @@ Use [teaching guidance](../teach/references/teaching.md) and [artifact guidance]
 - Give explanatory feedback and relevant lesson links. Reveal answer-bearing links with feedback.
 - Offer optional Markdown copy/download using the shared controls for choice and written answers. Other widgets can provide a simple equivalent when useful.
 
-Use the [library helper](../teach/scripts/library.py) to create a shell. Save under `quizzes/`, refresh the index and return an absolute file link. Quickly check content, answer keys and links; exhaustive browser testing is unnecessary.
+Use the [library helper](../teach/scripts/library.py) to create a shell. Save under `quizzes/`, refresh the index and return an absolute file link. Inspect related lessons, topics, references and glossary entries; add useful reciprocal links while keeping answer-bearing links inside feedback. Run the [link checker](../teach/scripts/check_links.py) on the library and repair its findings before delivery, following artifact guidance. Check content and answer keys; exhaustive browser testing is unnecessary. This link-maintenance pass does not update learning state.
 
 Quizzes are a fun aside. Creating, opening, completing or exporting one does not update learning state. Discuss answers if the user brings them back; use the `teach-update` skill only when an update is requested or meaningful teaching interaction warrants it.

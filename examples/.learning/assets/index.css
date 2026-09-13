@@ -520,3 +520,10 @@ input[type="checkbox"] {
 [data-question] > [data-check] {
   margin-top: 0.85rem;
 }
+
+.type-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}

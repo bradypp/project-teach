@@ -19,24 +19,24 @@ python3 /path/to/teach/scripts/library.py index /project/.learning
 
 - The helper automatically records creation time in UTC and displays it beneath the page title. Keep this timestamp stable when editing; there is no updated-time field.
 - Add subject tags with `--tags "queues,reliability"`; maintain the comma-separated `tags` meta value when content changes. Reuse a small set of existing tags.
-- The home page lists Lessons, Topics, Quizzes, References, then Glossary, omitting empty sections. Tags and newest/oldest/alphabetical sorting apply to the first four; the glossary stays accessible below.
+- The home page lists Lessons, Topics, Quizzes, References, then Glossary, omitting empty sections. Type filters sit above subject filters; select one value per row, including All. A page must match both selected values. Tags and newest/oldest/alphabetical sorting apply to the first four; the glossary stays accessible below.
 - Keep descriptive filenames stable. Rebuild the index after changing titles, tags or pages.
 
-## Optional page opening
+## Page opening
 
-Use the [page-intro component](../assets/templates/page-intro.html) after the title and creation date when it helps orientation:
+The helper inserts the shared [page-intro component](../assets/templates/page-intro.html) after the title and creation date in every content shell:
 
-- Show optional subject tags that match the page metadata.
+- Tags are populated from page metadata and hidden when absent.
 - Give a short summary connecting the idea to the project or current decision.
 - For longer pages, add optional contents linking to real section IDs. Keep labels descriptive and the layout flexible.
-- Omit unused parts. Quiz summaries and contents must preserve the challenge; answer-bearing links belong with feedback.
+- Keep the short summary; omit contents when unnecessary. Use stable IDs on useful sections even without contents. The glossary can use term navigation instead. Quiz introductions must preserve the challenge; answer-bearing links belong with feedback.
 
 Shared CSS owns language-label styling, pointer cursors, home dividers and quiz-action spacing. Apply presentation fixes there and in reusable components, then synchronise example assets; avoid example-only style patches.
 
 ## Code and visual components
 
 - Use the [code block component](../assets/templates/code-block.html) for explicitly labelled languages. Locally bundled Highlight.js supplies syntax highlighting; shared controls add a language label and Copy code button. Use `language-text` for plain text or ASCII.
-- Prefer the [Mermaid component](../assets/templates/diagram.html) for supported diagrams: flowcharts, sequences, classes, states, git graphs, pie/bar charts and related structures. Keep the source in `pre.mermaid` inside `figure.diagram`, with a useful caption.
+- Read [Mermaid authoring guidance](mermaid.md) for syntax examples, dynamic theming and troubleshooting. Prefer the [Mermaid component](../assets/templates/diagram.html) for supported diagrams: flowcharts, sequences, classes, states, git graphs, pie/bar charts and related structures. Keep the source in `pre.mermaid` inside `figure.diagram`, with a useful caption.
 - The [component script](../assets/components.js) applies the shared theme tokens and re-renders diagrams on theme changes. Keep diagram colours in the shared integration rather than embedding light-only styles or Mermaid theme directives.
 - Use ASCII when a small text diagram communicates better. Use custom SVG/canvas for visuals Mermaid cannot express well; use CSS theme tokens for fills, lines, backgrounds and labels.
 - Reuse the existing quiz controls, native revealable explanations and semantic comparison tables. Layout remains flexible; components do not require surrounding cards.
@@ -97,7 +97,7 @@ The [browser controls](../assets/index.js) perform conversion; the Python helper
 - Link the first meaningful occurrence of a known glossary term to its stable anchor. Keep answer-revealing quiz links inside feedback.
 - Add meaningful sources and real section anchors where useful.
 - Include a recommended primary resource and an invitation to ask follow-up questions.
-- Quickly check content, answer keys and local links. Routine artifacts need no exhaustive browser test procedure.
+- Quickly check content and answer keys. Run the [link checker](../scripts/check_links.py) with `python3 /path/to/teach/scripts/check_links.py /project/.learning` after updating related links. Repair reported missing files, broken HTML anchors and duplicate IDs. This does not verify external URLs or judge which reciprocal links are useful. Routine artifacts need no exhaustive browser test procedure.
 - Rebuild the index and link useful lessons from learning state or their supporting record.
 - Return an absolute clickable file link that can be opened from the chat; open it automatically with an available host/browser tool if possible; try launching into an extrenal browser via cli if possible.
 

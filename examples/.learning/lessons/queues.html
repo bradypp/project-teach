@@ -22,12 +22,12 @@
       <a href="../index.html">← My learning notebook</a>
     </nav>
     <main id="main">
-      <header><h1>Why queues help</h1><p class="page-date">Created <time datetime="2026-09-10T09:00:00+00:00">10th Sept 2026 · 09:00</time></p></header>
+      <header><h1>Why queues help</h1><p class="page-date">Created <time datetime="2026-09-10T09:00:00+00:00">10th Sept 2026 · 09:00</time></p></header><div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
 <p class="muted">Fieldnotes export service · fictional learning project</p>
-<div class="page-tags" aria-label="Subjects"><span class="subject-tag">queues</span><span class="subject-tag">systems</span></div>
+
 <p class="lede">Our export endpoint should accept a request quickly while a worker builds the file. A queue gives those two activities room to run at different speeds. It does not create processing capacity.</p>
 <nav aria-label="Lesson sections"><a href="#decision">The decision</a> · <a href="#capacity">Capacity</a> · <a href="#experiment">Experiment</a> · <a href="#failures">Failure boundaries</a></nav>
-<h2 id="decision">The planning question</h2><p>Should <code>POST /exports</code> build the CSV before responding, or create a job that the user can check later? In this example project, a large export takes several seconds and multiple users may ask at once. We want a short acceptance response and a visible job status.</p>
+</div><h2 id="decision">The planning question</h2><p>Should <code>POST /exports</code> build the CSV before responding, or create a job that the user can check later? In this example project, a large export takes several seconds and multiple users may ask at once. We want a short acceptance response and a visible job status.</p>
 <ul><li><strong>Producer:</strong> the request handler that submits a job.</li><li><strong>Queue:</strong> waiting work that has not yet been taken by a worker.</li><li><strong>Worker:</strong> the process that builds the export.</li><li><strong>Job status:</strong> a separate explanation of what happened, such as pending, running, ready or failed.</li></ul>
 <figure class="diagram"><pre class="mermaid">flowchart LR
   A[Export request] --&gt; B[Admission check]

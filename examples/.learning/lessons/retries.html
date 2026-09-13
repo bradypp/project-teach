@@ -22,12 +22,12 @@
       <a href="../index.html">← My learning notebook</a>
     </nav>
     <main id="main">
-      <header><h1>When a retry repeats a side effect</h1><p class="page-date">Created <time datetime="2026-09-12T18:11:50+00:00">12th Sept 2026 · 18:11</time></p></header>
+      <header><h1>When a retry repeats a side effect</h1><p class="page-date">Created <time datetime="2026-09-12T18:11:50+00:00">12th Sept 2026 · 18:11</time></p></header><div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
 <p class="muted">Fieldnotes export service · fictional learning project</p>
-<div class="page-tags" aria-label="Subjects"><span class="subject-tag">reliability</span></div>
+
 <p class="lede">A timeout tells us that an answer did not arrive in time. It does not tell us whether the export was created. Retrying safely requires a definition of “the same job.”</p>
 <nav aria-label="Lesson sections"><a href="#window">Failure window</a> · <a href="#identity">Identity</a> · <a href="#experiment">Experiment</a> · <a href="#contract">Contract</a></nav>
-<h2 id="window">The next planning decision</h2><p>A worker writes <code>exports/job-42.csv</code>, then crashes before reporting completion. Another worker retries the job. Should it create a second file, overwrite the first, return the existing result, or refuse to run?</p>
+</div><h2 id="window">The next planning decision</h2><p>A worker writes <code>exports/job-42.csv</code>, then crashes before reporting completion. Another worker retries the job. Should it create a second file, overwrite the first, return the existing result, or refuse to run?</p>
 <p>We need a policy for that uncertainty before adding automatic retries. <a href="../references/glossary.html#idempotency">Idempotency</a> describes the effect of repetition. The goal here is one logical export result even if processing is attempted more than once.</p>
 <figure class="diagram"><pre class="mermaid">sequenceDiagram
   participant Client

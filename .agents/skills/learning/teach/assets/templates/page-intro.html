@@ -1,14 +1,13 @@
-<!-- Optional opening: place after the title/date header. Keep only useful parts.
-     Match visible subject tags to the page's tags metadata. -->
+<!-- Tags come from page metadata and hide when absent.
+     Add optional contents for longer pages, linking to real section IDs;
+     glossary term navigation can serve as contents. Preserve quiz answers for feedback. -->
 <div class="page-intro">
-  <div class="page-tags" aria-label="Subjects">
-    <span class="subject-tag">Subject</span>
-  </div>
-  <p class="lede">A short summary of the idea and why it matters in this project.</p>
-  <!-- For longer pages, link to real section IDs. Omit when navigation adds little.
-       For quizzes, avoid links or wording that disclose answers before feedback. -->
-  <nav class="page-contents" aria-label="On this page">
+  <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+  <p class="muted">
+    Explain the idea and its relevance to the current project in a short
+    summary.
+  </p>
+  <!-- Optional: <nav class="page-contents" aria-label="On this page">
     <a href="#mechanism">The mechanism</a>
-    <a href="#application">Apply it</a>
-  </nav>
+  </nav> -->
 </div>

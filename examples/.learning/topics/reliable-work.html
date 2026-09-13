@@ -22,10 +22,10 @@
       <a href="../index.html">← My learning notebook</a>
     </nav>
     <main id="main">
-      <header><h1>Reliable work</h1><p class="page-date">Created <time datetime="2026-09-12T18:11:50+00:00">12th Sept 2026 · 18:11</time></p></header>
+      <header><h1>Reliable work</h1><p class="page-date">Created <time datetime="2026-09-12T18:11:50+00:00">12th Sept 2026 · 18:11</time></p></header><div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
 <p class="muted">Fieldnotes export service · fictional learning project</p>
 <p class="lede">Accepting a job, executing an attempt and publishing a result are separate events. A reliable export service defines what happens between them.</p>
-<h2>Current synthesis</h2><ul><li><a href="../lessons/queues.html#capacity">Capacity</a> governs whether we should accept more work.</li><li><a href="../lessons/retries.html#identity">Identity</a> governs whether two requests mean one export or two.</li><li>Recovery governs what a new worker may safely do after the previous one disappears.</li></ul>
+</div><h2>Current synthesis</h2><ul><li><a href="../lessons/queues.html#capacity">Capacity</a> governs whether we should accept more work.</li><li><a href="../lessons/retries.html#identity">Identity</a> governs whether two requests mean one export or two.</li><li>Recovery governs what a new worker may safely do after the previous one disappears.</li></ul>
 <figure class="diagram"><pre class="mermaid">stateDiagram-v2
   [*] --&gt; Pending: Accepted
   Pending --&gt; Running: Claimed

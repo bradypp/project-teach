@@ -22,9 +22,13 @@
       <a href="../index.html">← My learning notebook</a>
     </nav>
     <main id="main">
-      <header><h1>{{TITLE}}</h1><p class="page-date">Created <time datetime="{{CREATED}}">{{CREATED_LABEL}}</time></p></header>
-      <!-- Optional: insert the useful parts of page-intro.html here: subject tags,
-           a short summary, and contents linking to real sections. Omit unused parts. -->
+      <header>
+        <h1>{{TITLE}}</h1>
+        <p class="page-date">
+          Created <time datetime="{{CREATED}}">{{CREATED_LABEL}}</time>
+        </p>
+      </header>
+      {{INTRO}}
       <p>
         Words I use in this project, with links back to the ideas behind them.
       </p>
@@ -33,7 +37,7 @@
         <ul class="page-list"></ul>
       </nav>
       <!-- Add terms alphabetically with stable IDs. For each term, include a concise
-           definition, project-specific meaning where useful, and a relative lesson link.
+           definition, project-specific meaning where useful, and relative lesson links.
            Example structure: <section id="backpressure"><h2>Backpressure</h2>
            <p>Definition and project context.</p><a href="../lessons/queues.html">Queues lesson</a></section>
            Replace examples with actual learned vocabulary; evidence belongs in records. -->

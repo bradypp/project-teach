@@ -83,9 +83,10 @@ def index(root):
             entries.append((created, title, entry))
         if not entries: continue
         entries.sort(key=lambda item: (item[0], item[1]), reverse=True)
-        filterable = ' data-library-section' if folder != 'glossary' else ''
+        filterable = f' data-library-section="{folder}"' if folder != 'glossary' else ''
         sections.append(f'<section class="library-section"{filterable}><h2>{folder.capitalize()}</h2><ul class="library-entries">' + ''.join(item[2] for item in entries) + '</ul></section>')
-    filters = '<div class="library-controls" data-export-ui><div class="filter-row"><div class="tag-filters" aria-label="Filter by subject">'
+    types = '<div class="type-filters" aria-label="Filter by type">' + ''.join(f'<button class="secondary tag-pill" data-type="{kind}" aria-pressed="{str(not kind).lower()}">{label}</button>' for kind, label in [('', 'All types'), ('lessons', 'Lessons'), ('topics', 'Topics'), ('quizzes', 'Quizzes'), ('references', 'References')]) + '</div>'
+    filters = '<div class="library-controls" data-export-ui>' + types + '<div class="filter-row"><div class="tag-filters" aria-label="Filter by subject">'
     filters += '<button class="secondary tag-pill" data-tag="" aria-pressed="true">All subjects</button>'
     filters += ''.join(f'<button class="secondary tag-pill" data-tag="{escape(tag, quote=True)}" aria-pressed="false">{escape(tag)}</button>' for tag in sorted(tags))
     filters += '</div><select id="library-sort" aria-label="Sort entries"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="title">Alphabetical</option></select></div><p data-filter-status role="status"></p></div>'
@@ -105,6 +106,8 @@ def new(root, kind, slug, title, tags=""):
     init(root)
     page.parent.mkdir(parents=True, exist_ok=True)
     template = (ASSETS / 'templates' / f'{kind}.html').read_text(encoding='utf-8')
+    intro = (ASSETS / 'templates/page-intro.html').read_text(encoding='utf-8')
+    template = template.replace('{{INTRO}}', intro)
     with page.open('x', encoding='utf-8') as stream:
         created = datetime.now(timezone.utc).replace(microsecond=0)
         stream.write(template.replace('{{TITLE}}', escape(title, quote=True)).replace('{{CREATED}}', created.isoformat()).replace('{{CREATED_LABEL}}', date_label(created.isoformat())).replace('{{TAGS}}', escape(tags, quote=True)))

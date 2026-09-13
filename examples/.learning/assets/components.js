@@ -56,7 +56,12 @@
   window.addEventListener('teach-theme-change', renderDiagrams);
   renderDiagrams();
 
-  const selected = new Set();
+  document.querySelectorAll('[data-page-tags]').forEach(container => {
+    const tags = [...new Set((document.querySelector('meta[name="tags"]')?.content || '').split(',').map(tag => tag.trim()).filter(Boolean))];
+    container.replaceChildren(...tags.map(tag => { const span = document.createElement('span'); span.className = 'subject-tag'; span.textContent = tag; return span; }));
+    container.hidden = !tags.length;
+  });
+  let selected = '', selectedType = '';
   const sort = document.querySelector('#library-sort');
   function filterLibrary() {
     let count = 0;
@@ -67,20 +72,21 @@
         !b.dataset.created ? -1 : (sort.value === 'oldest' ? 1 : -1) * a.dataset.created.localeCompare(b.dataset.created) || a.dataset.title.localeCompare(b.dataset.title));
       let visible = 0;
       entries.forEach(entry => {
-        entry.hidden = selected.size > 0 && !entry.dataset.tags.split(',').some(tag => selected.has(tag));
+        entry.hidden = (selectedType && section.dataset.librarySection !== selectedType) || (selected && !entry.dataset.tags.split(',').includes(selected));
         section.querySelector('ul').append(entry);
         if (!entry.hidden) visible++;
       });
       section.hidden = !visible; count += visible;
     });
-    document.querySelectorAll('[data-tag]').forEach(button => button.setAttribute('aria-pressed', button.dataset.tag ? selected.has(button.dataset.tag) : !selected.size));
+    document.querySelectorAll('[data-tag]').forEach(button => button.setAttribute('aria-pressed', button.dataset.tag === selected));
+    document.querySelectorAll('[data-type]').forEach(button => button.setAttribute('aria-pressed', button.dataset.type === selectedType));
     const status = document.querySelector('[data-filter-status]');
     if (status) status.textContent = `${count} ${count === 1 ? 'entry' : 'entries'}`;
   }
   document.querySelectorAll('[data-tag]').forEach(button => button.addEventListener('click', () => {
-    const tag = button.dataset.tag;
-    if (!tag) selected.clear(); else if (selected.has(tag)) selected.delete(tag); else selected.add(tag);
+    selected = button.dataset.tag;
     filterLibrary();
   }));
+  document.querySelectorAll('[data-type]').forEach(button => button.addEventListener('click', () => { selectedType = button.dataset.type; filterLibrary(); }));
   if (sort) { sort.addEventListener('change', filterLibrary); filterLibrary(); }
 })();
