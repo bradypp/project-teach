@@ -131,6 +131,27 @@
   function quizChatMarkdown(doc) {
     return `Please review my responses to “${doc.title}”. Give me feedback on my reasoning, then ask 1-3 useful follow-up questions.\n\n${exportMarkdown(doc)}`;
   }
+  function localFilePath(doc) {
+    const url = new URL(doc.location.href);
+    let path = decodeURIComponent(url.pathname);
+    if (/^\/[a-z]:\//i.test(path)) path = path.slice(1);
+    return url.host ? `//${url.host}${path}` : path;
+  }
+  function followUpChatPrompt(doc, pageKind) {
+    const lines = [
+      "Use the `teach` skill to help me explore this existing material more deeply.",
+      "",
+      `Type: ${pageKind}`,
+      `Title: ${doc.title.trim().replace(/\s+/g, " ")}`,
+    ];
+    const topics = (doc.querySelector('meta[name="tags"]')?.content || "")
+      .split(",")
+      .map((topic) => topic.trim())
+      .filter(Boolean);
+    if (topics.length) lines.push(`Topics: ${topics.join(", ")}`);
+    lines.push(`Local file: ${localFilePath(doc)}`);
+    return lines.join("\n");
+  }
   function showManualCopy(value, message) {
     const fallback = document.querySelector(".export-fallback");
     const label = fallback.querySelector("label");
@@ -147,11 +168,15 @@
   toolbar.className = "notebook-tools";
   toolbar.dataset.exportUi = "";
   toolbar.setAttribute("aria-label", "Notebook tools");
-  const isQuiz = document.body.dataset.pageKind === "quiz";
+  const pageKind = document.body.dataset.pageKind;
+  const isQuiz = pageKind === "quiz";
+  const hasFollowUp = ["lesson", "topic", "reference"].includes(pageKind);
   const chatAction = isQuiz
     ? `<button type="button" data-chat>${iconSwap("chat", "check")}<span class="button-label" data-default-label="Copy for chat">Copy for chat</span></button>`
-    : "";
-  toolbar.innerHTML = `<div class="actions">${chatAction}<button type="button"${isQuiz ? ' class="secondary"' : ""} data-copy>${iconSwap("copy", "check")}<span class="button-label" data-default-label="Copy Markdown">Copy Markdown</span></button><button type="button" class="secondary" data-download>${icon("download")}<span class="button-label">Save Markdown</span></button></div>
+    : hasFollowUp
+      ? `<button type="button" data-chat>${iconSwap("chat", "check")}<span class="button-label" data-default-label="Copy follow-up">Copy follow-up</span></button>`
+      : "";
+  toolbar.innerHTML = `<div class="actions">${chatAction}<button type="button"${isQuiz || hasFollowUp ? ' class="secondary"' : ""} data-copy>${iconSwap("copy", "check")}<span class="button-label" data-default-label="Copy Markdown">Copy Markdown</span></button><button type="button" class="secondary" data-download>${icon("download")}<span class="button-label">Save Markdown</span></button></div>
     <p data-export-status role="status"></p><div class="export-fallback" hidden><label for="export-text">Select and copy</label><textarea id="export-text" readonly></textarea></div>`;
   const home = document.createElement("a");
   home.href =
@@ -274,10 +299,15 @@
   const chat = document.querySelector("[data-chat]");
   if (chat)
     chat.addEventListener("click", async () => {
-      const value = quizChatMarkdown(document);
+      const value = isQuiz
+        ? quizChatMarkdown(document)
+        : followUpChatPrompt(document, pageKind);
+      const successMessage = isQuiz
+        ? "Quiz responses copied. Paste them into chat."
+        : "Follow-up copied. Paste it into chat.";
       try {
         await navigator.clipboard.writeText(value);
-        status.textContent = "Quiz responses copied. Paste them into chat.";
+        status.textContent = successMessage;
         setTemporarySuccess(
           chat,
           chat.querySelector(".button-label"),

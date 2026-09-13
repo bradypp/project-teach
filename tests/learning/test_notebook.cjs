@@ -33,7 +33,7 @@ const assert=require('node:assert/strict');
   assert.equal(await page.locator('[data-theme-system]').count(),0);
   assert.equal(await page.locator('.site-nav .notebook-link-icon svg').count(),1);
   assert.equal(await page.locator('[data-export-status]').isVisible(),false);
-  assert.equal(await page.locator('[data-chat]').count(),0);
+  assert.equal(await page.locator('[data-chat] .button-label').textContent(),'Copy follow-up');
   let md=await page.evaluate(()=>learningExportMarkdown(document));
   assert.match(md,/# A small experiment/);assert.match(md,/## A useful model/);
   assert.match(md,/```python\nif x < 3:\n    print\(x\)\n```/);
