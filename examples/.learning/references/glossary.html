@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="created" content="2026-09-12T18:11:50+00:00" />
-    <meta name="tags" content="" />
-    <title>My glossary</title>
+    <meta name="created" content="2026-09-13T00:47:23+00:00" />
+    <meta name="tags" content="reference,terminology" />
+    <title>Reliability glossary</title>
     <link rel="stylesheet" href="../assets/index.css" />
 
     <script src="../assets/theme.js"></script>
@@ -16,15 +16,109 @@
     <script src="../assets/vendor/highlight.js" defer></script>
     <script src="../assets/components.js" defer></script>
   </head>
-  <body>
+  <body data-page-kind="glossary">
     <a class="skip" href="#main">Skip to content</a>
     <nav class="site-nav" aria-label="Library">
-      <a href="../index.html">← My learning notebook</a>
+      <a href="../index.html">My learning notebook</a>
     </nav>
     <main id="main">
-      <header><h1>My glossary</h1><p class="page-date">Created <time datetime="2026-09-12T18:11:50+00:00">12th Sept 2026 · 18:11</time></p></header><div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
-<p class="muted">Fieldnotes export service · fictional learning project</p>
-<p>Vocabulary from the fictional project’s learning sessions. These entries are examples, not an assessment of your understanding.</p><nav aria-label="Terms"><a href="#admission">Admission</a> · <a href="#attempt">Attempt</a> · <a href="#backlog">Backlog</a> · <a href="#backpressure">Backpressure</a> · <a href="#idempotency">Idempotency</a> · <a href="#operation-key">Operation key</a></nav></div><section id="admission"><h2>Admission</h2><p>The decision to accept work now. A request can be refused before it becomes an accepted job.</p><a href="../lessons/queues.html#decision">See it in context</a></section><section id="attempt"><h2>Attempt</h2><p>One execution try. Several attempts may belong to the same logical job.</p><a href="../lessons/retries.html#window">See it in context</a></section><section id="backlog"><h2>Backlog</h2><p>Accepted work still waiting for processing. Count and age reveal different aspects of waiting.</p><a href="capacity.html#model">See it in context</a></section><section id="backpressure"><h2>Backpressure</h2><p>A capacity signal that slows or stops a producer. Here, a full pending-job queue triggers waiting or explicit refusal.</p><a href="../lessons/queues.html#capacity">See it in context</a></section><section id="idempotency"><h2>Idempotency</h2><p>Repeating the same logical operation preserves the intended effect. Here, a retry should resolve to the same export result.</p><a href="../lessons/retries.html#identity">See it in context</a></section><section id="operation-key"><h2>Operation key</h2><p>An identifier for one export intent, reused by repeat attempts and changed for a genuinely new export.</p><a href="../lessons/retries.html#identity">See it in context</a></section>
-</main>
+      <header class="page-header">
+        <p class="eyebrow">Glossary</p>
+        <h1>Reliability glossary</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-13T00:47:23+00:00">13th Sept 2026 · 00:47</time>
+        </p>
+      </header>
+      <div class="page-intro">
+        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+        <p class="lede">
+          The small vocabulary behind Lantern's reliability design. Each term
+          says what it means here and points back to the lesson that develops it.
+        </p>
+        <nav class="page-contents" aria-label="Terms">
+          <a href="#acknowledgement">Acknowledgement</a>
+          <a href="#at-least-once-delivery">At-least-once delivery</a>
+          <a href="#backpressure">Backpressure</a>
+          <a href="#deduplication">Deduplication</a>
+          <a href="#idempotency-key">Idempotency key</a>
+          <a href="#inbox">Inbox</a>
+          <a href="#transaction-boundary">Transaction boundary</a>
+        </nav>
+      </div>
+
+      <section id="acknowledgement">
+        <h2>Acknowledgement</h2>
+        <p>
+          A response telling the sender what Lantern has accepted responsibility
+          for. In this project, success means the event is durably stored; it
+          does not mean business processing has finished.
+        </p>
+        <p><a href="../lessons/what-an-acknowledgement-promises.html#promise">See how Lantern defines the promise →</a></p>
+      </section>
+
+      <section id="at-least-once-delivery">
+        <h2>At-least-once delivery</h2>
+        <p>
+          A delivery contract in which the sender retries uncertain outcomes, so
+          a logical event may arrive more than once. Reliability comes from not
+          losing accepted work and making repeats safe—not from assuming one request.
+        </p>
+        <p><a href="../lessons/make-retries-boring.html#ambiguity">Trace the lost-response scenario →</a></p>
+      </section>
+
+      <section id="backpressure">
+        <h2>Backpressure</h2>
+        <p>
+          The explicit behavior used when downstream capacity is exhausted. For
+          Lantern that might mean rejecting before storage, spilling to another
+          durable tier, or shedding work under a stated freshness contract.
+        </p>
+        <p><a href="../lessons/bound-the-inbox.html#policies">Compare the policies →</a></p>
+      </section>
+
+      <section id="deduplication">
+        <h2>Deduplication</h2>
+        <p>
+          Recognizing multiple deliveries as the same logical event and retaining
+          one canonical inbox row. Deduplication stops repeated capture; it does
+          not automatically make every downstream side effect exactly once.
+        </p>
+        <p><a href="../lessons/make-retries-boring.html#limits">See the boundary of the guarantee →</a></p>
+      </section>
+
+      <section id="idempotency-key">
+        <h2>Idempotency key</h2>
+        <p>
+          A stable identifier supplied by the party that knows which attempts
+          express one intent. Lantern uses the provider-scoped event ID as the
+          intake key and stores a digest to expose changed content under that ID.
+        </p>
+        <p><a href="../lessons/make-retries-boring.html#identity">See why identity should express intent →</a></p>
+      </section>
+
+      <section id="inbox">
+        <h2>Inbox</h2>
+        <p>
+          A durable table of received messages and their processing state. It
+          separates the short HTTP intake path from slower work and remains the
+          source of truth after a process restart.
+        </p>
+        <p><a href="../topics/reliable-webhook-delivery.html#project">See the inbox in Lantern's full design →</a></p>
+      </section>
+
+      <section id="transaction-boundary">
+        <h2>Transaction boundary</h2>
+        <p>
+          The all-or-nothing region around related database changes. Lantern's
+          intake transaction establishes one durable event identity before the
+          handler returns success; worker effects may require a different boundary.
+        </p>
+        <p><a href="../lessons/what-an-acknowledgement-promises.html#boundary">Locate the acknowledgement boundary →</a></p>
+      </section>
+
+      <footer>
+        Vocabulary supports the lessons; demonstrated understanding belongs in learning records.
+      </footer>
+    </main>
   </body>
 </html>

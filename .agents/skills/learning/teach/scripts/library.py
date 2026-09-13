@@ -74,7 +74,7 @@ def index(root):
             title = ''.join(parser.parts).strip() or page.stem
             created = parser.metadata.get('created', '')
             page_tags = sorted({tag.strip().lower() for tag in parser.metadata.get('tags', '').split(',') if tag.strip()})
-            if folder != 'glossary': tags.update(page_tags)
+            tags.update(page_tags)
             href = quote(page.relative_to(root).as_posix(), safe='/')
             label = date_label(created)
             pills = ''.join(f'<button type="button" class="secondary tag-pill" data-tag="{escape(tag, quote=True)}" aria-pressed="false">{escape(tag)}</button>' for tag in page_tags)
@@ -83,7 +83,8 @@ def index(root):
             entries.append((created, title, entry))
         if not entries: continue
         entries.sort(key=lambda item: (item[0], item[1]), reverse=True)
-        filterable = f' data-library-section="{folder}"' if folder != 'glossary' else ''
+        section_type = 'references' if folder == 'glossary' else folder
+        filterable = f' data-library-section="{section_type}"'
         sections.append(f'<section class="library-section"{filterable}><h2>{folder.capitalize()}</h2><ul class="library-entries">' + ''.join(item[2] for item in entries) + '</ul></section>')
     types = '<div class="type-filters" aria-label="Filter by type">' + ''.join(f'<button class="secondary tag-pill" data-type="{kind}" aria-pressed="{str(not kind).lower()}">{label}</button>' for kind, label in [('', 'All types'), ('lessons', 'Lessons'), ('topics', 'Topics'), ('quizzes', 'Quizzes'), ('references', 'References')]) + '</div>'
     filters = '<div class="library-controls" data-export-ui>' + types + '<div class="filter-row"><div class="tag-filters" aria-label="Filter by subject">'

@@ -39,11 +39,7 @@ For each saved lesson:
 
 ## Assets
 
-Build from reusable components in `.learning/assets/`: stylesheets, quiz widgets, comparison tables, simulators, diagram helpers, and other visualisations.
-
-The bundled HTML/CSS is a lean starting point, not a mandatory layout. Inspect existing project assets before authoring. Customise them to fit the teaching purpose; when a new component would serve another lesson, save it for reuse. One-off content can remain inline. Keep shared changes compatible with existing pages.
-
-Prefer a personal reading notebook: warm light colours, charcoal dark mode, expressive headings and readable text. A shared stylesheet gives the library a consistent feel. Readable typography, useful visual hierarchy and print-friendly explanations matter more than elaborate controls. Keep the library local and lightweight; no application framework is required.
+Use the shared [artifact visual language](visual-language.md) when composing saved lessons. Choose components for explanatory value, keep one-off content inline, and promote a pattern into shared assets when its visual meaning, structure or behavior recurs.
 
 ## Knowledge, practice and experience
 

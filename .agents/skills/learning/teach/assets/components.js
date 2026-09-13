@@ -19,18 +19,27 @@
       const copy = document.createElement("button");
       copy.type = "button";
       copy.className = "secondary";
-      copy.textContent = "Copy code";
+      copy.innerHTML = `${window.learningNotebookUi.iconSwap("copy", "check")}<span class="button-label" data-default-label="Copy code">Copy code</span>`;
+      const copyLabel = copy.querySelector(".button-label");
       copy.addEventListener("click", async () => {
         try {
           await navigator.clipboard.writeText(code.textContent);
-          copy.textContent = "Copied";
+          window.learningNotebookUi.setTemporarySuccess(
+            copy,
+            copyLabel,
+            "Copied",
+          );
         } catch (_) {
           const range = document.createRange();
           range.selectNodeContents(code);
           const selection = getSelection();
           selection.removeAllRanges();
           selection.addRange(range);
-          copy.textContent = "Code selected — copy manually";
+          copyLabel.textContent = "Selected — copy manually";
+          clearTimeout(copy._notebookReset);
+          copy._notebookReset = setTimeout(() => {
+            copyLabel.textContent = copyLabel.dataset.defaultLabel;
+          }, 2400);
         }
       });
       tools.append(label, copy);
@@ -61,15 +70,15 @@
         const token = (name) => css.getPropertyValue(name).trim();
         const ink = token("--ink"),
           surface = token("--surface"),
-          accent = token("--accent"),
-          soft = token("--soft");
+          secondary = token("--secondary"),
+          soft = token("--surface-soft"),
+          line = token("--line-strong");
         const colors = [
-          accent,
-          token("--code-keyword"),
-          token("--code-string"),
-          token("--code-number"),
-          soft,
-          surface,
+          token("--chart-1"),
+          token("--chart-2"),
+          token("--chart-3"),
+          token("--chart-4"),
+          token("--chart-5"),
         ];
         const variables = {
           darkMode: document.documentElement.dataset.theme === "dark",
@@ -78,33 +87,34 @@
           background: token("--paper"),
           primaryColor: surface,
           primaryTextColor: ink,
-          primaryBorderColor: accent,
+          primaryBorderColor: line,
           secondaryColor: soft,
           secondaryTextColor: ink,
-          secondaryBorderColor: accent,
+          secondaryBorderColor: line,
           tertiaryColor: soft,
           tertiaryTextColor: ink,
-          lineColor: accent,
+          tertiaryBorderColor: line,
+          lineColor: secondary,
           textColor: ink,
           mainBkg: surface,
-          nodeBorder: accent,
+          nodeBorder: line,
           clusterBkg: soft,
-          clusterBorder: accent,
+          clusterBorder: line,
           edgeLabelBackground: surface,
           actorBkg: surface,
-          actorBorder: accent,
+          actorBorder: line,
           actorTextColor: ink,
-          actorLineColor: accent,
+          actorLineColor: secondary,
           signalColor: ink,
           signalTextColor: ink,
           labelBoxBkgColor: surface,
-          labelBoxBorderColor: accent,
+          labelBoxBorderColor: line,
           labelTextColor: ink,
           noteBkgColor: soft,
           noteTextColor: ink,
-          noteBorderColor: accent,
+          noteBorderColor: line,
           activationBkgColor: soft,
-          activationBorderColor: accent,
+          activationBorderColor: line,
           pieSectionTextColor: ink,
           pieTitleTextColor: ink,
           pieLegendTextColor: ink,
@@ -114,12 +124,12 @@
             titleColor: ink,
             xAxisLabelColor: ink,
             xAxisTitleColor: ink,
-            xAxisTickColor: accent,
-            xAxisLineColor: accent,
+            xAxisTickColor: line,
+            xAxisLineColor: secondary,
             yAxisLabelColor: ink,
             yAxisTitleColor: ink,
-            yAxisTickColor: accent,
-            yAxisLineColor: accent,
+            yAxisTickColor: line,
+            yAxisLineColor: secondary,
             plotColorPalette: colors.join(","),
           },
         };
@@ -134,8 +144,14 @@
           securityLevel: "strict",
           theme: "base",
           themeVariables: variables,
-          flowchart: { htmlLabels: false, curve: "basis" },
-          themeCSS: ".node rect, .node polygon { stroke-width: 1.5px; }",
+          flowchart: {
+            htmlLabels: false,
+            curve: "basis",
+            diagramPadding: 12,
+            useMaxWidth: true,
+          },
+          themeCSS:
+            ".node rect, .node circle, .node ellipse, .node polygon, .node path { stroke-width: 1.5px; } .node rect, .cluster rect, .actor { rx: 10px; ry: 10px; } .edgePath path, .flowchart-link { stroke-width: 1.6px; } .label, .nodeLabel { font-weight: 600; }",
         });
         for (const item of diagrams) {
           try {
@@ -144,6 +160,13 @@
               item.figure.dataset.mermaidSource,
             );
             item.view.innerHTML = svg;
+            const graphic = item.view.querySelector("svg");
+            if (graphic) {
+              graphic.setAttribute("role", "img");
+              const caption = item.figure.querySelector("figcaption");
+              if (caption)
+                graphic.setAttribute("aria-label", caption.textContent.trim());
+            }
             item.source.hidden = true;
             item.figure.dataset.renderedTheme =
               document.documentElement.dataset.theme;

@@ -16,16 +16,19 @@
     <script src="../assets/vendor/highlight.js" defer></script>
     <script src="../assets/components.js" defer></script>
   </head>
-  <body>
+  <body data-page-kind="quiz">
     <a class="skip" href="#main">Skip to content</a>
     <nav class="site-nav" aria-label="Library">
-      <a href="../index.html">← My learning notebook</a
+      <a href="../index.html">My learning notebook</a
       ><span>Make the idea your own</span>
     </nav>
     <main id="main">
-      <header>
+      <header class="page-header">
         <p class="eyebrow">quiz</p>
-        <h1>{{TITLE}}</h1><p class="page-date">Created <time datetime="{{CREATED}}">{{CREATED_LABEL}}</time></p>
+        <h1>{{TITLE}}</h1>
+        <p class="page-date">
+          Created <time datetime="{{CREATED}}">{{CREATED_LABEL}}</time>
+        </p>
       </header>
       {{INTRO}}
       <!-- AUTHOR: Duplicate question fieldsets. Replace prompts/options/reasoning, mark exactly one radio data-correct="true" per question, use unique name/id values. Mark any optional hint details data-hint. Add lesson links inside data-explanation (revealed after checking). -->

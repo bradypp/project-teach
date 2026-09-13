@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-13T00:47:23+00:00" />
+    <meta name="tags" content="queues,backpressure,reliability" />
+    <title>Bound the inbox</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="lesson">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Lesson</p>
+        <h1>Bound the inbox</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-13T00:47:23+00:00">13th Sept 2026 · 00:47</time>
+        </p>
+      </header>
+      <div class="page-intro">
+        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+        <p class="lede">
+          A queue moves waiting somewhere; it does not create processing
+          capacity. Lantern needs a visible backlog limit and an honest policy
+          for the moment arrivals outrun the worker.
+        </p>
+        <nav class="page-contents" aria-label="On this page">
+          <a href="#pressure">See the pressure</a>
+          <a href="#two-bounds">Separate two bounds</a>
+          <a href="#policies">Choose a policy</a>
+          <a href="#signals">Measure the right signals</a>
+        </nav>
+      </div>
+
+      <section id="pressure">
+        <h2>The backlog is subtraction over time</h2>
+        <p>
+          If Lantern receives 90 events per second while its worker completes
+          60, the pending inbox grows by roughly 30 each second. A queue smooths
+          a short spike; during sustained overload it merely delays the point of
+          failure and makes the work older.
+        </p>
+        <figure class="diagram">
+          <pre class="mermaid">flowchart LR
+    A[Arrivals<br/>90 per second] --> I[(Durable inbox)]
+    I --> W[Worker<br/>60 per second]
+    W --> E[Effects]
+    I -. grows by 30 per second .-> O[Backlog age rises]</pre>
+          <figcaption>
+            While arrival rate exceeds drain rate, both queue depth and the age
+            of the oldest event rise. Neither can be fixed by naming the buffer a queue.
+          </figcaption>
+        </figure>
+        <p class="callout">
+          <strong>Backpressure is a contract, not a container.</strong> It says
+          how intake responds when downstream capacity is exhausted: wait,
+          reject, shed, redirect, or deliberately degrade.
+        </p>
+      </section>
+
+      <section id="two-bounds">
+        <h2>Lantern has two different queues</h2>
+        <p>
+          The SQLite inbox owns accepted events. An <code>asyncio.Queue</code>
+          can cheaply wake local workers, but it must not become the only copy.
+          Python documents that a positive <code>maxsize</code> makes
+          <code>await put()</code> wait when the queue is full.
+        </p>
+        <pre><code class="language-python">wakeups = asyncio.Queue(maxsize=1)
+
+async def nudge_worker():
+    try:
+        wakeups.put_nowait(None)
+    except asyncio.QueueFull:
+        pass  # one wake-up is already pending; events remain in SQLite
+
+async def worker():
+    while True:
+        try:
+            await asyncio.wait_for(wakeups.get(), timeout=2)
+        except TimeoutError:
+            pass  # periodic polling also finds work after a restart
+
+        while event := inbox.claim_next():
+            await process(event)
+</code></pre>
+        <p>
+          Bounding the wake-up queue protects process memory. It does not bound
+          the durable backlog. Lantern therefore also needs a product-level
+          limit—perhaps maximum pending rows, maximum oldest-event age, or a
+          per-provider quota—checked before it accepts new ownership.
+        </p>
+      </section>
+
+      <section id="policies">
+        <h2>Choose overload behavior deliberately</h2>
+        <table>
+          <thead>
+            <tr><th>Policy</th><th>Good fit</th><th>Cost</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Reject before storing with <code>503</code> and <code>Retry-After</code></td>
+              <td>The provider retries and delivery latency can stretch.</td>
+              <td>Retry traffic may amplify an incident; coordinate limits and backoff.</td>
+            </tr>
+            <tr>
+              <td>Spill into another durable tier</td>
+              <td>Burst retention matters more than immediate processing.</td>
+              <td>More infrastructure and a recovery path to operate.</td>
+            </tr>
+            <tr>
+              <td>Drop expired or low-value work</td>
+              <td>The event has an explicit freshness or priority contract.</td>
+              <td>Data loss must be intentional, observable and acceptable.</td>
+            </tr>
+            <tr>
+              <td>Accept without a bound</td>
+              <td>Almost never a real policy.</td>
+              <td>Disk exhaustion and stale work choose the failure mode for you.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          The ordering matters: if Lantern chooses rejection, it must reject
+          <em>before</em> the acknowledgement boundary. Once the row is committed
+          and success is returned, Lantern owns the work even if the worker is slow.
+        </p>
+      </section>
+
+      <section id="signals">
+        <h2>Depth tells you how much; age tells you how late</h2>
+        <ul>
+          <li><strong>Pending depth</strong> shows the amount of unfinished work.</li>
+          <li><strong>Oldest-event age</strong> exposes user-visible delay even when volume is modest.</li>
+          <li><strong>Arrival and completion rates</strong> show whether the system is recovering or falling further behind.</li>
+          <li><strong>Reject and retry rates</strong> reveal pressure moved back to providers.</li>
+          <li><strong>Attempt count and dead-letter volume</strong> separate poison events from broad saturation.</li>
+        </ul>
+        <aside class="callout">
+          <strong>Your turn.</strong> Lantern's oldest pending event is 12 minutes
+          old and increasing, while depth is flat. Give two plausible explanations.
+          Which additional metric would distinguish them?
+        </aside>
+        <p>
+          Bring your answer to the
+          <a href="../quizzes/inbox-under-failure.html">Inbox under failure practice</a>,
+          or use the <a href="../references/webhook-reliability-checklist.html#capacity">capacity checklist</a>
+          while designing the real endpoint.
+        </p>
+      </section>
+
+      <section id="sources">
+        <h2>Sources and further reading</h2>
+        <ul>
+          <li>
+            <a href="https://docs.python.org/3/library/asyncio-queue.html">Python <code>asyncio.Queue</code></a>
+            defines the exact positive-<code>maxsize</code> blocking behavior used above.
+          </li>
+          <li>
+            <a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/rel_mitigate_interaction_failure_fail_fast.html">AWS Well-Architected: Fail fast and limit queues</a>
+            connects buffering with backlog age, explicit queue management and fast failure under resource pressure.
+          </li>
+          <li>
+            <a href="https://docs.stripe.com/webhooks#handle-events-asynchronously">Stripe's asynchronous webhook guidance</a>
+            provides the provider-side reason to decouple intake from slow processing.
+          </li>
+        </ul>
+      </section>
+
+      <footer>
+        Synthesis: <a href="../topics/reliable-webhook-delivery.html">Reliable webhook delivery</a> ·
+        Vocabulary: <a href="../references/glossary.html#backpressure">Backpressure</a>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-13T00:47:23+00:00" />
+    <meta name="tags" content="webhooks,reliability,http" />
+    <title>What an acknowledgement promises</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="lesson">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Lesson</p>
+        <h1>What an acknowledgement promises</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-13T00:47:23+00:00">13th Sept 2026 · 00:47</time>
+        </p>
+      </header>
+      <div class="page-intro">
+        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+        <p class="lede">
+          A success response is a promise. Lantern should make that promise at
+          the first point where losing the web process can no longer lose the
+          event: immediately after the inbox row commits.
+        </p>
+        <nav class="page-contents" aria-label="On this page">
+          <a href="#promise">Name the promise</a>
+          <a href="#boundary">Find the boundary</a>
+          <a href="#implementation">Place it in code</a>
+          <a href="#failure-cases">Try failure cases</a>
+        </nav>
+      </div>
+
+      <section id="promise">
+        <h2>First, name the promise</h2>
+        <p>
+          A webhook sender cannot see Lantern's internal state. It sees an HTTP
+          response and decides whether delivery succeeded. Returning <code>2xx</code>
+          too early says “you can stop trying” while the only copy may still be
+          in process memory.
+        </p>
+        <p>
+          HTTP gives us a useful distinction. A <code>202 Accepted</code> response
+          means the request was accepted for processing, not that processing
+          finished. It is intentionally noncommittal about the final outcome.
+          That semantic fits Lantern—but the status code cannot make an
+          in-memory event durable. The implementation must earn the response.
+        </p>
+        <p class="callout">
+          <strong>Lantern's promise:</strong> once the sender receives success,
+          Lantern owns a durable copy of the event and can continue processing
+          without another delivery. It does not promise that the worker has
+          already completed the side effect.
+        </p>
+      </section>
+
+      <section id="boundary">
+        <h2>The commit is the hand-off</h2>
+        <figure class="diagram">
+          <pre class="mermaid">sequenceDiagram
+    participant P as Provider
+    participant H as HTTP handler
+    participant D as SQLite inbox
+    participant W as Worker
+    P->>H: POST event evt_204
+    H->>D: INSERT pending event
+    D-->>H: COMMIT succeeds
+    H-->>P: 202 Accepted
+    W->>D: claim pending event
+    W->>W: apply business effect
+    W->>D: mark processed</pre>
+          <figcaption>
+            The response crosses the network only after the durable hand-off.
+            Worker progress happens on the far side of that promise.
+          </figcaption>
+        </figure>
+        <p>
+          The important line is not “request received” or “job enqueued.” It is
+          “the inbox transaction committed.” SQLite states that database reads
+          and writes occur inside transactions; an explicit transaction lets
+          Lantern treat all writes that establish ownership as one boundary.
+        </p>
+
+        <table>
+          <thead>
+            <tr><th>Response point</th><th>If Lantern crashes next</th><th>Verdict</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Before validation</td>
+              <td>The sender may retry malformed work forever.</td>
+              <td>Reject clearly with a non-<code>2xx</code> response.</td>
+            </tr>
+            <tr>
+              <td>After appending to an in-memory queue</td>
+              <td>The process restart erases the only copy.</td>
+              <td>Too early.</td>
+            </tr>
+            <tr>
+              <td>After the inbox commit</td>
+              <td>The worker can find the pending row after restart.</td>
+              <td>The useful acknowledgement boundary.</td>
+            </tr>
+            <tr>
+              <td>After all business processing</td>
+              <td>The event is safe, but slow work may make the sender time out.</td>
+              <td>Correct but unnecessarily coupled.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="implementation">
+        <h2>Put the response after the durable write</h2>
+        <p>
+          This sketch leaves signature verification as an explicit prerequisite
+          and keeps business work out of the request path. The database function
+          returns only after its transaction commits.
+        </p>
+        <pre><code class="language-python">async def receive_event(request):
+    raw_body = await request.body()
+    verify_signature(raw_body, request.headers)
+    event = parse_envelope(raw_body)
+
+    result = inbox.record(
+        provider="acme-pay",
+        event_id=event.id,
+        payload=raw_body,
+    )  # committed before this call returns
+
+    return Response.json(
+        {"event_id": event.id, "state": result.state},
+        status=202,
+    )</code></pre>
+        <p>
+          A duplicate can still receive success because Lantern already owns the
+          event. The next lesson makes that statement safe instead of hopeful.
+        </p>
+      </section>
+
+      <section id="failure-cases">
+        <h2>Walk the two dangerous windows</h2>
+        <ol>
+          <li>
+            <strong>Crash before commit:</strong> no durable row exists and no
+            success response was sent. The provider retries. This is recoverable.
+          </li>
+          <li>
+            <strong>Commit succeeds, response is lost:</strong> the row exists,
+            but the provider cannot know that. It retries. Lantern must recognize
+            the repeated identity and avoid a second effect.
+          </li>
+        </ol>
+        <aside class="callout">
+          <strong>Your turn.</strong> Draw one vertical line through Lantern's
+          request path at the moment it becomes safe to return success. What
+          durable fact exists immediately to the right of your line that did not
+          exist on the left?
+        </aside>
+        <p>
+          If your answer is “a committed row keyed by the provider's event ID,”
+          continue to <a href="make-retries-boring.html">Make retries boring</a>.
+          If the boundary is still fuzzy, describe the crash you are unsure
+          about and we can trace it together.
+        </p>
+      </section>
+
+      <section id="sources">
+        <h2>Sources and further reading</h2>
+        <ul>
+          <li>
+            <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15.3.3">RFC 9110 §15.3.3</a>
+            defines what <code>202 Accepted</code> does—and deliberately does not—promise.
+          </li>
+          <li>
+            <a href="https://docs.stripe.com/webhooks">Stripe's webhook guide</a>
+            is a concrete provider contract: return <code>2xx</code> quickly,
+            handle asynchronously, and expect retries and duplicate deliveries.
+          </li>
+          <li>
+            <a href="https://www.sqlite.org/lang_transaction.html">SQLite transaction documentation</a>
+            grounds the storage boundary used in this project.
+          </li>
+        </ul>
+      </section>
+
+      <footer>
+        Next: <a href="make-retries-boring.html">Make retries boring</a> ·
+        <a href="../references/glossary.html#acknowledgement">Acknowledgement in the glossary</a>
+      </footer>
+    </main>
+  </body>
+</html>

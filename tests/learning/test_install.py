@@ -16,6 +16,7 @@ class InstallTests(unittest.TestCase):
             paths = installer.install(destination)
             self.assertEqual(len(paths), 5)
             self.assertTrue((destination / 'teach-setup/../teach/references/learning-system.md').is_file())
+            self.assertTrue((destination / 'teach/references/visual-language.md').is_file())
             self.assertTrue((destination / 'teach/assets/templates/lesson.html').is_file())
             self.assertTrue((destination / 'teach-quiz/agents/openai.yaml').is_file())
             self.assertFalse((destination / 'productivity').exists())

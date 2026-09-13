@@ -1,6 +1,6 @@
 # Learning artifacts
 
-Use the bundled shell and components to make enjoyable, directly browsable learning material.
+Use the bundled shell to create and deliver directly browsable learning material. Read the [artifact visual language](visual-language.md) before composing page content or changing shared presentation.
 
 ## Start with the lean base
 
@@ -19,39 +19,12 @@ python3 /path/to/teach/scripts/library.py index /project/.learning
 
 - The helper automatically records creation time in UTC and displays it beneath the page title. Keep this timestamp stable when editing; there is no updated-time field.
 - Add subject tags with `--tags "queues,reliability"`; maintain the comma-separated `tags` meta value when content changes. Reuse a small set of existing tags.
-- The home page lists Lessons, Topics, Quizzes, References, then Glossary, omitting empty sections. Type filters sit above subject filters; select one value per row, including All. A page must match both selected values. Tags and newest/oldest/alphabetical sorting apply to the first four; the glossary stays accessible below.
+- The home page lists Lessons, Topics, Quizzes, References, then Glossary, omitting empty sections. Type filters sit above subject filters; select one value per row, including All. A page must match both selected values. The glossary has its own section and participates in References and subject filtering.
 - Keep descriptive filenames stable. Rebuild the index after changing titles, tags or pages.
 
-## Page opening
+## Compose the page
 
-The helper inserts the shared [page-intro component](../assets/templates/page-intro.html) after the title and creation date in every content shell:
-
-- Tags are populated from page metadata and hidden when absent.
-- Give a short summary connecting the idea to the project or current decision.
-- For longer pages, add optional contents linking to real section IDs. Keep labels descriptive and the layout flexible.
-- Keep the short summary; omit contents when unnecessary. Use stable IDs on useful sections even without contents. The glossary can use term navigation instead. Quiz introductions must preserve the challenge; answer-bearing links belong with feedback.
-
-Shared CSS owns language-label styling, pointer cursors, home dividers and quiz-action spacing. Apply presentation fixes there and in reusable components, then synchronise example assets; avoid example-only style patches.
-
-## Code and visual components
-
-- Use the [code block component](../assets/templates/code-block.html) for explicitly labelled languages. Locally bundled Highlight.js supplies syntax highlighting; shared controls add a language label and Copy code button. Use `language-text` for plain text or ASCII.
-- Read [Mermaid authoring guidance](mermaid.md) for syntax examples, dynamic theming and troubleshooting. Prefer the [Mermaid component](../assets/templates/diagram.html) for supported diagrams: flowcharts, sequences, classes, states, git graphs, pie/bar charts and related structures. Keep the source in `pre.mermaid` inside `figure.diagram`, with a useful caption.
-- The [component script](../assets/components.js) applies the shared theme tokens and re-renders diagrams on theme changes. Keep diagram colours in the shared integration rather than embedding light-only styles or Mermaid theme directives.
-- Use ASCII when a small text diagram communicates better. Use custom SVG/canvas for visuals Mermaid cannot express well; use CSS theme tokens for fills, lines, backgrounds and labels.
-- Reuse the existing quiz controls, native revealable explanations and semantic comparison tables. Layout remains flexible; components do not require surrounding cards.
-- Follow explicit visualisation frequency/style preferences in `PREFERENCES.md`. Select visuals for explanatory value rather than adding one to every section.
-- Markdown export retains Mermaid source and captions. Give other visuals meaningful textual export descriptions; verify code exports preserve their language and content.
-
-## Choose the form
-
-The shell provides typography, navigation and a content region. Design that region around the lesson: short prose, a worked example, diagram, comparison, simulator or custom quiz widget. Sections, cards and text boxes are optional components, not a required recipe.
-
-- Inspect `.learning/assets/` before creating new components.
-- Adapt the shared CSS and HTML where useful; preserve other pages when changing shared assets.
-- Use semantic HTML, readable labels and useful visual hierarchy.
-- Prefer local resources and lightweight browser controls over frameworks or external dependencies.
-- Keep explanations readable even when an optional interaction is unavailable.
+The helper inserts the shared page opening after the title and creation date. Follow the [artifact visual language](visual-language.md) for its summary, optional contents, callouts, tables, code, diagrams, practice components and theme tokens. Use stable IDs on useful sections and keep quiz introductions free of answer-bearing links.
 
 A worthwhile chat explanation can be saved as a compact HTML lesson using the same shell. This keeps one browsable version without a Markdown-rendering pipeline. Tiny clarifications need not be saved; consolidate related material only when it improves the explanation.
 
@@ -74,12 +47,6 @@ python3 /path/to/teach/scripts/library.py new /project/.learning glossary glossa
 ```
 
 The [glossary shell](../assets/templates/glossary.html) lives at `references/glossary.html`, appears in the library index and uses the shared theme and Copy/Save Markdown controls. Fill its term navigation and stable term sections with actual vocabulary. Update that page in place and link directly to term anchors from lessons or learning state.
-
-## Optional quiz components
-
-`assets/templates/choice-question.html` and `open-question.html` can be inserted into the quiz form and customised. Choice questions need unique radio names, exactly one `data-correct="true"` option, feedback and an explanation. Enable the choice scaffold after authoring it. Written questions need unique textarea IDs and a revealable worked answer.
-
-The shared script offers feedback, hints and optional Markdown copy/download for these components. Custom widgets may provide their own small feedback loop. No server, persistent answer storage or learning-state synchronisation is required.
 
 ## Theme and Markdown export
 

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-13T00:47:23+00:00" />
+    <meta name="tags" content="reference,webhooks,reliability" />
+    <title>Webhook reliability checklist</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="reference">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Reference</p>
+        <h1>Webhook reliability checklist</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-13T00:47:23+00:00">13th Sept 2026 · 00:47</time>
+        </p>
+      </header>
+      <div class="page-intro">
+        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+        <p class="lede">
+          A compact implementation and review companion for Lantern. Every
+          checked item should point to code, a constraint, a metric or a tested
+          failure—not just an intention.
+        </p>
+        <nav class="page-contents" aria-label="On this page">
+          <a href="#boundary">Boundary</a>
+          <a href="#identity">Identity</a>
+          <a href="#capacity">Capacity</a>
+          <a href="#failure-tests">Failure tests</a>
+        </nav>
+      </div>
+
+      <section id="boundary">
+        <h2>1 · Acknowledgement boundary</h2>
+        <ul>
+          <li>Verify the signature against the unmodified request body before accepting ownership.</li>
+          <li>Reject invalid or unsupported envelopes with a deliberate non-<code>2xx</code> response.</li>
+          <li>Commit the durable inbox row before returning success.</li>
+          <li>Keep slow business logic outside the request path.</li>
+          <li>Document what the chosen success code promises; do not imply processing is complete.</li>
+        </ul>
+        <p><a href="../lessons/what-an-acknowledgement-promises.html#boundary">Why the commit is the hand-off →</a></p>
+      </section>
+
+      <section id="identity">
+        <h2>2 · Identity and retries</h2>
+        <ul>
+          <li>Use a provider-issued event ID or explicit idempotency key, scoped to its issuer.</li>
+          <li>Enforce one event per identity with a database uniqueness constraint.</li>
+          <li>Insert directly with conflict handling; avoid a separate check-then-insert race.</li>
+          <li>Return a compatible success response for a known, identical delivery.</li>
+          <li>Store enough integrity data to reject the same identity with a changed payload.</li>
+          <li>Choose and document how long deduplication identity is retained.</li>
+        </ul>
+        <p><a href="../lessons/make-retries-boring.html#identity">Why identity belongs to intent →</a></p>
+      </section>
+
+      <section id="capacity">
+        <h2>3 · Capacity and backlog</h2>
+        <ul>
+          <li>Give every in-memory queue a positive bound; keep accepted events in durable storage.</li>
+          <li>Define the durable backlog limit in rows, bytes, age, tenant quota, or a useful combination.</li>
+          <li>Apply rejection or shedding before committing and acknowledging new ownership.</li>
+          <li>Coordinate retry guidance with providers so overload does not become a retry storm.</li>
+          <li>Alert on depth, oldest-event age, arrival rate, drain rate and rejected intake.</li>
+          <li>Separate poison events from broad saturation with attempt counts and a dead-letter path.</li>
+        </ul>
+        <p><a href="../lessons/bound-the-inbox.html#policies">Compare overload policies →</a></p>
+      </section>
+
+      <section id="worker">
+        <h2>4 · Worker safety</h2>
+        <ul>
+          <li>Claim work so concurrent workers do not deliberately process the same row.</li>
+          <li>Recover rows abandoned by a crashed worker.</li>
+          <li>Give each external side effect its own idempotency or reconciliation contract.</li>
+          <li>Record attempt time, completion, last error and correlation identity.</li>
+          <li>Do not mark completion before the effect you mean to represent has succeeded.</li>
+        </ul>
+      </section>
+
+      <section id="failure-tests">
+        <h2>5 · Failure tests worth keeping</h2>
+        <table>
+          <thead><tr><th>Inject this failure</th><th>Expected durable truth</th></tr></thead>
+          <tbody>
+            <tr><td>Crash before inbox commit</td><td>No row, no success; provider remains responsible for retry.</td></tr>
+            <tr><td>Lose the response after commit</td><td>Retry maps to the existing row and causes no second capture.</td></tr>
+            <tr><td>Deliver the same ID concurrently</td><td>The uniqueness constraint permits one canonical row.</td></tr>
+            <tr><td>Reuse an ID with another body</td><td>Lantern reports a mismatch instead of overwriting.</td></tr>
+            <tr><td>Stop the worker after accepting</td><td>Pending rows survive and age/depth metrics rise.</td></tr>
+            <tr><td>Crash after a remote effect</td><td>Retry is safe through downstream idempotency or reconciliation.</td></tr>
+            <tr><td>Fill the configured backlog</td><td>New work follows the documented reject, spill or shed policy.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <aside class="callout">
+        <strong>Review prompt.</strong> Pick any success response in the system
+        and finish this sentence with a database fact: “After this response,
+        Lantern can prove …” If the sentence names only memory or intention, the
+        boundary is not durable yet.
+      </aside>
+
+      <footer>
+        See the <a href="../topics/reliable-webhook-delivery.html">full synthesis</a> ·
+        Try the <a href="../quizzes/inbox-under-failure.html">failure practice</a>
+      </footer>
+    </main>
+  </body>
+</html>

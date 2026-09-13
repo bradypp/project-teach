@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-13T00:47:23+00:00" />
+    <meta name="tags" content="practice,webhooks,reliability" />
+    <title>Inbox under failure</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="quiz">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a
+      ><span>Make the idea your own</span>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">quiz</p>
+        <h1>Inbox under failure</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-13T00:47:23+00:00">13th Sept 2026 · 00:47</time>
+        </p>
+      </header>
+      <div class="page-intro">
+        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+        <p class="lede">
+          Six failure scenes from the Lantern inbox. Predict the durable state,
+          choose the safest boundary, and explain the trade-off before revealing
+          the reasoning.
+        </p>
+        <nav class="page-contents" aria-label="On this page">
+          <a href="#q1">Acknowledgement</a>
+          <a href="#q2">Concurrent retry</a>
+          <a href="#q3">Changed intent</a>
+          <a href="#q4">Sustained overload</a>
+          <a href="#q5">External effect</a>
+          <a href="#q6">Policy choice</a>
+        </nav>
+      </div>
+
+      <p class="muted">
+        Work from the scenario, not the vocabulary. Answers stay in this page
+        unless you copy or save them; practice does not update learning records.
+      </p>
+      <form data-quiz>
+        <fieldset id="q1" data-question>
+          <legend>
+            Lantern inserts an event into an in-memory queue, returns
+            <code>202</code>, then the process crashes before SQLite is touched.
+            Who owns recovery?
+          </legend>
+          <label class="option" for="q1-a">
+            <input id="q1-a" type="radio" name="q1" value="a" />
+            Lantern, because <code>202</code> transferred ownership.
+          </label>
+          <label class="option" for="q1-b">
+            <input id="q1-b" type="radio" name="q1" value="b" data-correct="true" />
+            Nobody reliably; Lantern promised ownership without retaining the event.
+          </label>
+          <label class="option" for="q1-c">
+            <input id="q1-c" type="radio" name="q1" value="c" />
+            SQLite, because the handler intended to write later.
+          </label>
+          <details data-hint>
+            <summary>A hint</summary>
+            <p>Ask which copy survives the process, then ignore what the code intended to do next.</p>
+          </details>
+          <button type="button" data-check>Check answer</button>
+          <p class="feedback" data-feedback aria-live="polite" hidden></p>
+          <div data-explanation hidden>
+            <h3>Why</h3>
+            <p>
+              The sender was told to stop retrying, but Lantern's only copy died
+              with the process. Acknowledgement should follow the durable inbox
+              commit. See <a href="../lessons/what-an-acknowledgement-promises.html#boundary">The commit is the hand-off</a>.
+            </p>
+          </div>
+        </fieldset>
+
+        <fieldset id="q2" data-question>
+          <legend>
+            Two handlers receive <code>evt_204</code> concurrently. Which design
+            closes the race with the least application choreography?
+          </legend>
+          <label class="option" for="q2-a">
+            <input id="q2-a" type="radio" name="q2" value="a" />
+            Each handler runs <code>SELECT</code>; if neither sees a row, both insert.
+          </label>
+          <label class="option" for="q2-b">
+            <input id="q2-b" type="radio" name="q2" value="b" data-correct="true" />
+            A unique <code>(provider, event_id)</code> constraint with conflict-aware insert.
+          </label>
+          <label class="option" for="q2-c">
+            <input id="q2-c" type="radio" name="q2" value="c" />
+            A random delay before each insert so one request probably finishes first.
+          </label>
+          <details data-hint>
+            <summary>A hint</summary>
+            <p>Which layer can arbitrate both writes at the exact point the invariant is enforced?</p>
+          </details>
+          <button type="button" data-check>Check answer</button>
+          <p class="feedback" data-feedback aria-live="polite" hidden></p>
+          <div data-explanation hidden>
+            <h3>Why</h3>
+            <p>
+              A uniqueness constraint makes the identity invariant indivisible
+              from the write. A pre-check leaves time for another handler to act.
+              See <a href="../lessons/make-retries-boring.html#sqlite">Let SQLite arbitrate the race</a>.
+            </p>
+          </div>
+        </fieldset>
+
+        <fieldset id="q3" data-question>
+          <legend>
+            Lantern already stored <code>evt_204</code>. The same provider sends
+            that ID again with a different payload digest. What is the safest default?
+          </legend>
+          <label class="option" for="q3-a">
+            <input id="q3-a" type="radio" name="q3" value="a" />
+            Overwrite the first payload because the newest delivery is authoritative.
+          </label>
+          <label class="option" for="q3-b">
+            <input id="q3-b" type="radio" name="q3" value="b" />
+            Silently discard it because every repeated ID is identical by definition.
+          </label>
+          <label class="option" for="q3-c">
+            <input id="q3-c" type="radio" name="q3" value="c" data-correct="true" />
+            Surface an identity conflict and preserve the original canonical payload.
+          </label>
+          <details data-hint>
+            <summary>A hint</summary>
+            <p>The same key now appears to name two different intentions. Avoid guessing which one is real.</p>
+          </details>
+          <button type="button" data-check>Check answer</button>
+          <p class="feedback" data-feedback aria-live="polite" hidden></p>
+          <div data-explanation hidden>
+            <h3>Why</h3>
+            <p>
+              Quiet overwrite destroys evidence; quiet discard hides a broken
+              contract. Preserve the first committed fact and make the mismatch
+              observable. See <a href="../lessons/make-retries-boring.html#identity">Identity belongs to the intent</a>.
+            </p>
+          </div>
+        </fieldset>
+
+        <fieldset id="q4" data-question>
+          <legend>
+            Arrivals remain at 90 events per second while the worker completes
+            60. What happens after adding an unbounded queue?
+          </legend>
+          <label class="option" for="q4-a">
+            <input id="q4-a" type="radio" name="q4" value="a" />
+            Throughput rises to 90 because enqueueing is fast.
+          </label>
+          <label class="option" for="q4-b">
+            <input id="q4-b" type="radio" name="q4" value="b" data-correct="true" />
+            The backlog grows by about 30 events per second until something else limits it.
+          </label>
+          <label class="option" for="q4-c">
+            <input id="q4-c" type="radio" name="q4" value="c" />
+            The queue automatically asks the provider to slow down.
+          </label>
+          <details data-hint>
+            <summary>A hint</summary>
+            <p>A buffer changes when work waits, not how quickly the worker finishes it.</p>
+          </details>
+          <button type="button" data-check>Check answer</button>
+          <p class="feedback" data-feedback aria-live="polite" hidden></p>
+          <div data-explanation hidden>
+            <h3>Why</h3>
+            <p>
+              Sustained difference accumulates: <code>90 − 60 = 30</code> new
+              pending events each second. Capacity requires a limit and policy.
+              See <a href="../lessons/bound-the-inbox.html#pressure">The backlog is subtraction over time</a>.
+            </p>
+          </div>
+        </fieldset>
+
+        <fieldset id="q5" data-question>
+          <legend>
+            The worker sends an email, then crashes before setting
+            <code>processed_at</code>. On restart, what can Lantern prove—and what
+            extra contract would make retry safe?
+          </legend>
+          <label for="reasoning-effect">Your reasoning</label>
+          <textarea id="reasoning-effect" placeholder="Separate the inbox fact from the remote email fact."></textarea>
+          <details data-self-check>
+            <summary>Compare your reasoning</summary>
+            <div data-explanation>
+              <p>
+                Lantern can prove that the event remains pending; its local
+                transaction cannot prove whether the email service acted. Pass a
+                stable effect key such as <code>email:evt_204</code> to a service
+                that honors idempotency, or reconcile against a durable downstream
+                receipt before retrying. Intake deduplication alone does not solve
+                this window. Revisit <a href="../lessons/make-retries-boring.html#limits">what deduplication does not solve</a>.
+              </p>
+            </div>
+          </details>
+        </fieldset>
+
+        <fieldset id="q6" data-question>
+          <legend>
+            Lantern's backlog limit is reached. Choose reject, spill, or shed for
+            this project, and state the condition that makes your choice honest.
+          </legend>
+          <label for="reasoning-policy">Your policy and trade-off</label>
+          <textarea id="reasoning-policy" placeholder="Name who retains ownership, what response Lantern sends, and which metric triggers it."></textarea>
+          <details data-self-check>
+            <summary>Compare your reasoning</summary>
+            <div data-explanation>
+              <p>
+                A strong answer names the ownership boundary and loss contract.
+                For Lantern's first slice, rejecting before storage with a
+                temporary failure is defensible only if the provider retries and
+                retry pressure is bounded. Spill is stronger when every event
+                must be retained; shed is valid only for explicitly disposable
+                work. Compare <a href="../lessons/bound-the-inbox.html#policies">the overload policies</a>.
+              </p>
+            </div>
+          </details>
+        </fieldset>
+      </form>
+
+      <footer>
+        Practice is disposable until discussed · Return to the
+        <a href="../topics/reliable-webhook-delivery.html">topic synthesis</a>
+      </footer>
+    </main>
+  </body>
+</html>

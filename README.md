@@ -43,7 +43,7 @@ Teaching and reviews finish by using the `teach-update` skill to reconcile affec
 
 Open [the example notebook](examples/.learning/index.html) to try the theme, diagrams, highlighted code, quizzes, tags and sorting. Its content is synthetic, not learning evidence.
 
-The helper adds creation timestamps automatically. The homepage shows nonempty Lessons, Topics, Quizzes and References sections with single-selection type and subject filters and newest/oldest/alphabetical sorting. The glossary stays unfiltered at the bottom. Use `--tags "subject,another-subject"` when creating pages.
+The helper adds creation timestamps automatically. The homepage shows nonempty Lessons, Topics, Quizzes, References and Glossary sections with single-selection type and subject filters and newest/oldest/alphabetical sorting. The glossary participates in reference and subject filtering. Use `--tags "subject,another-subject"` when creating pages.
 
 Mermaid and Highlight.js are bundled locally. Supported diagrams and code blocks inherit the notebook theme; custom layouts remain flexible. Diagram source and code survive Markdown export.
 
@@ -63,7 +63,8 @@ Python 3 runs the artifact helper; the generated library opens directly in a bro
 
 - [State and records](.agents/skills/learning/teach/references/learning-system.md)
 - [Teaching guidance](.agents/skills/learning/teach/references/teaching.md)
-- [Artifacts and components](.agents/skills/learning/teach/references/artifacts.md)
+- [Artifact mechanics](.agents/skills/learning/teach/references/artifacts.md)
+- [Artifact visual language](.agents/skills/learning/teach/references/visual-language.md)
 
 Helper tests: `python3 -m unittest discover -s tests/learning -p 'test_*.py'`. Routine lessons need only a quick content/link check; browser tests in `tests/learning/test_browser.cjs` and `test_notebook.cjs` cover shared controls, exports and themes (Playwright and a Chromium browser required).
 

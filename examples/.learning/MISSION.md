@@ -1,20 +1,5 @@
-# Fieldnotes export service
+# Learning mission
 
-Fictional demonstration of a project-first setup. No sample claims describe the real user's knowledge.
+Use the Lantern webhook inbox to build a practical mental model of reliable asynchronous intake: acknowledge only what has been retained, make repeated delivery harmless, and make overload visible and bounded.
 
-Build a small service that accepts CSV export requests, processes them in the background and exposes job status.
-
-## Capabilities to develop
-
-- Explain why acceptance, execution and completion are separate events.
-- Choose an explicit overload response from a capacity model.
-- Trace a crash between producing an effect and recording success.
-- Design stable operation identity before enabling automatic retries.
-
-## Scope and constraints
-
-- Start with a local Python experiment; durable storage is the next design stage.
-- Prioritise inspectable behaviour over infrastructure breadth.
-- Email, scheduling and multiple regions are outside the first milestone.
-
-See the active [project plan](../PROJECT_PLAN.md) and [current learning state](LEARNING_STATE.md).
+The immediate outcome is a design the learner can explain under crash, retry and traffic-spike scenarios—not merely code that works on the happy path.

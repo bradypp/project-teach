@@ -9,19 +9,35 @@
   if (valid(query)) preference = query;
   if (!valid(preference)) preference = "system";
   const media = matchMedia("(prefers-color-scheme: dark)");
-  function apply(value) {
-    preference = valid(value) ? value : "system";
-    document.documentElement.dataset.theme =
-      preference === "system" ? (media.matches ? "dark" : "light") : preference;
-    try {
-      localStorage.setItem("teach-theme", preference);
-    } catch (_) {}
-    window.dispatchEvent(new Event("teach-theme-change"));
+  function withoutTransitions(change) {
+    const style = document.createElement("style");
+    style.textContent = "*,*::before,*::after{transition:none!important}";
+    document.head.append(style);
+    change();
+    if (document.body) void document.body.offsetHeight;
+    requestAnimationFrame(() => requestAnimationFrame(() => style.remove()));
+  }
+  function apply(value, suppressTransitions) {
+    const change = () => {
+      preference = valid(value) ? value : "system";
+      document.documentElement.dataset.theme =
+        preference === "system"
+          ? media.matches
+            ? "dark"
+            : "light"
+          : preference;
+      try {
+        localStorage.setItem("teach-theme", preference);
+      } catch (_) {}
+      window.dispatchEvent(new Event("teach-theme-change"));
+    };
+    if (suppressTransitions && document.body) withoutTransitions(change);
+    else change();
   }
   window.teachTheme = {
     get: () => preference,
     set: (value) => {
-      apply(value);
+      apply(value, true);
       const url = new URL(location.href);
       url.searchParams.set("theme", preference);
       try {
@@ -30,9 +46,9 @@
     },
   };
   media.addEventListener("change", () => {
-    if (preference === "system") apply(preference);
+    if (preference === "system") apply(preference, true);
   });
-  apply(preference);
+  apply(preference, false);
   document.addEventListener("click", (event) => {
     const link = event.target.closest("a[href]");
     if (

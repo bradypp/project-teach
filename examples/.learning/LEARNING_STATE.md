@@ -1,28 +1,31 @@
-# Current learning state
+# Learning state
 
-Synthetic demonstration of teach-update reconciliation, not real learner evidence.
+> Synthetic example: this file demonstrates the shape of maintained state. Its learner evidence is fictional and must not be attributed to a real user.
 
-## Demonstrated in the fictional interaction
+## Current understanding
 
-- Capacity versus storage: reasoned through a burst and admission choice. [Evidence](records/0001-capacity-is-not-storage.md), [lesson](lessons/queues.html).
-- Timeout uncertainty: identified a side effect/status failure window. [Evidence](records/0002-timeout-is-uncertainty.md), [lesson](lessons/retries.html).
+- Can distinguish **accepted for later processing** from **processing completed**, and places the acknowledgement after the durable inbox commit. Evidence: [acknowledgement is a boundary](records/0001-acknowledgement-is-a-boundary.md).
+- Can explain why a stable event ID plus a uniqueness constraint makes duplicate intake a no-op. Evidence: [retries need stable identity](records/0002-retries-need-stable-identity.md).
 
-## Exposure and uncertainty
+## Useful exposure — not yet verified
 
-- Stable operation keys: introduced in the retry lesson; real implementation remains unverified.
-- Durable claiming and publication: identified by planning, not yet demonstrated.
-- [Quiz](quizzes/queue-practice.html) created for practice; no answers have been supplied and no assessment is inferred from it.
+- [Bound the inbox](lessons/bound-the-inbox.html) introduced queue limits, message age and overload policy. No learner explanation or application has been observed yet.
+- [Reliable webhook delivery](topics/reliable-webhook-delivery.html) connects durable acknowledgement, deduplication and backpressure into one design.
 
-## Deferred
+## Uncertainty and next checks
 
-- Transactions and leases: revisit before implementing durable job claims.
-- Retry budgets and jitter: revisit when the first recoverable failure path is implemented.
+- Verify that the learner can reason about the crash after the external side effect but before marking an event complete.
+- Ask the learner to choose and justify Lantern's overload response when SQLite writes are saturated.
+- Check whether the same-key/different-payload case is rejected rather than quietly treated as a duplicate.
 
-## Opportunities
+## Deferred scope
 
-- Fair scheduling across users: useful if large exports starve smaller ones.
-- Outbox patterns: investigate when notification becomes a project requirement.
+- Provider-specific signature verification and secret rotation.
+- Multi-worker claiming, leases and recovery of abandoned work.
+- The transactional outbox pattern for side effects that leave SQLite.
 
-## Connected material
+## Useful lessons
 
-[Topic synthesis](topics/reliable-work.html) · [Capacity reference](references/capacity.html) · [Glossary](references/glossary.html)
+- [What an acknowledgement promises](lessons/what-an-acknowledgement-promises.html) — revisit when deciding where the HTTP response belongs.
+- [Make retries boring](lessons/make-retries-boring.html) — revisit when defining identity, uniqueness and transaction boundaries.
+- [Webhook reliability checklist](references/webhook-reliability-checklist.html) — use during implementation and review.

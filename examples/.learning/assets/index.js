@@ -1,6 +1,31 @@
 /* Shared notebook controls. Only theme preference is stored; learning files stay untouched. */
 (function () {
   "use strict";
+  const icons = {
+    copy: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path></svg>',
+    check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4.2 4.2L19 6.5"></path></svg>',
+    download: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"></path><path d="m7.5 11 4.5 4.5 4.5-4.5"></path><path d="M5 20h14"></path></svg>',
+    moon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4a8.5 8.5 0 1 0 11.2 11.2Z"></path></svg>',
+    sun: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2.5v2M12 19.5v2M4.8 4.8l1.4 1.4M17.8 17.8l1.4 1.4M2.5 12h2M19.5 12h2M4.8 19.2l1.4-1.4M17.8 6.2l1.4-1.4"></path></svg>',
+    system: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg>',
+  };
+  function icon(name) {
+    return `<span class="button-icon" aria-hidden="true">${icons[name]}</span>`;
+  }
+  function iconSwap(defaultName, activeName) {
+    return `<span class="icon-swap" aria-hidden="true"><span class="icon-default">${icons[defaultName]}</span><span class="icon-active">${icons[activeName]}</span></span>`;
+  }
+  function setTemporarySuccess(button, label, successText) {
+    if (!button) return;
+    clearTimeout(button._notebookReset);
+    button.classList.add("is-swapped");
+    label.textContent = successText;
+    button._notebookReset = setTimeout(() => {
+      button.classList.remove("is-swapped");
+      label.textContent = label.dataset.defaultLabel;
+    }, 1800);
+  }
+  window.learningNotebookUi = { icon, iconSwap, setTemporarySuccess };
   function text(node) {
     return node ? node.textContent.trim().replace(/\s+/g, " ") : "";
   }
@@ -99,14 +124,19 @@
   toolbar.className = "notebook-tools";
   toolbar.dataset.exportUi = "";
   toolbar.setAttribute("aria-label", "Notebook tools");
-  toolbar.innerHTML = `<div class="actions"><button type="button" data-copy>Copy Markdown</button><button type="button" class="secondary" data-download>Save Markdown</button></div>
+  toolbar.innerHTML = `<div class="actions"><button type="button" data-copy>${iconSwap("copy", "check")}<span class="button-label" data-default-label="Copy Markdown">Copy Markdown</span></button><button type="button" class="secondary" data-download>${icon("download")}<span class="button-label">Save Markdown</span></button></div>
     <p data-export-status role="status"></p><div class="export-fallback" hidden><label for="export-text">Select and copy</label><textarea id="export-text" readonly></textarea></div>`;
-  const home = document.createElement('a');
-  home.href = document.querySelector('.site-nav a')?.getAttribute('href') || 'index.html';
-  home.textContent = '← My learning notebook';
-  const row = document.createElement('div'); row.className = 'tools-row';
-  row.append(home, toolbar.querySelector('.actions')); toolbar.prepend(row);
-  if (!document.body.hasAttribute('data-notebook-home')) document.body.append(toolbar);
+  const home = document.createElement("a");
+  home.href =
+    document.querySelector(".site-nav a")?.getAttribute("href") ||
+    "index.html";
+  home.textContent = "My learning notebook";
+  const row = document.createElement("div");
+  row.className = "tools-row";
+  row.append(home, toolbar.querySelector(".actions"));
+  toolbar.prepend(row);
+  if (!document.body.hasAttribute("data-notebook-home"))
+    document.body.append(toolbar);
   let navigation = document.querySelector(".site-nav");
   if (!navigation) {
     navigation = document.createElement("nav");
@@ -114,16 +144,30 @@
     navigation.setAttribute("aria-label", "Notebook");
     document.body.insertBefore(navigation, document.querySelector("main"));
   }
+  const existingHome = navigation.querySelector("a");
+  if (existingHome?.textContent.trim().startsWith("←"))
+    existingHome.textContent = existingHome.textContent
+      .trim()
+      .replace(/^←\s*/, "");
+  if (!navigation.querySelector("a, .notebook-mark")) {
+    const mark = document.createElement("span");
+    mark.className = "notebook-mark";
+    mark.textContent = "Personal learning notebook";
+    navigation.append(mark);
+  }
   const themes = document.createElement("div");
   themes.className = "theme-controls";
   themes.dataset.exportUi = "";
-  themes.innerHTML = `<button type="button" class="secondary" data-theme-toggle></button><button type="button" class="secondary" data-theme-system>Use system</button>`;
+  themes.innerHTML = `<button type="button" class="secondary skip-icon-transition" data-theme-toggle>${iconSwap("moon", "sun")}<span class="button-label"></span></button><button type="button" class="secondary" data-theme-system>${icon("system")}<span class="button-label">Use system</span></button>`;
   navigation.append(themes);
   const toggle = themes.querySelector("[data-theme-toggle]");
   const system = themes.querySelector("[data-theme-system]");
   function showTheme() {
     const dark = document.documentElement.dataset.theme === "dark";
-    toggle.textContent = dark ? "Light mode" : "Dark mode";
+    toggle.classList.toggle("is-swapped", dark);
+    toggle.querySelector(".button-label").textContent = dark
+      ? "Light mode"
+      : "Dark mode";
     toggle.setAttribute(
       "aria-label",
       dark ? "Switch to light theme" : "Switch to dark theme",
@@ -138,6 +182,11 @@
   system.addEventListener("click", () => window.teachTheme.set("system"));
   window.addEventListener("teach-theme-change", showTheme);
   showTheme();
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() =>
+      toggle.classList.remove("skip-icon-transition"),
+    ),
+  );
   document.querySelectorAll("[data-self-check]").forEach((reveal) =>
     reveal.addEventListener("toggle", () => {
       if (reveal.open)
@@ -157,12 +206,14 @@
       feedback.hidden = false;
       if (!selected) {
         feedback.textContent = "Choose an answer first.";
+        feedback.dataset.state = "error";
         return;
       }
-      feedback.textContent =
-        selected.dataset.correct === "true"
-          ? "Yes — explore the reasoning below."
-          : "Not quite — explore the reasoning below.";
+      const correct = selected.dataset.correct === "true";
+      feedback.textContent = correct
+        ? "Yes — explore the reasoning below."
+        : "Not quite — explore the reasoning below.";
+      feedback.dataset.state = correct ? "success" : "error";
       question.dataset.checked = "true";
       question.querySelector("[data-explanation]").hidden = false;
     }),
@@ -174,6 +225,7 @@
       if (question.dataset.checked === "true") {
         question.querySelector("[data-feedback]").textContent =
           "Answer changed after viewing feedback. Check again to compare.";
+        question.querySelector("[data-feedback]").dataset.state = "changed";
       }
     }),
   );
@@ -185,6 +237,11 @@
       try {
         await navigator.clipboard.writeText(value);
         status.textContent = "Copied as Markdown.";
+        setTemporarySuccess(
+          copy,
+          copy.querySelector(".button-label"),
+          "Copied",
+        );
       } catch (_) {
         const fallback = document.querySelector(".export-fallback");
         const area = fallback.querySelector("textarea");

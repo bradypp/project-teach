@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-13T00:47:23+00:00" />
+    <meta name="tags" content="webhooks,idempotency,sqlite" />
+    <title>Make retries boring</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="lesson">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Lesson</p>
+        <h1>Make retries boring</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-13T00:47:23+00:00">13th Sept 2026 · 00:47</time>
+        </p>
+      </header>
+      <div class="page-intro">
+        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+        <p class="lede">
+          Retries are normal when the sender cannot observe your commit. Give
+          each intent a stable identity, enforce it in storage, and make the
+          repeated path an ordinary result.
+        </p>
+        <nav class="page-contents" aria-label="On this page">
+          <a href="#ambiguity">The ambiguity</a>
+          <a href="#identity">Stable identity</a>
+          <a href="#sqlite">SQLite implementation</a>
+          <a href="#limits">What this does not solve</a>
+        </nav>
+      </div>
+
+      <section id="ambiguity">
+        <h2>A lost response creates ambiguity</h2>
+        <p>
+          Imagine Lantern commits <code>evt_204</code>, then the network drops
+          its <code>202</code>. The provider observes a timeout. It cannot tell
+          whether nothing happened or whether everything up to the response
+          happened, so retrying is the sensible action.
+        </p>
+        <figure class="diagram">
+          <pre class="mermaid">sequenceDiagram
+    participant P as Provider
+    participant L as Lantern
+    participant D as SQLite
+    P->>L: POST evt_204
+    L->>D: INSERT evt_204
+    D-->>L: COMMIT
+    L--xP: 202 lost in transit
+    Note over P,L: outcome is unknown to the provider
+    P->>L: retry evt_204
+    L->>D: INSERT ... ON CONFLICT
+    D-->>L: already stored
+    L-->>P: 202 duplicate</pre>
+          <figcaption>
+            At-least-once delivery turns an uncertain outcome into a repeated
+            request. Stable identity turns the repeat into something recognizable.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section id="identity">
+        <h2>Identity belongs to the intent</h2>
+        <p>
+          A payload hash is useful for integrity, but it is a poor primary
+          identity: two intentional events can have the same fields. Prefer the
+          provider's stable event ID, scoped by provider or account. AWS makes
+          the same design argument for caller-provided request identifiers: the
+          caller can state which attempts belong to one intent.
+        </p>
+        <p class="callout">
+          <strong>Invariant:</strong> for one <code>(provider, event_id)</code>,
+          Lantern stores one canonical payload. A repeat with the same digest is
+          harmless. The same ID with a different digest is a conflict worth
+          surfacing, not silently overwriting.
+        </p>
+        <p>
+          Put this invariant in a uniqueness constraint. A separate “look first,
+          then insert” check leaves a race where two handlers both see nothing
+          and both proceed.
+        </p>
+      </section>
+
+      <section id="sqlite">
+        <h2>Let SQLite arbitrate the race</h2>
+        <pre><code class="language-sql">CREATE TABLE inbox_events (
+    id             INTEGER PRIMARY KEY,
+    provider       TEXT NOT NULL,
+    event_id       TEXT NOT NULL,
+    payload        BLOB NOT NULL,
+    payload_sha256 TEXT NOT NULL,
+    received_at    TEXT NOT NULL,
+    processed_at   TEXT,
+    UNIQUE (provider, event_id)
+);</code></pre>
+        <p>
+          SQLite's UPSERT can turn a uniqueness conflict into a no-op. The
+          transaction keeps the insert and conflict inspection together; the
+          digest detects reused identity with changed intent.
+        </p>
+        <pre><code class="language-python">from dataclasses import dataclass
+from hashlib import sha256
+
+@dataclass(frozen=True)
+class RecordResult:
+    state: str              # "stored" or "duplicate"
+    inbox_id: int
+
+def record(connection, provider, event_id, payload):
+    digest = sha256(payload).hexdigest()
+
+    with connection:       # commit on success; rollback on exception
+        inserted = connection.execute(
+            """
+            INSERT INTO inbox_events
+                (provider, event_id, payload, payload_sha256, received_at)
+            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(provider, event_id) DO NOTHING
+            RETURNING id
+            """,
+            (provider, event_id, payload, digest),
+        ).fetchone()
+
+        if inserted:
+            return RecordResult("stored", inserted[0])
+
+        existing = connection.execute(
+            """SELECT id, payload_sha256 FROM inbox_events
+               WHERE provider = ? AND event_id = ?""",
+            (provider, event_id),
+        ).fetchone()
+
+        if existing[1] != digest:
+            raise IdempotencyConflict(event_id)
+
+        return RecordResult("duplicate", existing[0])</code></pre>
+
+        <table>
+          <thead>
+            <tr><th>Attempt</th><th>Constraint result</th><th>Handler result</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>First <code>evt_204</code></td><td>New unique key</td><td><code>stored</code></td></tr>
+            <tr><td>Same ID, same body</td><td>Conflict; digest matches</td><td><code>duplicate</code></td></tr>
+            <tr><td>Same ID, changed body</td><td>Conflict; digest differs</td><td>Raise and investigate</td></tr>
+            <tr><td>Same body, new ID</td><td>New unique key</td><td><code>stored</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="limits">
+        <h2>Deduplicating intake is not exactly-once processing</h2>
+        <p>
+          The unique inbox row prevents duplicate <em>capture</em>. A worker can
+          still crash after causing an external side effect but before recording
+          completion. That later boundary needs its own strategy: an idempotency
+          key understood by the downstream service, an atomic local transaction,
+          or reconciliation.
+        </p>
+        <aside class="callout">
+          <strong>Your turn.</strong> A worker sends a welcome email for
+          <code>evt_204</code> and crashes before setting
+          <code>processed_at</code>. Which fact does the inbox preserve, and
+          which fact can it not prove? Sketch the smallest additional contract
+          that would make the email retry safe.
+        </aside>
+        <p>
+          Next, decide what Lantern does when valid new events arrive faster than
+          the worker drains them in <a href="bound-the-inbox.html">Bound the inbox</a>.
+        </p>
+      </section>
+
+      <section id="sources">
+        <h2>Sources and further reading</h2>
+        <ul>
+          <li>
+            <a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS Builders' Library: Making retries safe with idempotent APIs</a>
+            explains caller-provided identity, atomic recording, and why the same
+            ID with different parameters should be treated as a mismatch.
+          </li>
+          <li>
+            <a href="https://docs.stripe.com/webhooks#handle-duplicate-events">Stripe: Handle duplicate events</a>
+            supplies a real webhook example of logging event IDs and skipping
+            already processed deliveries.
+          </li>
+          <li>
+            <a href="https://www.sqlite.org/lang_upsert.html">SQLite UPSERT</a>
+            documents <code>ON CONFLICT</code> behavior for uniqueness constraints.
+          </li>
+        </ul>
+      </section>
+
+      <footer>
+        Previous: <a href="what-an-acknowledgement-promises.html">What an acknowledgement promises</a> ·
+        Reference: <a href="../references/webhook-reliability-checklist.html#identity">Identity checklist</a>
+      </footer>
+    </main>
+  </body>
+</html>

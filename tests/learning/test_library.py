@@ -47,7 +47,7 @@ class LibraryTests(unittest.TestCase):
         self.assertIn('Less &lt; more &amp; safe', content)
 
     def test_glossary_shares_reference_navigation_and_assets(self):
-        page = library.new(self.root, 'glossary', 'glossary', 'My glossary')
+        page = library.new(self.root, 'glossary', 'glossary', 'My glossary', 'reference, terminology')
         self.assertEqual(page, self.root / 'references/glossary.html')
         content = page.read_text()
         self.assertIn('aria-label="Terms"', content)
@@ -57,6 +57,8 @@ class LibraryTests(unittest.TestCase):
         index = (self.root / 'index.html').read_text()
         self.assertEqual(index.count('href="references/glossary.html"'), 1)
         self.assertEqual(index.count('<h2>Glossary</h2>'), 1)
+        self.assertIn('<section class="library-section" data-library-section="references"><h2>Glossary</h2>', index)
+        self.assertIn('data-tag="terminology"', index)
         self.assertFalse((self.root / 'GLOSSARY.md').exists())
 
     def test_topics_section_tracks_actual_pages_and_preserves_synthesis(self):

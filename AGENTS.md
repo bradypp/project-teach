@@ -14,6 +14,7 @@ This repository packages project-based teaching skills. Read the relevant skill 
 - `teach/references/learning-system.md` defines project storage, evidence and records.
 - `teach/references/teaching.md` defines baseline teaching depth, methods, personality and lesson design.
 - `teach/references/artifacts.md` defines artifact mechanics and delivery.
+- `teach/references/visual-language.md` defines HTML composition, reusable components and theme-token use.
 - `teach/references/writing.md` defines prose guidance for teaching and maintained Markdown.
 - `teach/references/PREFERENCES.md` is a concise template for optional project overrides. The skills and references must work fully without it.
 - Templates and components live with `teach`; other skills link to shared guidance.

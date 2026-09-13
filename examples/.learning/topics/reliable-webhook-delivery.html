@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-13T00:47:23+00:00" />
+    <meta name="tags" content="webhooks,reliability,architecture" />
+    <title>Reliable webhook delivery</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="topic">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Topic</p>
+        <h1>Reliable webhook delivery</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-13T00:47:23+00:00">13th Sept 2026 · 00:47</time>
+        </p>
+      </header>
+      <div class="page-intro">
+        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+        <p class="lede">
+          Reliable webhook intake is three linked contracts: retain before
+          acknowledging, recognize repeated intent, and stop accepting work when
+          retention or processing capacity is exhausted.
+        </p>
+        <nav class="page-contents" aria-label="On this page">
+          <a href="#mental-model">Mental model</a>
+          <a href="#takeaways">Key takeaways</a>
+          <a href="#project">Lantern design</a>
+          <a href="#questions">Still to explore</a>
+        </nav>
+      </div>
+
+      <section id="summary">
+        <h2>Summary</h2>
+        <p>
+          Delivery is not one moment. The provider attempts a request, Lantern
+          takes durable ownership, and a worker eventually applies an effect.
+          Networks and processes can fail between every pair of those facts. A
+          reliable design makes each transition recoverable without pretending
+          it can eliminate uncertainty.
+        </p>
+      </section>
+
+      <section id="mental-model">
+        <h2>Three gates, in order</h2>
+        <figure class="diagram">
+          <pre class="mermaid">flowchart LR
+    E[Validate envelope] --> C{Capacity available?}
+    C -- no --> R[Reject honestly]
+    C -- yes --> U{Unique identity?}
+    U -- duplicate --> A[Return accepted]
+    U -- new --> D[(Commit durable row)]
+    D --> A
+    D --> W[Worker applies effect]
+    W --> M[Mark complete]</pre>
+          <figcaption>
+            Capacity is decided before ownership. Success follows a durable,
+            identity-protected row. Processing completes later.
+          </figcaption>
+        </figure>
+        <p>
+          Read the diagram from the failure edges. A rejection leaves ownership
+          with the provider. A lost success response causes a duplicate, which
+          the unique key absorbs. A worker crash leaves a pending row for retry.
+          The remaining hard case is an external effect that succeeds just before
+          the worker crashes; that effect needs its own idempotency or reconciliation.
+        </p>
+      </section>
+
+      <section id="takeaways">
+        <h2>Key takeaways</h2>
+        <ul>
+          <li>An HTTP success code communicates a boundary; choose it from the durable fact you can defend.</li>
+          <li>At-least-once delivery is practical when repeats are safe and observable.</li>
+          <li>A provider-scoped event ID expresses intent better than guessing from payload equality.</li>
+          <li>A uniqueness constraint closes the race that an application-level pre-check leaves open.</li>
+          <li>Queue limits require an overload policy; they do not manufacture worker throughput.</li>
+          <li>Measure oldest-event age as well as depth so stale work cannot hide in a stable count.</li>
+        </ul>
+      </section>
+
+      <section id="project">
+        <h2>In Lantern</h2>
+        <table>
+          <thead>
+            <tr><th>Contract</th><th>Lantern mechanism</th><th>Observable proof</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Accepted means retained</td>
+              <td>Return <code>202</code> after the SQLite transaction commits.</td>
+              <td>The event row survives a process restart.</td>
+            </tr>
+            <tr>
+              <td>Retry means same intent</td>
+              <td>Unique <code>(provider, event_id)</code> plus payload digest.</td>
+              <td>Duplicate deliveries point to one inbox row; mismatches alert.</td>
+            </tr>
+            <tr>
+              <td>Overload stays bounded</td>
+              <td>Cap pending work and reject before commit when full.</td>
+              <td>Depth, age, rejects and drain rate expose the condition.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="connections">
+        <h2>Connected learning</h2>
+        <ul>
+          <li><a href="../lessons/what-an-acknowledgement-promises.html#boundary">What an acknowledgement promises</a> develops the commit boundary.</li>
+          <li><a href="../lessons/make-retries-boring.html#sqlite">Make retries boring</a> implements stable identity in SQLite.</li>
+          <li><a href="../lessons/bound-the-inbox.html#policies">Bound the inbox</a> compares overload policies.</li>
+          <li><a href="../quizzes/inbox-under-failure.html">Inbox under failure</a> interleaves all three ideas.</li>
+          <li><a href="../references/webhook-reliability-checklist.html">Webhook reliability checklist</a> turns the model into review prompts.</li>
+        </ul>
+      </section>
+
+      <section id="sources">
+        <h2>Sources and further reading</h2>
+        <ul>
+          <li><a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15.3.3">RFC 9110 §15.3.3</a> anchors the meaning of accepted asynchronous work.</li>
+          <li><a href="https://docs.stripe.com/webhooks">Stripe's webhook guide</a> demonstrates retries, duplicates and asynchronous processing in a real provider contract.</li>
+          <li><a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS on idempotent APIs</a> develops the identity and atomicity model.</li>
+          <li><a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/rel_mitigate_interaction_failure_fail_fast.html">AWS on limited queues</a> develops the overload and backlog model.</li>
+        </ul>
+      </section>
+
+      <section id="questions">
+        <h2>Still to explore</h2>
+        <ul>
+          <li>How should Lantern lease a row so multiple workers can recover abandoned work?</li>
+          <li>When the side effect is remote, where should its idempotency key live?</li>
+          <li>Which event types become valueless when stale, and who is allowed to discard them?</li>
+          <li>How do provider signatures and secret rotation fit before the acknowledgement boundary?</li>
+        </ul>
+      </section>
+
+      <footer>
+        Current synthesis for the Lantern reliability thread · Last updated 13 September 2026
+      </footer>
+    </main>
+  </body>
+</html>
