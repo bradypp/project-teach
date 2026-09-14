@@ -33,7 +33,7 @@ This repository packages project-based teaching skills. Read the relevant skill 
 - Keep each skill's purpose, actionable workflow and important constraints readable in its entry point. Put shared detail in clearly linked references.
 - Preserve the detail needed for consistent teaching, including decision criteria, examples and enjoyable practice. Do not reduce workflows to routing paragraphs merely to shorten them.
 - Keep baseline behaviour in skills and references. Teaching-style files supplement it with optional preferences; they must not become required instruction manuals.
-- Remove genuine duplication by choosing an owning reference and linking to it. A brief workflow reminder can remain where it helps execution; do not repeat the full explanation.
+- Remove genuine duplication by choosing a single owning skill or by linking to a shared reference. A brief workflow reminder can remain where it helps execution; do not repeat the full explanation.
 - Use descriptive headings and bullets for parallel rules or choices, and numbered lists for sequences. Avoid packing a list of instructions into a large paragraph.
 - Prefer focused edits that preserve the original vision and useful sections. Retain requested additions when restoring earlier detail.
 - Keep writing guidance self-contained; external inspiration does not need attribution links in skill instructions.

@@ -21,25 +21,20 @@ A lesson should be **beautiful**, with clean, readable typography and layout. Th
 
 - Default to substantial depth, not a five-minute overview. Cover the mechanism, prerequisites, worked examples, alternatives, failure cases and application needed to reason about the topic in this project.
 - Split broad subjects into linked, navigable lessons when useful; do not trim necessary explanation to meet a time limit. Further reading and user-requested drilling can extend the scope.
-- Prefer headings and bullets for parallel points, comparisons and steps over dense paragraphs. Use short connected paragraphs where they explain a mechanism more clearly.
 - Tie it to the mission and the learner's zone of proximal development: challenging enough to develop understanding, with necessary prerequisites supplied.
 - Explain the transferable mental model and connect it to the real project.
 - Show meaningful alternatives, consequences or failure cases. Walk through cause and effect, then vary an assumption.
 - State where an analogy stops matching the system.
 - Give the user a relevant application or reasoning question.
 
-Prefer a detailed HTML lesson over a detailed chat explanation. Keep chat to orientation, the original question and a link for substantial teaching. Choose the presentation for the idea. A worked example, annotated diagram, simulation, comparison or visual puzzle may be better than conventional sections. Small explanations can stay in chat with Mermaid or another useful inline visual. Prefer themed Mermaid for supported diagrams and ASCII for simple text relationships; follow artifact guidance for the reusable integration. Follow [artifact guidance](artifacts.md) when saving a lesson.
+Prefer a detailed HTML lesson over a detailed chat explanation. Keep chat to orientation, the original question and a link for substantial teaching. Choose the presentation for the idea: a worked example, annotated diagram, simulation, comparison or visual puzzle may be better than conventional sections. Small explanations can stay in chat with with an inline visual if useful.
 
-For each saved lesson:
 
-- Link to related lessons/reference documents using useful anchors where available.
-- Recommend the strongest primary resource actually consulted, with a reason to read or watch it.
-- Invite follow-up questions to the agent.
-- Return a clickable file link and open it through an available host tool or appropriate CLI when possible.
+Follow [writing guidance](writing.md) when drafting and [artifact guidance](artifacts.md) when saving, connecting, verifying or delivering a lesson. Recommend the strongest primary resource actually consulted, explain what it adds and invite follow-up questions.
 
 ## Assets
 
-Use the shared [artifact visual language](visual-language.md) when composing saved lessons. Choose components for explanatory value, keep one-off content inline, and promote a pattern into shared assets when its visual meaning, structure or behavior recurs.
+Use the shared [artifact visual language](visual-language.md) when composing saved lessons. Choose components for explanatory value, keep one-off content inline, and promote a pattern into shared assets when its visual meaning, structure or behaviour recurs.
 
 ## Knowledge, practice and experience
 

@@ -47,8 +47,8 @@ Keep the insight, evidence and remaining uncertainty together. Evidence includes
 
 Evidence boundaries:
 
-- A generated lesson, completed agent task or repeated activity is not a learning record. Agent-written code and passing tests establish project activity.
-- Reasoning during planning, debugging contributions and explained manual changes can demonstrate the user's understanding. Identify self-reported application as such.
+- A generated lesson, autonomously completed agent task or repeated activity is not a learning record. Agent-written code and passing tests establish project activity.
+- Reasoning during a planning session, meaningful learning interactions, implementing a related feature to completion (including with agent assistance after a planning session), and explained manual changes are examples of user demonstrated understanding.
 - Quiz creation, completion and export never update state automatically; discussion of answers can supply evidence.
 - Useful exposure can be mentioned briefly in state with a lesson/source link, with understanding still unverified.
 - A correct answer supports current performance, not guaranteed retention. Old evidence is a reason to check recall rather than automatically demote understanding.
@@ -64,16 +64,16 @@ Use a Deferred section for deliberately postponed learning, with the reason and 
 
 Keep useful unknown unknowns in the state's Opportunities section unless the user opts out. Each names the concept, discovery context, why it could matter and a useful link if available—including useful ideas beyond this project’s current scope. Deduplicate them; there are no deadlines or implied obligations. The mission owns user-stated goals.
 
-`references/glossary.html` is the authoritative vocabulary aid. Add a term once the user can use it meaningfully; definitions introduced by a lesson can remain there until then. Give a concise definition, project-specific meaning or ambiguity where useful, and a lesson link. Maintain it as one navigable HTML reference page with a term list linking to stable term anchors, lesson links and the shared theme and Markdown-export controls. Use the glossary shell described in [artifact guidance](artifacts.md). Revise definitions in place; do not maintain a parallel Markdown glossary. A glossary entry is not a duplicate record of its evidence.
+`references/glossary.html` is the authoritative vocabulary aid. Add a term once the user can use it meaningfully; definitions introduced by a lesson can remain there until then. Give a concise definition, project-specific meaning or ambiguity where useful, and a lesson link. Revise definitions in place; do not maintain a parallel Markdown glossary. A glossary entry is not a duplicate record of its evidence. Follow [artifact guidance](artifacts.md#glossary) for the page mechanics.
 
 ## Retain and connect
 
 - **Lessons:** Keep reusable teaching as HTML snapshots with sources and context. Save a worthwhile short chat explanation as compact HTML; skip tiny clarifications unless the user prefers otherwise. Correct factual errors visibly or link a replacement when the model changes materially.
 - **Topics:** Maintain browsable HTML syntheses following [topic guidance](#topic-synthesis).
-- **Research:** Retain an investigation when it will improve future understanding or decisions. Small lookups remain ephemeral.
-- **Resources:** Keep a small annotated collection when sources will be reused. Practitioner suggestions are optional and respect preferences.
+- **Research:** Retain an investigation from the [research template](templates/research.md) when it will improve future understanding or decisions. Small lookups remain ephemeral.
+- **Resources:** Use the [resources template](templates/RESOURCES.md) for a small annotated collection when sources will be reused. Practitioner suggestions are optional and respect preferences.
 
-Use descriptive Markdown links and relative paths. HTML can target real anchors in related lessons, quizzes and reference pages. When creating lessons, quizzes or references, inspect related pages and add useful reciprocal links, including glossary term anchors where relevant. Keep answer-bearing quiz links with feedback. Repair links when moving material; rebuild the HTML index after artifact changes. Keep detail in its authoritative file rather than copying it across state, records and glossary.
+Use descriptive Markdown links and relative paths. HTML can target real anchors in related lessons, quizzes and reference pages. When creating lessons, quizzes or references, inspect related pages and add useful reciprocal links. Link the first meaningful occurrence of a known glossary term to its stable anchor, and keep answer-bearing quiz links with feedback. Keep detail in its authoritative file rather than copying it across state, records and glossary. Follow [artifact maintenance and verification](artifacts.md#maintain-and-verify) after changing HTML pages or links.
 
 ## What to update and when
 
@@ -86,7 +86,7 @@ Use descriptive Markdown links and relative paths. HTML can target real anchors 
 | `topics/*.html` | Related lessons/application need consolidation or the current synthesis has materially changed: create or update one topic page. |
 | Lessons and references | Correct an error, add a useful cross-link or connect new material; avoid rewriting unrelated historical lessons. |
 | `RESOURCES.md` / `research/` | Sources or an investigation warrant repeated use: retain an annotated collection or focused synthesis, not every lookup. |
-| `index.html` | HTML pages added, moved, renamed or removed: rebuild navigation. |
+| `index.html` | HTML pages added, moved, renamed or removed: rebuild home page navigation. |
 | `MISSION.md` | User goals or scope change: confirm unresolved changes before editing. |
 
 Run reconciliation after teaching and reviews even when the result is no change. Preserve manual content, deduplicate by concept and aliases, and update only affected destinations. Quiz creation, completion and export remain outside automatic reconciliation.

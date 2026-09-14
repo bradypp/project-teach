@@ -27,7 +27,7 @@ The callout is already a shared CSS component. Keep its simple markup inline:
 
 ```html
 <p class="callout">
-  Callout text here like a core idea, useful rule, and/or relevant consequences.
+  A core idea, useful rule, and/or relevant consequences.
 </p>
 ```
 
@@ -39,7 +39,7 @@ Choose the element by meaning. A central takeaway can be a paragraph; genuinely 
 - **Diagrams:** Start from the [diagram template](../assets/templates/diagram.html) and follow [Mermaid guidance](mermaid.md). Keep themes and palette directives out of individual diagrams.
 - **Choice practice:** Start from [choice-question.html](../assets/templates/choice-question.html). Use a unique radio name and IDs, one `data-correct="true"` option, feedback and a hidden explanation; enable the fieldset after authoring.
 - **Written practice:** Start from [open-question.html](../assets/templates/open-question.html). Use a unique textarea ID and revealable worked reasoning.
-- **Custom interactions:** Keep the core explanation usable without JavaScript. Put reusable behavior in `assets/components.js`; use semantic HTML and shared tokens for its static state.
+- **Custom interactions:** Keep the core explanation usable without JavaScript. Put reusable behaviour in `assets/components.js`; use semantic HTML and shared tokens for its static state.
 
 ## Theme tokens
 
@@ -57,7 +57,7 @@ Shared tokens supply both light and dark values. Add a semantic token when a rec
 
 - Keep obvious one-element patterns such as callouts inline and document their usage here.
 - Add a template when repeated structure or required attributes are easy to get wrong, as with diagrams and quiz questions.
-- Add shared CSS or JavaScript when the same visual meaning or behavior recurs across pages. Preserve existing pages and synchronise maintained examples after shared asset changes.
-- Give custom SVG, canvas or simulators accessible text and the export fallback described in [artifact guidance](artifacts.md#theme-and-markdown-export).
+- Add shared CSS or JavaScript when the same visual meaning or behaviour recurs across pages. Preserve existing pages and synchronise maintained examples after shared asset changes.
+- Give custom SVG, canvas or simulators accessible text and the export fallback described in [artifact guidance](artifacts.md#markdown-export).
 
-After introducing a component or changing shared presentation, check light and dark themes, a narrow viewport, keyboard-visible states and Markdown export. Routine use of an established primitive needs only a quick content and link check.
+After introducing a component or changing shared presentation, check light and dark themes, a narrow viewport, keyboard-visible states and Markdown export. Routine use of an established primitive follows the quick checks in [artifact guidance](artifacts.md#maintain-and-verify).

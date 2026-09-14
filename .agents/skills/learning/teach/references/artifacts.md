@@ -13,14 +13,8 @@ python3 /path/to/teach/scripts/library.py new /project/.learning reference queue
 python3 /path/to/teach/scripts/library.py index /project/.learning
 ```
 
-`new` copies missing shared assets and creates a shell; existing pages and assets are preserved. `init ROOT` creates an empty library. `index ROOT` regenerates navigation from actual HTML files. Generated index content is replaceable; keep authored material in lessons/reference pages.
-
-## Dates, tags and home navigation
-
-- The helper automatically records creation time in UTC and displays it beneath the page title. Keep this timestamp stable when editing; there is no updated-time field.
-- Add subject tags with `--tags "queues,reliability"`; maintain the comma-separated `tags` meta value when content changes. Reuse a small set of existing tags.
-- The home page lists Lessons, Topics, Quizzes, References, then Glossary, omitting empty sections. Type filters sit above subject filters; select one value per row, including All. A page must match both selected values. The glossary has its own section and participates in References and subject filtering.
-- Keep descriptive filenames stable. Rebuild the index after changing titles, tags or pages.
+- `new` creates a shell, copies missing shared assets and refreshes the index, preserving existing pages and assets. When upgrading a library, review and deliberately copy updated shared files.
+- `init ROOT` creates an empty library. `index ROOT` regenerates navigation from actual HTML files. Keep authored material in content pages; generated index content is replaceable.
 
 ## Compose the page
 
@@ -28,7 +22,7 @@ The helper inserts the shared page opening after the title and creation date. Fo
 
 A worthwhile chat explanation can be saved as a compact HTML lesson using the same shell. This keeps one browsable version without a Markdown-rendering pipeline. Tiny clarifications need not be saved; consolidate related material only when it improves the explanation.
 
-## Topic pages
+### Topic pages
 
 Create a current synthesis with the [topic shell](../assets/templates/topic.html):
 
@@ -36,9 +30,9 @@ Create a current synthesis with the [topic shell](../assets/templates/topic.html
 python3 /path/to/teach/scripts/library.py new /project/.learning topic queues --title "Understanding queues"
 ```
 
-It lives under `topics/` with shared theme/export controls and a notebook link. The index shows a Topics section only while topic pages exist. Follow [topic synthesis guidance](learning-system.md#topic-synthesis) for content and maintenance; update the existing page rather than generating competing summaries.
+It lives under `topics/`. Follow [topic synthesis guidance](learning-system.md#topic-synthesis) for content and maintenance; update the existing page rather than generating competing summaries.
 
-## Glossary
+### Glossary
 
 Create the vocabulary page with the [library helper](../scripts/library.py):
 
@@ -46,26 +40,50 @@ Create the vocabulary page with the [library helper](../scripts/library.py):
 python3 /path/to/teach/scripts/library.py new /project/.learning glossary glossary --title "My glossary"
 ```
 
-The [glossary shell](../assets/templates/glossary.html) lives at `references/glossary.html`, appears in the library index and uses the shared theme and Copy/Save Markdown controls. Fill its term navigation and stable term sections with actual vocabulary. Update that page in place and link directly to term anchors from lessons or learning state.
+The [glossary shell](../assets/templates/glossary.html) lives at `references/glossary.html`. Fill its term navigation and stable term sections with actual vocabulary. Update that page in place and link directly to term anchors from lessons or learning state.
 
-## Theme and Markdown export
+## Metadata and navigation
 
-Every page loads shared theme controls. Content pages also show footer navigation and Copy/Save Markdown. Lessons, topics and references add Copy follow-up, which copies their kind, title, tags and absolute local path with an instruction to use the `teach` skill. Quizzes add Copy for chat with a discussion prompt and the live responses. These are clipboard handoffs because a standalone local page cannot submit to its originating conversation. Glossaries retain only the Markdown actions, and the home page omits the toolbar. Theme storage is best-effort for local files; internal HTML links carry the choice. The default follows the system preference.
+- The helper records creation time in UTC and displays it beneath the title. Keep it stable when editing; there is no updated-time field.
+- Add subject tags with `--tags "queues,reliability"`; maintain the comma-separated `tags` meta value as content changes. Reuse a small set of existing tags.
+- Keep descriptive filenames stable.
+- The home page groups nonempty content types and filters entries by type and subject. The glossary has its own section and participates in reference filtering.
 
-Export converts the main content using locally bundled Turndown and its GFM plugin. It preserves headings, lists, code, tables, sources and current responses, omits controls and unrevealed exercise feedback, and resolves relative links against the original page. Exported local links refer to that machine's files; moving the Markdown alone does not copy those assets.
+## Shared controls and export
+
+- All pages share theme controls, defaulting to the system preference. Local-file storage is best-effort; internal HTML links carry the selected theme.
+- Content pages include a notebook link in the footer toolbar and Copy/Save Markdown. The home page omits this toolbar.
+
+### Markdown export
+
+Copy/Save Markdown preserves headings, lists, code, tables, sources and current responses, omits controls and unrevealed exercise feedback, and resolves relative links against the original page. Exported local links refer to that machine's files; moving the Markdown alone does not copy those assets.
 
 For a custom visual or simulator, add `data-export-text="A useful textual explanation"` to its container, or an accessible label for a simple SVG/canvas. Use `data-export-ignore` for purely decorative content. A textual snapshot cannot preserve an interactive simulation. Keep core content in semantic HTML so layout changes do not affect conversion.
 
-The [browser controls](../assets/index.js) perform conversion; the Python helper only generates pages. Vendor versions and licenses are recorded in [vendor notes](../assets/vendor/README.md). Customised existing assets are preserved by the helper; review and deliberately copy updated shared files when upgrading an existing library.
+- The [browser controls](../assets/index.js) convert the main content using bundled Turndown and its GFM plugin; the Python helper generates pages.
+- Bundled dependency versions and licenses are documented in [vendor notes](../assets/vendor/README.md).
 
-## Connect and deliver
+### Continue in chat
 
-- Inspect related lessons, topics, quizzes and references when adding material. Add useful links in both directions where the relationship warrants it, and repair affected links over time.
-- Link the first meaningful occurrence of a known glossary term to its stable anchor. Keep answer-revealing quiz links inside feedback.
-- Add meaningful sources and real section anchors where useful.
-- Include a recommended primary resource and an invitation to ask follow-up questions.
-- Quickly check content and answer keys. Run the [link checker](../scripts/check_links.py) with `python3 /path/to/teach/scripts/check_links.py /project/.learning` after updating related links. Repair reported missing files, broken HTML anchors and duplicate IDs. This does not verify external URLs or judge which reciprocal links are useful. Routine artifacts need no exhaustive browser test procedure.
-- Rebuild the index and link useful lessons from learning state or their supporting record.
-- Return an absolute clickable file link that can be opened from the chat; open it automatically with an available host/browser tool if possible; try launching into an extrenal browser via cli if possible.
+The user pastes the copied prompt into an existing conversation or a new local chat:
 
-When delivering an HTML artifact, give a short summary, link and relevant pending question in chat; let the artifact carry the detailed explanation. The user can continue the conversation without completing the artifact. Tests for changes to shared helper code are separate from routine lesson creation.
+- **Copy follow-up** on lessons, topics and references asks to use the `teach` skill with the page kind, title, optional tags and absolute local file path. The receiving chat needs access to that file.
+- **Copy for chat** on quizzes includes a discussion prompt and the current responses.
+
+Both actions offer manual copying if clipboard access fails. They do not send messages or update learning records. Glossaries retain only the Markdown actions.
+
+## Maintain and verify
+
+- Follow [retention and connection guidance](learning-system.md#retain-and-connect) for which learning material warrants a link and where quiz or glossary links belong. Inspect related lessons, topics, quizzes and references when adding material, and repair affected links over time.
+
+After changing an authored HTML page, local link or ID:
+
+1. Quickly check the content and any answer keys.
+2. Run the [link checker](../scripts/check_links.py) with `python3 /path/to/teach/scripts/check_links.py /project/.learning` and repair missing files, broken HTML anchors and duplicate IDs. The checker does not verify external URLs or decide which reciprocal links are useful.
+3. Rebuild the index after manually adding, moving, renaming or removing pages, or changing page titles or tags. The `new` command already refreshes it; content-only edits do not require a rebuild.
+
+Routine artifacts need no exhaustive browser testing. After changing shared helpers, components or presentation, run the relevant helper or browser tests and the additional visual checks in [visual-language.md](visual-language.md#extend-deliberately).
+
+## Deliver
+
+Return an absolute clickable file link with a short summary and relevant pending question. Open the page with an available host/browser tool or launch an external browser through the CLI when possible. Let the artifact carry the detailed explanation; the user can continue without completing it.

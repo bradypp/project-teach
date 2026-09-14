@@ -8,12 +8,7 @@ Read [writing guidance](../teach/references/writing.md) before drafting question
 
 ## Review the project
 
-Read [project context and evidence](../teach/references/learning-system.md), the mission and any explicit teaching preferences. Start with `LEARNING_STATE.md`, then follow relevant records, lessons and glossary links.
-
-- Separate demonstrated understanding from self-report and exposure.
-- Treat weak evidence as uncertainty about knowledge, not proof of weak knowledge.
-- Use old evidence as a reason to check retention, not automatically downgrade it.
-- Treat retained opportunities as possibilities, not overdue curriculum.
+Read [project context and evidence](../teach/references/learning-system.md), the mission and any explicit teaching preferences. Start with `LEARNING_STATE.md`, then follow relevant records, lessons and glossary links. Keep evidence types distinct; treat gaps and stale evidence as reasons to check understanding, not as proof of weak knowledge. Opportunities remain as optional possibilities.
 
 ## Practise and reflect
 

@@ -11,9 +11,9 @@ Read [writing guidance](../teach/references/writing.md) before drafting project 
 ## Propose the setup
 
 1. Read [project storage](../teach/references/learning-system.md) and inspect the project and any existing learning files.
-2. Establish the starting point: topic-first, project-first, or both. Complete the setup investigation in [research guidance](../teach/references/research.md) before proposing the mission: it defines discovery, source verification, freshness, optional workers and readiness. Share a concise, source-linked orientation, then propose a concrete mission and observable capabilities. When no project exists yet, agree on a small real outcome or experiment.
-3. Offer optional customisation of depth, pace, format, teacher personality, practice and retention using the [teaching-style template](../teach/references/PREFERENCES.md). If skipped, do not create `PREFERENCES.md`; explain that they can create their own later and the skills and references already supply the full baseline. Preserve an existing project style.
-4. Ask whether `.learning/` should be tracked or ignored. Offer one learning-project integration that combines project purpose, development guidance and passive teaching in AGENTS.md. Ask which existing skills the user wants supplemented; inspect the supplied workflows and propose small new wrappers using [integration guidance](../teach/references/integrations.md).
+2. Establish the starting point: topic-first, project-first, or both. Complete the setup path in [research guidance](../teach/references/research.md), share a concise source-linked orientation, then propose a concrete mission and observable capabilities. When no project exists yet, agree on a small real outcome or experiment.
+3. Offer optional customisation through the [teaching-style template](../teach/references/PREFERENCES.md). Preserve an existing project style; when customisation is skipped, rely on the complete baseline and create no preferences file.
+4. Ask whether `.learning/` should be tracked or git ignored. Use [integration guidance](../teach/references/integrations.md) to offer the learning-project AGENTS integration and user-selected workflow wrappers.
 
 Use the research to inform scope and learning opportunities without turning setup into a compulsory curriculum.
 

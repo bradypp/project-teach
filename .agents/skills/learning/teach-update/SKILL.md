@@ -9,12 +9,10 @@ Read [writing guidance](../teach/references/writing.md) before maintaining Markd
 
 ## Find the evidence
 
-Read [project context and evidence](../teach/references/learning-system.md). Inspect the supplied account or recent accessible conversation, relevant project changes and existing records. If no account or evidence is available, ask for a short account rather than inventing history.
-
-- Distinguish exposure, self-report, demonstrated reasoning and user application within the evidence itself.
-- Planning explanations, debugging contributions and manual changes can demonstrate understanding.
-- Agent-written implementation and passing tests alone establish project activity.
-- Courses, books, articles, videos and experiments use the same evidence rules; they need not generate a lesson.
+- Read [project context and evidence](../teach/references/learning-system.md), which owns the evidence hierarchy and record criteria.
+- Inspect the supplied account or recent accessible conversation, relevant project changes and existing records.
+- Preserve the user's actual contribution: exposure and agent-written work establish activity, while self-report and demonstrated reasoning support different claims.
+- If no account or evidence is available, ask for a short account rather than inventing history.
 
 ## Reconcile
 
@@ -25,6 +23,6 @@ Run after teaching and reviews, or when requested manually. Quizzes do not autom
 3. Create, enrich or supersede a record only when the [record criteria](../teach/references/learning-system.md#learning-records) are met. Preserve the user's actual contribution and remaining uncertainty.
 4. Reconcile the thin state summary, deferred prerequisites and opportunities. Update relevant glossary terms and links only where useful; do not rewrite every file after every session.
 5. Create or revise a topic synthesis when accumulated material warrants it, following [topic guidance](../teach/references/learning-system.md#topic-synthesis) and its linked HTML template. Keep the explanation current while retaining evidence in records.
-6. Repair affected internal links and rebuild the library index after HTML changes. Confirm any unresolved change to the mission or user-stated goals; preserve authorised choices and manual content.
+6. When changing HTML pages, links, IDs or metadata, complete [artifact maintenance and verification](../teach/references/artifacts.md#maintain-and-verify). Confirm any unresolved change to the mission or user-stated goals; preserve authorised choices and manual content.
 
 Research claims or synthesis needing verification using [research guidance](../teach/references/research.md). Report what changed and what the evidence supports, or why no change was needed. This workflow reconciles learning; it does not primarily teach.

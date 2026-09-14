@@ -23,17 +23,17 @@ Everything lives under `.learning/`:
 - `LEARNING_STATE.md`: current understanding, uncertainty, opportunities and links.
 - `records/`: selective learning insights with evidence.
 - `references/glossary.html`: useful vocabulary, created when needed.
-- `lessons/`, `quizzes/`, `references/`, `assets/`, `index.html`: the browsable local library.
+- `lessons/`, `topics/`, `quizzes/`, `references/`, `assets/`, `index.html`: the browsable local library.
 
-Topic syntheses live in `topics/*.html`, with their own home-page section once one exists. Research and resource lists appear only when useful. There is no global store or automatic cross-project synchronisation.
+Research and resource lists appear only when useful. There is no global store or automatic cross-project synchronisation.
 
 ## Teaching and presentation
 
 Teaching inspects prerequisites across the active plan/spec, teaches upcoming concepts broadly and goes deeply into what is needed next. The mission guides direction; state and records guide known understanding and gaps. Substantive teaching includes research and useful further reading.
 
-Detailed HTML lessons are the default for substantial topics, with readable headings, bullets, worked examples and application. Short explanations can stay in chat. Substantial gaps produce HTML automatically; worthwhile short explanations can also be retained as compact HTML. Tiny clarifications need not become artifacts.
+Detailed HTML lessons are the default for substantial topics; short explanations can stay in chat. Worthwhile short explanations may also be retained as compact HTML, while tiny clarifications need not become artifacts.
 
-The bundled HTML/CSS supplies a lean base. Lessons can use diagrams, visualisations, simulations and custom widgets suited to the concept. Shared components keep the library consistent without imposing fixed layouts. Every page offers system/light/dark themes; content pages also offer Markdown copy/download. Lessons, topics and references add a Copy follow-up handoff with their details and absolute local path; quizzes add Copy for chat with their live responses. Both prepare text for pasting because standalone local pages do not submit directly. Export preserves teaching content and current responses; custom visuals can supply textual summaries. Theme storage is best-effort for local files, with the choice carried through internal navigation. Exports do not automatically update learning state.
+The bundled HTML/CSS supplies a lean base. Lessons can use diagrams, visualisations, simulations and custom widgets suited to the concept. Shared components keep the library consistent without imposing fixed layouts. Content pages support themes, Markdown export and clipboard handoffs for continuing in chat; standalone pages never submit or update learning state directly.
 
 Setup offers optional customisation through the [teaching-style template](.agents/skills/learning/teach/references/PREFERENCES.md). Skipping the questions creates no style file; you can add your own later. The skills and references supply the full baseline. Preferences can override teacher personality, depth, pace and presentation. Optional integration adds a brief project purpose, learning-oriented development rules and a marked passive-teaching block together in `AGENTS.md`. Removing that block disables passive teaching. User-selected workflows can receive small new wrappers; original skills remain untouched.
 
@@ -43,7 +43,7 @@ Teaching and reviews finish by using the `teach-update` skill to reconcile affec
 
 Open [the example notebook](examples/.learning/index.html) to try the theme, diagrams, highlighted code, quizzes, tags and sorting. Its content is synthetic, not learning evidence.
 
-The helper adds creation timestamps automatically. The homepage shows nonempty Lessons, Topics, Quizzes, References and Glossary sections with single-selection type and subject filters and newest/oldest/alphabetical sorting. The glossary participates in reference and subject filtering. Use `--tags "subject,another-subject"` when creating pages.
+The helper adds creation timestamps automatically. The home page groups nonempty content types and supports type, subject and sort controls. Use `--tags "subject,another-subject"` when creating pages.
 
 Mermaid and Highlight.js are bundled locally. Supported diagrams and code blocks inherit the notebook theme; custom layouts remain flexible. Diagram source and code survive Markdown export.
 
@@ -63,9 +63,10 @@ Python 3 runs the artifact helper; the generated library opens directly in a bro
 
 - [State and records](.agents/skills/learning/teach/references/learning-system.md)
 - [Teaching guidance](.agents/skills/learning/teach/references/teaching.md)
+- [Research guidance](.agents/skills/learning/teach/references/research.md)
 - [Artifact mechanics](.agents/skills/learning/teach/references/artifacts.md)
 - [Artifact visual language](.agents/skills/learning/teach/references/visual-language.md)
+- [Writing guidance](.agents/skills/learning/teach/references/writing.md)
+- [Optional integrations](.agents/skills/learning/teach/references/integrations.md)
 
-Helper tests: `python3 -m unittest discover -s tests/learning -p 'test_*.py'`. Routine lessons need only a quick content/link check; browser tests in `tests/learning/test_browser.cjs`, `test_follow_up.cjs` and `test_notebook.cjs` cover shared controls, exports and themes (Playwright and a Chromium browser required).
-
-Content shells include a short intro, metadata-driven tags and optional contents. After editing related pages, run `python3 .agents/skills/learning/teach/scripts/check_links.py /path/to/.learning` to check local HTML links and IDs.
+Helper tests: `python3 -m unittest discover -s tests/learning -p 'test_*.py'`. Browser tests in `tests/learning/test_browser.cjs`, `test_follow_up.cjs` and `test_notebook.cjs` cover shared controls, exports and themes (Playwright and a Chromium browser required). Routine pages and link-checking conditions are defined once in [artifact maintenance and verification](.agents/skills/learning/teach/references/artifacts.md#maintain-and-verify).
