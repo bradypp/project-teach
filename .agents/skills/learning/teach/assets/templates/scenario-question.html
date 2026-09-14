@@ -1,0 +1,48 @@
+<!-- Adapt this fictional scenario. Keep only the context blocks/diagram that
+     help reasoning. Use choice, written responses or both as sibling questions.
+     Rename IDs/names when reusing; answer-bearing links belong in feedback. -->
+<section class="practice-group" aria-labelledby="recovery-scenario">
+  <h2 id="recovery-scenario">The missing receipt</h2>
+  <p>A webhook worker asks an email service to send a message. The worker crashes before storing a local completion receipt.</p>
+  <aside class="callout">
+    The event is still pending locally. The email service may have accepted the
+    request, but the worker did not retain its response.
+  </aside>
+  <figure class="diagram">
+    <pre class="mermaid">flowchart TB
+      A[Request sent to email service] --> B[Worker crashes]
+      B --> C[Local completion receipt missing]</pre>
+    <figcaption>The crash interrupts the local record of a remote operation.</figcaption>
+  </figure>
+  <fieldset data-question>
+    <legend>What can the restarted worker conclude from the pending event alone?</legend>
+    <label class="option"><input type="radio" name="receipt-fact" value="unsent" />The email was never sent.</label>
+    <label class="option"><input type="radio" name="receipt-fact" value="unknown" data-correct="true" />The local record does not settle whether the email was sent.</label>
+    <label class="option"><input type="radio" name="receipt-fact" value="sent" />The email was sent exactly once.</label>
+    <button type="button" data-check>Check the conclusion</button>
+    <p class="feedback" data-feedback aria-live="polite" hidden></p>
+    <div data-explanation hidden>
+      <p>A local pending marker can coexist with either remote outcome. The missing receipt is an information gap, not proof of failure or success.</p>
+    </div>
+  </fieldset>
+  <fieldset data-question>
+    <legend>Choose the next move and explain what evidence or contract it needs.</legend>
+    <label for="receipt-plan">Your recovery plan</label>
+    <textarea id="receipt-plan" rows="5"></textarea>
+    <details data-hint>
+      <summary>A hint</summary>
+      <p>Separate the question “did it happen?” from “can repeating it be safe?”</p>
+    </details>
+    <details data-self-check>
+      <summary>Compare possible approaches</summary>
+      <div data-explanation>
+        <ul>
+          <li>A durable remote receipt could settle the outcome if the service lets you look it up reliably.</li>
+          <li>A stable operation key can make retry safe when the service guarantees deduplication for that key and retry window.</li>
+          <li>Without either contract, describe the duplicate-send risk and how a human would resolve it.</li>
+        </ul>
+        <!-- Add a relevant lesson link here. -->
+      </div>
+    </details>
+  </fieldset>
+</section>

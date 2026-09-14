@@ -699,6 +699,72 @@ textarea:focus {
   outline: 0;
 }
 
+textarea.response-short {
+  min-height: 5.5rem;
+}
+
+[data-question] input[type="number"] {
+  width: 10ch;
+  max-width: 100%;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  color: var(--ink);
+}
+
+.practice-group {
+  margin-block: 3rem;
+}
+
+.practice-group > fieldset {
+  margin-block: 1.5rem;
+}
+
+.experiment-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.experiment-controls input[type="range"] {
+  width: calc(100% - 3ch);
+  vertical-align: middle;
+  accent-color: var(--accent);
+}
+
+.experiment-controls output {
+  font-variant-numeric: tabular-nums;
+}
+
+.experiment-plot {
+  margin: 1.2rem 0;
+}
+
+.experiment-plot svg {
+  width: 100%;
+  max-width: 36rem;
+  color: var(--ink);
+}
+
+.experiment-plot text {
+  fill: currentColor;
+  font-size: 12px;
+}
+
+.plot-axis {
+  stroke: var(--line-strong);
+  fill: none;
+}
+
+.plot-line {
+  stroke: var(--chart-2);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  fill: none;
+}
+
 label[for] {
   display: block;
   margin: 1rem 0 0.45rem;

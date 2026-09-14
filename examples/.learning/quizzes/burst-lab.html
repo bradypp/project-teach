@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-14T02:20:45+00:00" />
+    <meta name="tags" content="practice,experiments" />
+    <title>Burst lab</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="quiz">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a
+      ><span>Make the idea your own</span>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">quiz</p>
+        <h1>Burst lab</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-14T02:20:45+00:00">14th Sept 2026 · 02:20</time>
+        </p>
+      </header>
+      
+<div class="page-intro">
+  <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+  <p>
+    A fictional Lantern exercise: calculate a burst, investigate a missing receipt, then change the arrival rate and test your prediction. Try any section; feedback is independent.
+  </p>
+  
+</div>
+
+      
+      <p class="muted">
+        Answers are temporary. Use Copy for chat to bring them back for
+        discussion, or save the Markdown below. This page does not update your
+        learning records.
+      </p>
+      <form data-quiz>
+<nav class="page-contents" aria-label="Practice sections"><a href="#backlog-problem">Follow a burst</a><a href="#recovery-scenario">Missing receipt</a><a href="#queue-lab">Experiment</a></nav>
+        
+        
+      <section class="practice-group" aria-labelledby="backlog-problem">
+  <h2 id="backlog-problem">Follow the backlog through a burst</h2>
+  <p>
+    A simplified inbox starts with 20 pending events. For 10 seconds, arrivals
+    stay at 9 events per second and one worker completes 6 per second.
+    Assume constant rates, no retries and no dropped events.
+  </p>
+  <p class="muted">Try any step. Each has its own feedback.</p>
+  <fieldset data-question>
+    <legend>1. How many events are pending after the burst?</legend>
+    <label for="burst-count">Pending events</label>
+    <input id="burst-count" type="number" min="0" step="1" />
+    <label for="burst-reason">Show the calculation</label>
+    <textarea id="burst-reason" class="response-short" rows="3"></textarea>
+    <details data-hint>
+      <summary>A hint</summary>
+      <p>Account for both the starting backlog and the net arrivals.</p>
+    </details>
+    <details data-self-check>
+      <summary>Compare the calculation</summary>
+      <div data-explanation>
+        <p>20 + (9 − 6) × 10 = 50 pending events. The worker continues processing during the burst.</p>
+      </div>
+    </details>
+  </fieldset>
+  <fieldset data-question>
+    <legend>2. Arrivals then fall to 3 per second. What happens to the backlog?</legend>
+    <label class="option"><input type="radio" name="burst-trend" value="grows" />It grows by 3 events per second.</label>
+    <label class="option"><input type="radio" name="burst-trend" value="drains" data-correct="true" />It drains by 3 events per second until empty.</label>
+    <label class="option"><input type="radio" name="burst-trend" value="steady" />It stays at its post-burst size.</label>
+    <button type="button" data-check>Check this step</button>
+    <p class="feedback" data-feedback aria-live="polite" hidden></p>
+    <div data-explanation hidden>
+      <p>The worker has 6 − 3 = 3 events per second of spare capacity. The backlog shrinks; it cannot go below zero.</p>
+    </div>
+  </fieldset>
+  <fieldset data-question>
+    <legend>3. Connect the steps: when would a bigger buffer help?</legend>
+    <label for="burst-synthesis">Your reasoning and one limit</label>
+    <textarea id="burst-synthesis" class="response-short" rows="3"></textarea>
+    <details data-self-check>
+      <summary>Compare the whole problem</summary>
+      <div data-explanation>
+        <p>A larger buffer can hold the temporary excess if there is enough spare capacity afterwards to drain it. Sustained excess arrivals keep accumulating; storage alone does not raise processing capacity.</p>
+        <p>Explore <a href="../lessons/bound-the-inbox.html#pressure">the reasoning in the lesson</a>.</p>
+      </div>
+    </details>
+  </fieldset>
+</section>
+<section class="practice-group" aria-labelledby="recovery-scenario">
+  <h2 id="recovery-scenario">The missing receipt</h2>
+  <p>A webhook worker asks an email service to send a message. The worker crashes before storing a local completion receipt.</p>
+  <aside class="callout">
+    The event is still pending locally. The email service may have accepted the
+    request, but the worker did not retain its response.
+  </aside>
+  <figure class="diagram">
+    <pre class="mermaid">flowchart TB
+      A[Request sent to email service] --> B[Worker crashes]
+      B --> C[Local completion receipt missing]</pre>
+    <figcaption>The crash interrupts the local record of a remote operation.</figcaption>
+  </figure>
+  <fieldset data-question>
+    <legend>What can the restarted worker conclude from the pending event alone?</legend>
+    <label class="option"><input type="radio" name="receipt-fact" value="unsent" />The email was never sent.</label>
+    <label class="option"><input type="radio" name="receipt-fact" value="unknown" data-correct="true" />The local record does not settle whether the email was sent.</label>
+    <label class="option"><input type="radio" name="receipt-fact" value="sent" />The email was sent exactly once.</label>
+    <button type="button" data-check>Check the conclusion</button>
+    <p class="feedback" data-feedback aria-live="polite" hidden></p>
+    <div data-explanation hidden>
+      <p>A local pending marker can coexist with either remote outcome. The missing receipt is an information gap, not proof of failure or success.</p>
+    </div>
+  </fieldset>
+  <fieldset data-question>
+    <legend>Choose the next move and explain what evidence or contract it needs.</legend>
+    <label for="receipt-plan">Your recovery plan</label>
+    <textarea id="receipt-plan" rows="5"></textarea>
+    <details data-hint>
+      <summary>A hint</summary>
+      <p>Separate the question “did it happen?” from “can repeating it be safe?”</p>
+    </details>
+    <details data-self-check>
+      <summary>Compare possible approaches</summary>
+      <div data-explanation>
+        <ul>
+          <li>A durable remote receipt could settle the outcome if the service lets you look it up reliably.</li>
+          <li>A stable operation key can make retry safe when the service guarantees deduplication for that key and retry window.</li>
+          <li>Without either contract, describe the duplicate-send risk and how a human would resolve it.</li>
+        </ul>
+        <p>Explore <a href="../lessons/make-retries-boring.html#limits">the reasoning in the lesson</a>.</p>
+      </div>
+    </details>
+  </fieldset>
+</section>
+<fieldset id="queue-lab" data-question data-queue-experiment>
+  <legend>Can this inbox drain?</legend>
+  <p>
+    This simplified model starts with 20 pending events and runs for 10 seconds.
+    Rates stay constant, events are treated as continuous flow, and there are
+    no retries, capacity limit or dropped events.
+  </p>
+  <label for="queue-prediction">Predict the shape of the backlog before running</label>
+  <textarea id="queue-prediction" class="response-short" rows="3"></textarea>
+  <div class="experiment-controls">
+    <div>
+      <label for="queue-arrivals">Arrivals per second</label>
+      <input id="queue-arrivals" data-arrivals type="range" min="0" max="12" step="1" value="9" />
+      <output for="queue-arrivals" data-arrivals-value data-export-ignore>9</output>
+    </div>
+    <div>
+      <label for="queue-service">Worker capacity per second</label>
+      <input id="queue-service" data-service type="range" min="0" max="12" step="1" value="6" />
+      <output for="queue-service" data-service-value data-export-ignore>6</output>
+    </div>
+  </div>
+  <button type="button" data-run-experiment disabled>Run 10 seconds</button>
+  <figure class="experiment-plot">
+    <svg data-queue-plot data-export-ignore viewBox="0 0 340 180" role="img" aria-label="Run the experiment to plot the backlog" hidden>
+      <path class="plot-axis" d="M40 15V145H325" />
+      <polyline class="plot-line" points="" />
+      <text x="8" y="20">140</text><text x="22" y="147">0</text>
+      <text x="40" y="168">0 s</text><text x="293" y="168">10 s</text>
+      <text x="55" y="20">Pending events</text>
+    </svg>
+    <figcaption data-experiment-result role="status">Not run yet. Choose settings, predict, then run.</figcaption>
+  </figure>
+  <noscript><p>To try it on paper, calculate max(0, 20 + (arrivals − capacity) × seconds) at 0, 5 and 10 seconds.</p></noscript>
+  <label for="queue-reflection">What changed your prediction? Try a different rate and explain.</label>
+  <textarea id="queue-reflection" class="response-short" rows="3"></textarea>
+  <details data-hint>
+    <summary>A hint</summary>
+    <p>Track the difference between arriving and completed work, starting with the existing backlog.</p>
+  </details>
+  <details data-self-check>
+    <summary>Compare your model</summary>
+    <div data-explanation>
+      <p>The backlog changes at arrivals minus capacity until it reaches zero. When capacity exceeds arrivals, spare capacity drains existing work; when arrivals exceed capacity, the backlog grows. Equal rates preserve the starting backlog.</p>
+      <p>Check whether your prediction included the starting 20 events and the zero floor. This constant-rate model omits burstiness and failures.</p>
+      <p>Explore <a href="../lessons/bound-the-inbox.html#pressure">the reasoning in the lesson</a>.</p>
+    </div>
+  </details>
+</fieldset>
+</form>
+
+      <footer>Try another angle in <a href="inbox-under-failure.html">Inbox under failure</a>.</footer>
+    </main>
+  </body>
+</html>

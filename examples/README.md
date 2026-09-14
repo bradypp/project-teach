@@ -20,5 +20,6 @@ The scenario is deliberately small, but the output is not a style gallery. It is
 - Continue to [Make retries boring](.learning/lessons/make-retries-boring.html) and [Bound the inbox](.learning/lessons/bound-the-inbox.html).
 - Use [Reliable webhook delivery](.learning/topics/reliable-webhook-delivery.html) to connect the ideas.
 - Try [Inbox under failure](.learning/quizzes/inbox-under-failure.html), then keep [the checklist](.learning/references/webhook-reliability-checklist.html) nearby while implementing.
+- Explore [Burst lab](.learning/quizzes/burst-lab.html) for independent problem steps, a diagram-supported scenario and a visual experiment. Change rates, run the model and copy its current settings, latest result and your reasoning back to chat.
 
 The previous example set remains untouched in `../backup/`.

@@ -1,0 +1,52 @@
+<!-- Adaptable queue experiment: shared behavior lives in components.js.
+     Rename all IDs when reusing. For another mechanism, author its own widget;
+     retain labelled inputs, prediction/reflection, a live textual result and
+     scoped feedback. The SVG duplicates the result, so export ignores it. -->
+<fieldset data-question data-queue-experiment>
+  <legend>Can this inbox drain?</legend>
+  <p>
+    This simplified model starts with 20 pending events and runs for 10 seconds.
+    Rates stay constant, events are treated as continuous flow, and there are
+    no retries, capacity limit or dropped events.
+  </p>
+  <label for="queue-prediction">Predict the shape of the backlog before running</label>
+  <textarea id="queue-prediction" class="response-short" rows="3"></textarea>
+  <div class="experiment-controls">
+    <div>
+      <label for="queue-arrivals">Arrivals per second</label>
+      <input id="queue-arrivals" data-arrivals type="range" min="0" max="12" step="1" value="9" />
+      <output for="queue-arrivals" data-arrivals-value data-export-ignore>9</output>
+    </div>
+    <div>
+      <label for="queue-service">Worker capacity per second</label>
+      <input id="queue-service" data-service type="range" min="0" max="12" step="1" value="6" />
+      <output for="queue-service" data-service-value data-export-ignore>6</output>
+    </div>
+  </div>
+  <button type="button" data-run-experiment disabled>Run 10 seconds</button>
+  <figure class="experiment-plot">
+    <svg data-queue-plot data-export-ignore viewBox="0 0 340 180" role="img" aria-label="Run the experiment to plot the backlog" hidden>
+      <path class="plot-axis" d="M40 15V145H325" />
+      <polyline class="plot-line" points="" />
+      <text x="8" y="20">140</text><text x="22" y="147">0</text>
+      <text x="40" y="168">0 s</text><text x="293" y="168">10 s</text>
+      <text x="55" y="20">Pending events</text>
+    </svg>
+    <figcaption data-experiment-result role="status">Not run yet. Choose settings, predict, then run.</figcaption>
+  </figure>
+  <noscript><p>To try it on paper, calculate max(0, 20 + (arrivals − capacity) × seconds) at 0, 5 and 10 seconds.</p></noscript>
+  <label for="queue-reflection">What changed your prediction? Try a different rate and explain.</label>
+  <textarea id="queue-reflection" class="response-short" rows="3"></textarea>
+  <details data-hint>
+    <summary>A hint</summary>
+    <p>Track the difference between arriving and completed work, starting with the existing backlog.</p>
+  </details>
+  <details data-self-check>
+    <summary>Compare your model</summary>
+    <div data-explanation>
+      <p>The backlog changes at arrivals minus capacity until it reaches zero. When capacity exceeds arrivals, spare capacity drains existing work; when arrivals exceed capacity, the backlog grows. Equal rates preserve the starting backlog.</p>
+      <p>Check whether your prediction included the starting 20 events and the zero floor. This constant-rate model omits burstiness and failures.</p>
+      <!-- Add a relevant lesson link here. -->
+    </div>
+  </details>
+</fieldset>

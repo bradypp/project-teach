@@ -56,9 +56,17 @@ The [glossary shell](../assets/templates/glossary.html) lives at `references/glo
 
 ### Markdown export
 
-Copy/Save Markdown preserves headings, lists, code, tables, sources and current responses, omits controls and unrevealed exercise feedback, and resolves relative links against the original page. Exported local links refer to that machine's files; moving the Markdown alone does not copy those assets.
+Copy/Save Markdown preserves headings, lists, code, tables, sources and current responses, omits action controls and unrevealed exercise feedback, and resolves relative links against the original page. The same exporter serves every content page and quiz Copy for chat, including embedded practice and custom components. Exported local links refer to that machine's files; moving the Markdown alone does not copy those assets.
 
-For a custom visual or simulator, add `data-export-text="A useful textual explanation"` to its container, or an accessible label for a simple SVG/canvas. Use `data-export-ignore` for purely decorative content. A textual snapshot cannot preserve an interactive simulation. Keep core content in semantic HTML so layout changes do not affect conversion.
+For custom visuals and simulators:
+
+- Keep prompts, context, labels and live results in semantic HTML. Native inputs/textareas export their current values; choices retain selection marks and selects export selected option labels. Hidden inputs and action controls are omitted.
+- For state held only in JavaScript, synchronise `data-export-summary="Current settings and latest result"` on the widget container whenever state changes. Export adds that text while retaining the container's semantic content and responses. Put prediction/reflection in labelled inputs; keep any answer-bearing summary inside the question's feedback area until revealed.
+- Use `data-export-text="A useful textual explanation"` on a visual-only container to replace its contents, or use an accessible label for a simple SVG/canvas. Keep response fields outside that replacement boundary. The exporter preserves semantic content if an older replacement container encloses responses, but a narrowly scoped fallback is clearer.
+- Use `data-export-ignore` for decoration or graphics whose meaning is already fully represented by a textual result. It removes the whole marked subtree, so keep useful answers and results outside it.
+- A result must identify the settings that produced it when controls can change before the next run. Include the current result, learner prediction/reflection and hint/feedback disclosure; include action history only when the sequence is educationally relevant.
+
+A textual snapshot cannot preserve an interactive simulation. Check new/custom widgets by filling answers, changing settings and copying before and after feedback. Confirm context, live values, results and disclosure are retained; unrevealed solutions should be absent. Layout changes alone should not affect conversion.
 
 - The [browser controls](../assets/index.js) convert the main content using bundled Turndown and its GFM plugin; the Python helper generates pages.
 - Bundled dependency versions and licenses are documented in [vendor notes](../assets/vendor/README.md).

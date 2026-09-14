@@ -1,0 +1,52 @@
+<!-- Adapt this worked problem, including its values/keys/links. Rename all IDs
+     and radio names when reusing. Steps are sibling questions, never gated.
+     The final synthesis is optional and reveals only its own explanation. -->
+<section class="practice-group" aria-labelledby="backlog-problem">
+  <h2 id="backlog-problem">Follow the backlog through a burst</h2>
+  <p>
+    A simplified inbox starts with 20 pending events. For 10 seconds, arrivals
+    stay at 9 events per second and one worker completes 6 per second.
+    Assume constant rates, no retries and no dropped events.
+  </p>
+  <p class="muted">Try any step. Each has its own feedback.</p>
+  <fieldset data-question>
+    <legend>1. How many events are pending after the burst?</legend>
+    <label for="burst-count">Pending events</label>
+    <input id="burst-count" type="number" min="0" step="1" />
+    <label for="burst-reason">Show the calculation</label>
+    <textarea id="burst-reason" class="response-short" rows="3"></textarea>
+    <details data-hint>
+      <summary>A hint</summary>
+      <p>Account for both the starting backlog and the net arrivals.</p>
+    </details>
+    <details data-self-check>
+      <summary>Compare the calculation</summary>
+      <div data-explanation>
+        <p>20 + (9 − 6) × 10 = 50 pending events. The worker continues processing during the burst.</p>
+      </div>
+    </details>
+  </fieldset>
+  <fieldset data-question>
+    <legend>2. Arrivals then fall to 3 per second. What happens to the backlog?</legend>
+    <label class="option"><input type="radio" name="burst-trend" value="grows" />It grows by 3 events per second.</label>
+    <label class="option"><input type="radio" name="burst-trend" value="drains" data-correct="true" />It drains by 3 events per second until empty.</label>
+    <label class="option"><input type="radio" name="burst-trend" value="steady" />It stays at its post-burst size.</label>
+    <button type="button" data-check>Check this step</button>
+    <p class="feedback" data-feedback aria-live="polite" hidden></p>
+    <div data-explanation hidden>
+      <p>The worker has 6 − 3 = 3 events per second of spare capacity. The backlog shrinks; it cannot go below zero.</p>
+    </div>
+  </fieldset>
+  <fieldset data-question>
+    <legend>3. Connect the steps: when would a bigger buffer help?</legend>
+    <label for="burst-synthesis">Your reasoning and one limit</label>
+    <textarea id="burst-synthesis" class="response-short" rows="3"></textarea>
+    <details data-self-check>
+      <summary>Compare the whole problem</summary>
+      <div data-explanation>
+        <p>A larger buffer can hold the temporary excess if there is enough spare capacity afterwards to drain it. Sustained excess arrivals keep accumulating; storage alone does not raise processing capacity.</p>
+        <!-- Add a relevant lesson link here. -->
+      </div>
+    </details>
+  </fieldset>
+</section>

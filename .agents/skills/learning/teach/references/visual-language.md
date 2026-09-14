@@ -37,8 +37,7 @@ Choose the element by meaning. A central takeaway can be a paragraph; genuinely 
 
 - **Code:** Start from the [code-block template](../assets/templates/code-block.html). Use `language-*` on the `code` element; `language-text` keeps plain text or ASCII unhighlighted. The component script adds the label and Copy code control.
 - **Diagrams:** Start from the [diagram template](../assets/templates/diagram.html) and follow [Mermaid guidance](mermaid.md). Keep themes and palette directives out of individual diagrams.
-- **Choice practice:** Start from [choice-question.html](../assets/templates/choice-question.html). Use a unique radio name and IDs, one `data-correct="true"` option, feedback and a hidden explanation; enable the fieldset after authoring.
-- **Written practice:** Start from [open-question.html](../assets/templates/open-question.html). Use a unique textarea ID and revealable worked reasoning.
+- **Practice:** Read [quiz practice guidance](quiz.md) when composing quizzes, exercises embedded in other pages, or custom practice interactions.
 - **Custom interactions:** Keep the core explanation usable without JavaScript. Put reusable behaviour in `assets/components.js`; use semantic HTML and shared tokens for its static state.
 
 ## Theme tokens

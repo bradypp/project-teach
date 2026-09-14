@@ -1,11 +1,14 @@
-<!-- Optional fieldset to insert inside the quiz form. Use unique label/textarea IDs. -->
-<fieldset  data-question>
+<!-- Reflection or written reasoning: use unique label/textarea IDs. Remove
+     response-short for a longer answer; assess with a rubric, not string matching. -->
+<fieldset data-question>
   <legend>
     Replace with a project-grounded prediction or reasoning question
   </legend>
   <label for="reasoning-1">Your reasoning</label>
   <textarea
     id="reasoning-1"
+    class="response-short"
+    rows="3"
     placeholder="Try the question before revealing the explanation."
   ></textarea>
   <details data-self-check>
@@ -14,6 +17,10 @@
       <p>
         Replace with a worked explanation and what to look for in your answer.
       </p>
+      <ul>
+        <li>Name the assumption that makes your reasoning work.</li>
+        <li>Describe one consequence or case where you would choose differently.</li>
+      </ul>
       <!-- Add the relevant relative lesson link here. -->
     </div>
   </details>

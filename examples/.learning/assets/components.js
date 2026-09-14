@@ -1,6 +1,45 @@
 /* Optional components use the notebook tokens; page layout stays flexible. */
 (function () {
   "use strict";
+  // A small model example, scoped so several experiments can share one page.
+  document.querySelectorAll("[data-queue-experiment]").forEach((experiment) => {
+    const arrivals = experiment.querySelector("[data-arrivals]");
+    const service = experiment.querySelector("[data-service]");
+    const run = experiment.querySelector("[data-run-experiment]");
+    const plot = experiment.querySelector("[data-queue-plot]");
+    const result = experiment.querySelector("[data-experiment-result]");
+    let lastRun = "";
+    function settingsChanged() {
+      experiment.querySelector("[data-arrivals-value]").value = arrivals.value;
+      experiment.querySelector("[data-service-value]").value = service.value;
+      if (lastRun) result.textContent = `Settings changed; run again. ${lastRun}`;
+    }
+    arrivals.addEventListener("input", settingsChanged);
+    service.addEventListener("input", settingsChanged);
+    run.disabled = false;
+    run.addEventListener("click", () => {
+      const incoming = Number(arrivals.value);
+      const capacity = Number(service.value);
+      const pending = (seconds) => Math.max(0, 20 + (incoming - capacity) * seconds);
+      const samples = Array.from({ length: 11 }, (_, second) => [second, pending(second)]);
+      // Include the zero crossing to keep the polyline faithful between samples.
+      const emptyAt = capacity > incoming ? 20 / (capacity - incoming) : Infinity;
+      if (emptyAt < 10 && !Number.isInteger(emptyAt)) {
+        samples.push([emptyAt, 0]);
+        samples.sort((a, b) => a[0] - b[0]);
+      }
+      plot.querySelector("polyline").setAttribute("points",
+        samples.map(([second, count]) => `${40 + second * 28.5},${145 - count / 140 * 130}`).join(" "),
+      );
+      const trend = incoming > capacity ? "grows" : incoming < capacity ? "drains" : "stays level";
+      const empty = emptyAt <= 10 ? ` It reaches zero at ${Number(emptyAt.toFixed(2))} seconds.` : "";
+      lastRun = `Last run: arrivals ${incoming}/s; capacity ${capacity}/s; starting backlog 20. Pending at 0, 5 and 10 seconds: 20, ${pending(5)}, ${pending(10)}. The backlog ${trend}.${empty}`;
+      result.textContent = lastRun;
+      plot.setAttribute("aria-label", lastRun);
+      plot.removeAttribute("hidden");
+    });
+  });
+
   document
     .querySelectorAll('pre > code[class*="language-"]')
     .forEach((code) => {

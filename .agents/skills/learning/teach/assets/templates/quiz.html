@@ -31,14 +31,19 @@
         </p>
       </header>
       {{INTRO}}
-      <!-- AUTHOR: Duplicate question fieldsets. Replace prompts/options/reasoning, mark exactly one radio data-correct="true" per question, use unique name/id values. Mark any optional hint details data-hint. Add lesson links inside data-explanation (revealed after checking). -->
+      <!-- AUTHOR: Mix choice, reflection, multi-step, scenario and custom practice
+           where useful. Start from the bundled question/experiment templates.
+           Keep each independently checked response in its own data-question;
+           group related steps with a section. Use unique names/IDs, mark hints
+           data-hint, and keep answer-bearing links inside data-explanation.
+           Custom widgets must expose their current state to Markdown export. -->
       <p class="muted">
         Answers are temporary. Use Copy for chat to bring them back for
         discussion, or save the Markdown below. This page does not update your
         learning records.
       </p>
       <form data-quiz>
-        <!-- AUTHOR: This disabled scaffold is not a finished quiz. Replace it with authored enabled questions before delivery. -->
+        <!-- AUTHOR: An empty shell is not a finished quiz. Author and enable components before delivery. -->
         <!-- Insert authored questions or a custom practice widget here. -->
       </form>
 

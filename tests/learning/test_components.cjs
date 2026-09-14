@@ -60,6 +60,7 @@ const assert=require('node:assert/strict');
  await page.screenshot({path:'/tmp/teach-home-light.png',fullPage:true});
  await page.goto(new URL('lessons/make-retries-boring.html',base).href);
  await page.locator('[data-page-tags] a',{hasText:'idempotency'}).click();
+ await page.waitForLoadState('load');
  assert.equal(new URL(page.url()).searchParams.get('tag'),'idempotency');
  assert.equal(await page.locator('.tag-filters [data-tag="idempotency"]').getAttribute('aria-pressed'),'true');
  assert.equal(await page.locator('[data-library-section]:visible .library-entry:visible').count(),1);

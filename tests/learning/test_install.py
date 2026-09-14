@@ -18,6 +18,9 @@ class InstallTests(unittest.TestCase):
             self.assertTrue((destination / 'teach-setup/../teach/references/learning-system.md').is_file())
             self.assertTrue((destination / 'teach/references/visual-language.md').is_file())
             self.assertTrue((destination / 'teach/assets/templates/lesson.html').is_file())
+            # New component assets remain available from an installed bundle.
+            for name in ('multi-step-question', 'scenario-question', 'visual-experiment'):
+                self.assertTrue((destination / f'teach/assets/templates/{name}.html').is_file())
             self.assertTrue((destination / 'teach-quiz/agents/openai.yaml').is_file())
             self.assertFalse((destination / 'productivity').exists())
 
