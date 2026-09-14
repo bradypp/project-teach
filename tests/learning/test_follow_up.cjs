@@ -20,7 +20,9 @@ const assert = require("node:assert/strict");
       execFileSync("python3", args);
       const folder = ["reference", "glossary", "resource"].includes(kind)
         ? "references"
-        : `${kind}s`;
+        : kind === "research"
+          ? "research"
+          : `${kind}s`;
       return join(root, folder, `${slug}.html`);
     };
     const pages = [
@@ -56,6 +58,17 @@ const assert = require("node:assert/strict");
         title: "Useful sources",
         topics: "resource",
         file: create("resource", "resources", "Useful sources"),
+      },
+      {
+        kind: "research",
+        title: "Retry ownership",
+        topics: "architecture, evidence",
+        file: create(
+          "research",
+          "retry-ownership",
+          "Retry ownership",
+          "architecture,evidence",
+        ),
       },
     ];
     const glossary = create("glossary", "glossary", "Terms");

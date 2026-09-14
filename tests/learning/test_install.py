@@ -17,11 +17,23 @@ class InstallTests(unittest.TestCase):
             self.assertEqual(len(paths), 5)
             self.assertTrue((destination / 'teach-setup/../teach/references/learning-system.md').is_file())
             self.assertTrue((destination / 'teach/references/visual-language.md').is_file())
+            integrations = destination / 'teach/references/integrations.md'
+            self.assertTrue(integrations.is_file())
+            integration_text = integrations.read_text()
+            self.assertEqual(integration_text.count('<!-- teach:execution:inline -->'), 1)
+            self.assertEqual(integration_text.count('<!-- teach:execution:background -->'), 1)
             self.assertTrue((destination / 'teach/assets/templates/lesson.html').is_file())
             self.assertTrue((destination / 'teach/references/templates/PREFERENCES.md').is_file())
+            wrapper = destination / 'teach/references/templates/wrapper.md'
+            self.assertTrue(wrapper.is_file())
+            wrapper_text = wrapper.read_text()
+            self.assertEqual(wrapper_text.count('<!-- teach:integration:start -->'), 1)
+            self.assertEqual(wrapper_text.count('<!-- teach:integration:end -->'), 1)
+            self.assertEqual(wrapper_text.count('<!-- teach:execution:{{inline|background}} -->'), 1)
             # New component assets remain available from an installed bundle.
-            for name in ('multi-step-question', 'scenario-question', 'visual-experiment', 'resource'):
+            for name in ('multi-step-question', 'scenario-question', 'visual-experiment', 'resource', 'research'):
                 self.assertTrue((destination / f'teach/assets/templates/{name}.html').is_file())
+            self.assertFalse((destination / 'teach/references/templates/research.md').exists())
             self.assertTrue((destination / 'teach-quiz/agents/openai.yaml').is_file())
             self.assertFalse((destination / 'productivity').exists())
 

@@ -214,7 +214,7 @@
   toolbar.setAttribute("aria-label", "Notebook tools");
   const pageKind = document.body.dataset.pageKind;
   const isQuiz = pageKind === "quiz";
-  const hasFollowUp = ["lesson", "topic", "reference", "resource"].includes(
+  const hasFollowUp = ["lesson", "topic", "reference", "resource", "research"].includes(
     pageKind,
   );
   const chatAction = isQuiz

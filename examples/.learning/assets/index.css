@@ -1071,6 +1071,10 @@ footer {
   --section-color: var(--chart-3);
 }
 
+.library-section[data-library-section="research"] {
+  --section-color: var(--chart-5);
+}
+
 .library-section:not([data-library-section]) {
   --section-color: var(--chart-5);
 }

@@ -8,6 +8,7 @@ Use the bundled shell to create and deliver directly browsable learning material
 | --- | --- |
 | Lesson | A substantial explanation with mechanisms, examples and application |
 | Topic | One current synthesis across accumulated lessons and application |
+| Research | A reusable, question-driven investigation with evidence, implications and limitations |
 | Quiz | Optional retrieval and transfer practice with feedback |
 | Reference | Concise lookup answers, checklists, algorithms or comparisons |
 | Glossary | Vocabulary the learner can use meaningfully, with concise definitions and lesson links |
@@ -23,6 +24,7 @@ Resolve [library helper](../scripts/library.py) from the installed teach skill:
 python3 /path/to/teach/scripts/library.py new /project/.learning lesson queue-backpressure --title "Queues and backpressure"
 python3 /path/to/teach/scripts/library.py new /project/.learning quiz queue-practice --title "Queue practice"
 python3 /path/to/teach/scripts/library.py new /project/.learning reference queues --title "Queue reference"
+python3 /path/to/teach/scripts/library.py new /project/.learning research retry-identity --title "Which retry identity should we preserve?"
 python3 /path/to/teach/scripts/library.py index /project/.learning
 ```
 
@@ -70,7 +72,7 @@ This creates `references/resources.html`. Use a descriptive slug for a useful ca
 - The helper records creation time in UTC and displays it beneath the title. Keep it stable when editing; there is no updated-time field.
 - Add subject tags with `--tags "queues,reliability"`; maintain the comma-separated `tags` meta value as content changes. Reuse a small set of existing tags. The helper adds mandatory `glossary` and `resource` tags for those page kinds; preserve them during edits and include them on manually authored pages.
 - Keep descriptive filenames stable.
-- The home page uses collection labels Lessons, Topics, Quizzes and Reference for sections and type filters. Individual page labels stay singular. It groups actual HTML files by folder; all glossary and resource pages appear under Reference and can be filtered by their mandatory tags.
+- The home page uses collection labels Lessons, Topics, Quizzes, Reference and Research for sections and type filters. Research appears last when retained investigations exist. Individual page labels stay singular. It groups actual HTML files by folder; all glossary and resource pages appear under Reference and can be filtered by their mandatory tags.
 
 ## Shared controls and export
 
@@ -98,7 +100,7 @@ A textual snapshot cannot preserve an interactive simulation. Check new/custom w
 
 The user pastes the copied prompt into an existing conversation or a new local chat:
 
-- **Copy follow-up** on lessons, topics, references and resource pages asks to use the `teach` skill with the page kind, title, optional tags and absolute local file path. The receiving chat needs access to that file.
+- **Copy follow-up** on lessons, topics, references, resource and research pages asks to use the `teach` skill with the page kind, title, optional tags and absolute local file path. The receiving chat needs access to that file.
 - **Copy for chat** on quizzes includes a discussion prompt, the absolute local HTML file path and the current responses.
 
 Both actions offer manual copying if clipboard access fails. They do not send messages or update learning records. Glossaries retain only the Markdown actions.

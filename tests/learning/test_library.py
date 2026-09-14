@@ -94,6 +94,23 @@ class LibraryTests(unittest.TestCase):
         library.index(self.root)
         self.assertNotIn('<h2>Topics</h2>', (self.root / 'index.html').read_text())
 
+    def test_research_has_its_own_final_section_and_template(self):
+        library.new(self.root, 'reference', 'decision-aid', 'Decision aid')
+        page = library.new(self.root, 'research', 'retry-ownership', 'Where should retries live?',
+                           'architecture, evidence')
+        self.assertEqual(page, self.root / 'research/retry-ownership.html')
+        content = page.read_text()
+        self.assertIn('data-page-kind="research"', content)
+        for section in ('scope', 'findings', 'implications', 'sources', 'limitations'):
+            self.assertIn(f'id="{section}"', content)
+        index = (self.root / 'index.html').read_text()
+        self.assertIn('href="research/retry-ownership.html"', index)
+        self.assertIn('data-type="research"', index)
+        self.assertLess(index.index('<h2>Reference</h2>'), index.index('<h2>Research</h2>'))
+        page.unlink()
+        library.index(self.root)
+        self.assertNotIn('<h2>Research</h2>', (self.root / 'index.html').read_text())
+
     def test_metadata_and_newest_order_are_preserved(self):
         older = library.new(self.root, 'lesson', 'older', 'Older', 'queues, systems')
         newer = library.new(self.root, 'lesson', 'newer', 'Newer', 'reliability')

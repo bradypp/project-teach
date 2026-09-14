@@ -53,4 +53,4 @@ Leave the gate with one unresolved learning gap, or return to the original work 
 
 ## Passive teaching
 
-During ordinary development, interrupt only when the [marked AGENTS block](references/integrations.md#passive-teaching) enables passive teaching and a significant transferable gap affects an imminent decision or failure. Routine syntax, unfamiliar APIs and boilerplate do not qualify. Otherwise continue quietly.
+During ordinary development, teach only when the [marked AGENTS block](references/integrations.md#passive-teaching) enables it and a significant transferable gap affects an imminent decision or failure. Follow the block's Inline or Background execution mode, treating an unmarked legacy block as Inline. Routine syntax, unfamiliar APIs and boilerplate do not qualify; otherwise continue quietly.

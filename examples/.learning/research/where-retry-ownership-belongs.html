@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-14T18:30:00+00:00" />
+    <meta name="tags" content="architecture,evidence" />
+    <title>Where should retry ownership live?</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="research">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Research</p>
+        <h1>Where should retry ownership live?</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-14T18:30:00+00:00">14th Sept 2026 · 18:30</time>
+        </p>
+      </header>
+      <div class="page-intro">
+        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+        <p>The durable inbox should own retry state because it can distinguish accepted work from completed work after a process failure.</p>
+        <nav class="page-contents" aria-label="On this page">
+          <a href="#scope">Scope</a>
+          <a href="#findings">Findings</a>
+          <a href="#implications">Implications</a>
+          <a href="#sources">Sources</a>
+          <a href="#limitations">Limitations</a>
+        </nav>
+      </div>
+
+      <section id="scope">
+        <h2>Scope</h2>
+        <p>This investigation compares the boundaries already described in the Lantern example: receipt acknowledgement, durable inbox state and worker execution.</p>
+      </section>
+
+      <section id="findings">
+        <h2>Findings</h2>
+        <p><a href="../lessons/what-an-acknowledgement-promises.html">Acknowledgement</a> proves that the event crossed the receiver's durability boundary; it does not prove that downstream work finished.</p>
+        <p><a href="../lessons/recover-abandoned-work.html">Lease-based recovery</a> lets the inbox make interrupted work eligible again without asking the sender to reconstruct local execution state.</p>
+        <p>The project model therefore supports one owner for pending, leased, completed and failed states: the durable inbox.</p>
+      </section>
+
+      <section id="implications">
+        <h2>Implications</h2>
+        <ul>
+          <li>Workers claim durable records rather than receiving untracked, in-memory jobs.</li>
+          <li>Retry timing and attempt counts remain observable across worker restarts.</li>
+          <li>Stable event identity can prevent a sender retry from creating independent work.</li>
+        </ul>
+      </section>
+
+      <section id="sources">
+        <h2>Sources</h2>
+        <ul>
+          <li><a href="../../PROJECT_PLAN.md">Lantern project plan</a> — defines the example's receiver, inbox and worker boundaries.</li>
+          <li><a href="../topics/reliable-webhook-delivery.html">Reliable webhook delivery</a> — consolidates the current project model.</li>
+        </ul>
+      </section>
+
+      <section id="limitations">
+        <h2>Limitations and recheck conditions</h2>
+        <p>This conclusion is scoped to the example's database-backed inbox. Recheck it if delivery moves to an external broker that becomes the authoritative retry owner.</p>
+      </section>
+    </main>
+  </body>
+</html>

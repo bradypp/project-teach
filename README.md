@@ -23,7 +23,7 @@ Everything lives under `.learning/`:
 - `LEARNING_STATE.md`: current understanding, uncertainty, opportunities and links.
 - `records/`: selective learning insights with evidence.
 - `references/*.html`: concise lookup material, glossary pages tagged `glossary`, and annotated tutorials, courses, videos, articles, documentation, books and tools tagged `resource`. Default to one glossary and one resource collection; split only for useful, distinct categories.
-- `lessons/`, `topics/`, `quizzes/`, `references/`, `assets/`, `index.html`: the browsable local library.
+- `lessons/`, `topics/`, `quizzes/`, `references/`, `research/`, `assets/`, `index.html`: the browsable local library.
 
 Research and resource lists appear only when useful. There is no global store or automatic cross-project synchronisation.
 
@@ -33,11 +33,13 @@ Teaching first reuses supported understanding, existing artifacts and sound rese
 
 Detailed HTML lessons are the default for substantial topics; short explanations can stay in chat. Worthwhile short explanations may also be retained as compact HTML, while tiny clarifications need not become artifacts.
 
-The notebook groups pages under Lessons, Topics, Quizzes and Reference, with glossary and resource collections in Reference. The bundled HTML/CSS supplies a lean base. Lessons can use diagrams, visualisations, simulations and custom widgets suited to the concept. Shared components keep the library consistent without imposing fixed layouts. Content pages support themes, Markdown export and clipboard handoffs for continuing in chat; standalone pages never submit or update learning state directly.
+The notebook groups pages under Lessons, Topics, Quizzes, Reference and Research, with glossary and resource collections in Reference and retained investigations in Research. The bundled HTML/CSS supplies a lean base. Lessons can use diagrams, visualisations, simulations and custom widgets suited to the concept. Shared components keep the library consistent without imposing fixed layouts. Content pages support themes, Markdown export and clipboard handoffs for continuing in chat; standalone pages never submit or update learning state directly.
 
 Quiz practice can mix quick-fire choices, short reflections, multi-step problems, explorative scenarios and visual experiments. The bundled [practice templates](.agents/skills/learning/teach/references/quiz.md#practice-components) support independent feedback and a queue experiment you can adapt. Custom widgets retain responses through the shared [export contract](.agents/skills/learning/teach/references/artifacts.md#markdown-export), including current settings and results.
 
 Setup offers optional customisation through the [teaching-style template](.agents/skills/learning/teach/references/templates/PREFERENCES.md). Skipping the questions creates no style file; you can add your own later. The skills and references supply the full baseline. Preferences can override teacher personality, depth, pace and presentation. Optional integration adds a brief project purpose, learning-oriented development rules and a marked passive-teaching block together in `AGENTS.md`. Removing that block disables passive teaching. User-selected workflows can receive small new wrappers; original skills remain untouched.
+
+Selected integrations share one execution mode. Inline is the default and retains the current teaching flow. Background delegates integrated investigation, research, artifact creation and learning updates to one medium-reasoning teaching subagent while the primary workflow continues and finishes without waiting; that subagent can use bounded low-reasoning discovery workers. Explicit teach commands stay in the foreground. When the host cannot deliver background subagent results, the primary workflow continues and reports a qualifying teaching opportunity as skipped rather than falling back inline.
 
 Teaching, quiz creation and reviews use the `teach-update` skill to reconcile useful exposure, study intent and affected learning files. Later discussion, reported study and relevant task evidence refine the assessment. Artifact delivery introduces material; understanding depends on the user’s contribution. Relinking existing material, browser actions and unchanged evidence need no update.
 

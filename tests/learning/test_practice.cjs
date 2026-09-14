@@ -44,9 +44,9 @@ const assert = require("node:assert/strict");
     page.on("pageerror", (error) => errors.push(error.message));
     const markdown = () => page.evaluate(() => learningExportMarkdown(document));
     const files = [];
-    for (const kind of ["quiz", "lesson", "topic", "reference", "glossary"]) {
+    for (const kind of ["quiz", "lesson", "topic", "reference", "glossary", "research"]) {
       execFileSync("python3", [helper, "new", root, kind, kind, "--title", `Mixed ${kind}`]);
-      const folder = ["reference", "glossary"].includes(kind) ? "references" : kind === "quiz" ? "quizzes" : `${kind}s`;
+      const folder = ["reference", "glossary"].includes(kind) ? "references" : kind === "quiz" ? "quizzes" : kind === "research" ? "research" : `${kind}s`;
       const file = join(root, folder, `${kind}.html`);
       files.push(file);
       const insertion = kind === "quiz" ? "</form>" : "</main>";

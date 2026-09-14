@@ -10,9 +10,9 @@ import shutil
 from urllib.parse import quote
 
 ASSETS = Path(__file__).resolve().parent.parent / 'assets'
-KINDS = {'lesson': 'lessons', 'quiz': 'quizzes', 'reference': 'references', 'glossary': 'references', 'resource': 'references', 'topic': 'topics'}
+KINDS = {'lesson': 'lessons', 'quiz': 'quizzes', 'reference': 'references', 'glossary': 'references', 'resource': 'references', 'topic': 'topics', 'research': 'research'}
 
-SECTION_LABELS = {'lessons': 'Lessons', 'topics': 'Topics', 'quizzes': 'Quizzes', 'references': 'Reference'}
+SECTION_LABELS = {'lessons': 'Lessons', 'topics': 'Topics', 'quizzes': 'Quizzes', 'references': 'Reference', 'research': 'Research'}
 
 def date_label(value):
     if not value: return 'Undated'
