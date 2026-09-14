@@ -124,8 +124,11 @@ const assert = require("node:assert/strict");
       if (kind !== "glossary") {
         await page.locator("[data-chat]").click();
         const handoff = await page.evaluate(() => window.copiedText);
-        if (kind === "quiz") assert.ok(handoff.endsWith(copied));
-        else assert.ok(handoff.includes(`Local file: ${file}`));
+        if (kind === "quiz") {
+          assert.ok(handoff.startsWith(`Please review my responses to [Mixed quiz](${file}).`));
+          assert.ok(handoff.endsWith(copied));
+          assert.ok(!handoff.includes("Local file:"));
+        } else assert.ok(handoff.includes(`Local file: ${file}`));
       } else assert.equal(await page.locator("[data-chat]").count(), 0);
       await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {
         configurable: true, value: { writeText: async () => { throw new Error("blocked"); } },

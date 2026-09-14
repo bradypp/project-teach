@@ -18,7 +18,7 @@ const assert = require("node:assert/strict");
       const args = [helper, "new", root, kind, slug, "--title", title];
       if (tags) args.push("--tags", tags);
       execFileSync("python3", args);
-      const folder = kind === "reference" || kind === "glossary"
+      const folder = ["reference", "glossary", "resource"].includes(kind)
         ? "references"
         : `${kind}s`;
       return join(root, folder, `${slug}.html`);
@@ -50,6 +50,12 @@ const assert = require("node:assert/strict");
           "Retry checklist",
           "retries",
         ),
+      },
+      {
+        kind: "resource",
+        title: "Useful sources",
+        topics: "resource",
+        file: create("resource", "resources", "Useful sources"),
       },
     ];
     const glossary = create("glossary", "glossary", "Terms");
@@ -120,7 +126,7 @@ const assert = require("node:assert/strict");
     assert.equal(await page.locator("#export-text").isVisible(), true);
     assert.match(
       await page.locator("#export-text").inputValue(),
-      /Local file: .*learning follow-up-.*retry-checklist\.html/,
+      /Local file: .*learning follow-up-.*resources\.html/,
     );
     assert.equal(
       await page.locator(".export-fallback label").textContent(),

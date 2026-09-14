@@ -13,4 +13,4 @@ Use the `{{original-skill-name}}` skill and the `teach` skill. If the original i
 
 {{Apply Explore or Deliver guidance from integrations.md, keeping only relevant instructions.}}
 
-Present the pending question alongside its explanation. Use the `teach` skill for substantial gaps, then resume the original workflow. Resolve prerequisite decisions before synthesis. Preserve original completion criteria and authorisation requirements; use the `teach-update` skill to reconcile actual user reasoning.
+Present the pending question alongside its explanation. Use the `teach` skill for substantial gaps, then resume the original workflow. Resolve prerequisite decisions before synthesis. Preserve original completion criteria and authorisation requirements; use the `teach-update` skill to reconcile useful exposure and actual user reasoning.

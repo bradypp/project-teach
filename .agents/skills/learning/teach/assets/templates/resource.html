@@ -16,23 +16,31 @@
     <script src="../assets/vendor/highlight.js" defer></script>
     <script src="../assets/components.js" defer></script>
   </head>
-  <body data-page-kind="reference">
+  <body data-page-kind="resource">
     <a class="skip" href="#main">Skip to content</a>
     <nav class="site-nav" aria-label="Library">
       <a href="../index.html">My learning notebook</a>
     </nav>
     <main id="main">
       <header class="page-header">
-        <p class="eyebrow">Reference</p>
+        <p class="eyebrow">Resource</p>
         <h1>{{TITLE}}</h1>
         <p class="page-date">
           Created <time datetime="{{CREATED}}">{{CREATED_LABEL}}</time>
         </p>
       </header>
       {{INTRO}}
-      <!-- Provide concise lookup material: a checklist, algorithm, worked pattern or comparison.
-         Link deeper explanations in lessons or the current topic synthesis.
-         Reuse project assets. Add useful source/lesson links and an invitation for follow-up. -->
+      <!-- Curate tutorials, courses, videos, articles, documentation, books and practical
+           tools worth returning to. Point to material to study or use; concise answers
+           themselves belong in ordinary reference pages. Group by
+           purpose only when useful; omit empty sections. Give each entry a stable ID,
+           descriptive link, what it offers and when to use it, plus date/version
+           scope where relevant. Practitioner perspectives are optional.
+           Link internal lessons for context. Keep one authoritative entry per resource. -->
+      <ul class="resource-list">
+        <!-- <li id="source-slug"><a href="https://example.com">Source title</a>
+             <p>What it offers and when to use it.</p></li> -->
+      </ul>
     </main>
   </body>
 </html>

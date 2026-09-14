@@ -28,7 +28,7 @@ Help the user understand the project they are planning or building, including th
 
 - Read [writing guidance](references/writing.md) before drafting.
 - Prefer a substantial HTML lesson over a long chat explanation. Follow [artifact guidance](references/artifacts.md) for page creation, maintenance, verification and delivery with the [library helper](scripts/library.py).
-- For follow-ups on existing material, deepen or reuse the source page when its scope fits; create a linked lesson for a distinct durable explanation. Keep topic pages as current syntheses and references concise.
+- For follow-ups on existing material, deepen or reuse the source page when its scope fits; create a linked lesson for a distinct durable explanation. Keep topic pages as current syntheses and references concise. Use [page selection guidance](references/artifacts.md#choose-a-page) for glossary vocabulary and annotated resource collections.
 - In chat, present the original question, a brief orientation and the lesson link. Small clarifications can stay inline.
 - Make the explanation project-grounded and complete enough for the current decision. The user can ask to drill down further or follow the reading links.
 - Teach generously during exploration; supplement delivery workflows without displacing their purpose. Ask a contextual application question; the pending planning question can serve as practice.
@@ -36,7 +36,7 @@ Help the user understand the project they are planning or building, including th
 
 ## 5. Reconcile and return to the work
 
-- Use the `teach-update` skill after teaching to reconcile artifacts, useful exposure, gaps and any actual user evidence. No changes are required when nothing meaningful changed; producing a lesson or working code does not demonstrate understanding.
+- Use the `teach-update` skill after teaching to reconcile useful new exposure, study intent, links, gaps and actual user evidence. No changes are required when nothing meaningful changed; producing a lesson or working code does not demonstrate understanding.
 - Finish with the relevant question, lesson link and a clear return to the original workflow.
 
 ## Passive teaching

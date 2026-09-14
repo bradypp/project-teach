@@ -10,6 +10,10 @@ A concise current view of understanding and worthwhile possibilities. Link to su
 
 - **{{Concept}}:** {{What is unclear or worth checking in context.}}
 
+## Exposure and study
+
+- **{{Concept}}:** {{Material introduced, practice requested or study reported; distinguish what remains unverified.}} [Material]({{artifact path}})
+
 ## Deferred
 
 - **{{Topic}}:** {{Why it is not needed yet and what would make it worth revisiting.}}
@@ -18,6 +22,3 @@ A concise current view of understanding and worthwhile possibilities. Link to su
 
 - **{{Concept}}:** {{What prompted discovery and why it might matter, even beyond this project.}} {{Useful link if available.}}
 
-## Useful lessons
-
-- [{{Lesson title}}]({{lesson path}}) — {{When to revisit it.}}

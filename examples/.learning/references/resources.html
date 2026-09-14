@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-14T02:40:39+00:00" />
+    <meta name="tags" content="resource" />
+    <title>Sources for reliable delivery</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="resource">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Resource</p>
+        <h1>Sources for reliable delivery</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-14T02:40:39+00:00">14th Sept 2026 · 02:40</time>
+        </p>
+      </header>
+      <p>Primary sources for Lantern’s delivery contract, retry identity and bounded queues.
+        Return to these when implementing or checking the linked behaviour.</p>
+      <ul>
+        <li id="source-4"><a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-15.3.3">RFC 9110, §15.3.3: 202 Accepted</a> — defines the deliberately noncommittal meaning of <code>202 Accepted</code>.</li>
+        <li id="source-5"><a href="https://docs.stripe.com/webhooks">Stripe webhook documentation</a> — a concrete provider contract covering fast <code>2xx</code> responses, repeated deliveries, asynchronous handling and event IDs.</li>
+        <li id="source-6"><a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">Making retries safe with idempotent APIs</a> — explains caller-provided request identity, atomic recording and the same-ID/different-intent edge case.</li>
+        <li id="source-7"><a href="https://www.sqlite.org/lang_upsert.html">SQLite UPSERT</a> and <a href="https://www.sqlite.org/lang_transaction.html">transactions</a> — authoritative behavior for uniqueness conflicts and commit boundaries in Lantern&#x27;s storage layer.</li>
+        <li id="source-8"><a href="https://docs.python.org/3/library/asyncio-queue.html">Python <code>asyncio</code> queues</a> — exact <code>maxsize</code> and blocking semantics for the in-process handoff example.</li>
+        <li id="source-9"><a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/rel_mitigate_interaction_failure_fail_fast.html">AWS Well-Architected: fail fast and limit queues</a> — operational guidance on bounded backlogs, message age and overload.</li>
+      </ul>
+      <p>Apply these sources with the <a href="webhook-reliability-checklist.html">reliability checklist</a>
+        and the <a href="../topics/reliable-webhook-delivery.html">current delivery model</a>.</p>
+    </main>
+  </body>
+</html>

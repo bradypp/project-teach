@@ -17,6 +17,8 @@ This is a learning project: {{brief project purpose and learning goals}}.
 
 <!-- teach:passive:start -->
 During ordinary development, use the `teach` skill when a significant transferable conceptual gap affects an imminent decision or failure. Keep routine syntax, API usage and boilerplate quiet. Apply the project's teaching preferences after the opportunity qualifies.
+
+Use the `teach-update` skill when ordinary development reveals meaningful user reasoning, application, reported study or a learning gap. Update only affected learning entries; autonomous agent work alone does not demonstrate understanding.
 <!-- teach:passive:end -->
 ```
 

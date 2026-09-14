@@ -56,10 +56,28 @@ class LibraryTests(unittest.TestCase):
             self.assertTrue((self.root / 'assets' / asset).is_file())
         index = (self.root / 'index.html').read_text()
         self.assertEqual(index.count('href="references/glossary.html"'), 1)
-        self.assertEqual(index.count('<h2>Glossary</h2>'), 1)
-        self.assertIn('<section class="library-section" data-library-section="references"><h2>Glossary</h2>', index)
+        self.assertNotIn('<h2>Glossary</h2>', index)
+        self.assertIn('<section class="library-section" data-library-section="references"><h2>Reference</h2>', index)
         self.assertIn('data-tag="terminology"', index)
         self.assertFalse((self.root / 'GLOSSARY.md').exists())
+
+    def test_multiple_collections_have_required_tags_and_one_section(self):
+        for kind in ('glossary', 'resource'):
+            for slug in ('networking', 'storage'):
+                page = library.new(self.root, kind, f'{kind}-{slug}', slug,
+                                   f' Systems, {kind.upper()}, systems ')
+                self.assertIn(f'name="tags" content="{kind},systems"', page.read_text())
+                self.assertIn(f'data-page-kind="{kind}"', page.read_text())
+        plain = library.new(self.root, 'resource', 'resources', 'Resources')
+        self.assertIn('name="tags" content="resource"', plain.read_text())
+        library.index(self.root)
+        html = (self.root / 'index.html').read_text()
+        self.assertEqual(html.count('<h2>Reference</h2>'), 1)
+        self.assertEqual(html.count('class="library-entry"'), 5)
+        for kind in ('glossary', 'resource'):
+            self.assertIn(f'data-tag="{kind}"', html)
+        self.assertNotIn('<h2>Glossary</h2>', html)
+        self.assertNotIn('<h2>Resource</h2>', html)
 
     def test_topics_section_tracks_actual_pages_and_preserves_synthesis(self):
         library.index(self.root)

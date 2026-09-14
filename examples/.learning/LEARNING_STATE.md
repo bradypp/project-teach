@@ -9,7 +9,7 @@
 
 ## Useful exposure — not yet verified
 
-- [Bound the inbox](lessons/bound-the-inbox.html) introduced queue limits, message age and overload policy. No learner explanation or application has been observed yet.
+- [Bound the inbox](lessons/bound-the-inbox.html) introduced queue limits, message age and overload policy; [Burst lab](quizzes/burst-lab.html) provides related practice. Reading, quiz completion and understanding remain unverified.
 - [Recover abandoned work](lessons/recover-abandoned-work.html) introduced expiring worker leases and atomic claims. No learner explanation or application has been observed yet.
 - [Read the shape of a backlog](lessons/read-backlog-shape.html) introduced the relationship between depth, age and rates. No learner interpretation has been observed yet.
 - [Reliable webhook delivery](topics/reliable-webhook-delivery.html) connects durable acknowledgement, deduplication and backpressure into one design.

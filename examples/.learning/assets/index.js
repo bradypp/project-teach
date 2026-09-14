@@ -48,8 +48,10 @@
     const inputs = original.querySelectorAll("textarea,input,select");
     copy.querySelectorAll("textarea,input,select").forEach((node, index) => {
       const live = inputs[index];
-      if (["hidden", "button", "submit", "reset"].includes(live.type) ||
-          live.matches("[hidden], [data-export-ignore], [data-export-ui]")) {
+      if (
+        ["hidden", "button", "submit", "reset"].includes(live.type) ||
+        live.matches("[hidden], [data-export-ignore], [data-export-ui]")
+      ) {
         node.remove();
         return;
       }
@@ -62,7 +64,9 @@
           ? "[selected] "
           : "[ ] "
         : live.tagName === "SELECT"
-          ? [...live.selectedOptions].map((option) => text(option)).join(", ") || "Not answered"
+          ? [...live.selectedOptions]
+              .map((option) => text(option))
+              .join(", ") || "Not answered"
           : live.value || "Not answered";
       if (live.tagName === "TEXTAREA") {
         replacement.textContent = "";
@@ -74,35 +78,41 @@
       node.replaceWith(replacement);
     });
     const questions = original.querySelectorAll("[data-question]");
-    [...copy.querySelectorAll("[data-question]")].reverse().forEach((question, reverseIndex) => {
-      const index = questions.length - 1 - reverseIndex;
-      const source = questions[index];
-      if (source.matches(":disabled")) {
-        question.remove();
-        return;
-      }
-      const viewed = source.dataset.checked === "true" ||
-        questionParts(source, "[data-self-check][open]").length > 0;
-      const hintSeen = source.dataset.hintSeen === "true" ||
-        questionParts(source, "[data-hint][open]").length > 0;
-      if (!viewed)
-        questionParts(question, "[data-explanation]")
-          .forEach((node) => node.remove());
-      if (!hintSeen)
-        questionParts(question, "[data-hint]")
-          .forEach((node) => node.remove());
-      const status = doc.createElement("p");
-      status.textContent = `Feedback viewed: ${viewed ? "yes" : "no"}; Hint revealed: ${hintSeen ? "yes" : "no"}`;
-      if (source.dataset.answerChanged === "true")
-        status.textContent += "; Response changed after feedback: yes";
-      question.append(status);
-      const legend = questionParts(question, "legend")[0];
-      if (legend) {
-        const heading = doc.createElement("h2");
-        heading.textContent = text(legend);
-        legend.replaceWith(heading);
-      }
-    });
+    [...copy.querySelectorAll("[data-question]")]
+      .reverse()
+      .forEach((question, reverseIndex) => {
+        const index = questions.length - 1 - reverseIndex;
+        const source = questions[index];
+        if (source.matches(":disabled")) {
+          question.remove();
+          return;
+        }
+        const viewed =
+          source.dataset.checked === "true" ||
+          questionParts(source, "[data-self-check][open]").length > 0;
+        const hintSeen =
+          source.dataset.hintSeen === "true" ||
+          questionParts(source, "[data-hint][open]").length > 0;
+        if (!viewed)
+          questionParts(question, "[data-explanation]").forEach((node) =>
+            node.remove(),
+          );
+        if (!hintSeen)
+          questionParts(question, "[data-hint]").forEach((node) =>
+            node.remove(),
+          );
+        const status = doc.createElement("p");
+        status.textContent = `Feedback viewed: ${viewed ? "yes" : "no"}; Hint revealed: ${hintSeen ? "yes" : "no"}`;
+        if (source.dataset.answerChanged === "true")
+          status.textContent += "; Response changed after feedback: yes";
+        question.append(status);
+        const legend = questionParts(question, "legend")[0];
+        if (legend) {
+          const heading = doc.createElement("h2");
+          heading.textContent = text(legend);
+          legend.replaceWith(heading);
+        }
+      });
     copy.querySelectorAll("[data-mermaid-source]").forEach((figure) => {
       const pre = doc.createElement("pre");
       const code = doc.createElement("code");
@@ -131,11 +141,15 @@
         node.getAttribute("data-export-text") ||
         node.getAttribute("aria-label") ||
         "Interactive visual: see the original HTML page.";
-      if (node.querySelector("[data-export-response], [data-question], output")) {
+      if (
+        node.querySelector("[data-export-response], [data-question], output")
+      ) {
         // Older custom widgets may put a replacement fallback around answers.
         // Retain their semantic content instead of discarding those responses.
         node.prepend(paragraph);
-        node.querySelectorAll("svg, canvas").forEach((visual) => visual.remove());
+        node
+          .querySelectorAll("svg, canvas")
+          .forEach((visual) => visual.remove());
       } else {
         node.replaceWith(paragraph);
       }
@@ -159,7 +173,7 @@
   window.learningExportMarkdown = exportMarkdown;
 
   function quizChatMarkdown(doc) {
-    return `Please review my responses to “${doc.title}”. Give me feedback on my reasoning, then ask 1-3 useful follow-up questions.\n\n${exportMarkdown(doc)}`;
+    return `Please review my responses to [${doc.title}](${localFilePath(doc)}). Give me feedback on my reasoning, then ask 1-3 useful follow-up questions.\n\n${exportMarkdown(doc)}`;
   }
   function localFilePath(doc) {
     const url = new URL(doc.location.href);
@@ -200,7 +214,9 @@
   toolbar.setAttribute("aria-label", "Notebook tools");
   const pageKind = document.body.dataset.pageKind;
   const isQuiz = pageKind === "quiz";
-  const hasFollowUp = ["lesson", "topic", "reference"].includes(pageKind);
+  const hasFollowUp = ["lesson", "topic", "reference", "resource"].includes(
+    pageKind,
+  );
   const chatAction = isQuiz
     ? `<button type="button" data-chat>${iconSwap("chat", "check")}<span class="button-label" data-default-label="Copy for chat">Copy for chat</span></button>`
     : hasFollowUp
@@ -299,7 +315,10 @@
     button.addEventListener("click", () => {
       const question = button.closest("[data-question]");
       if (!question) return;
-      const selected = questionParts(question, 'input[type="radio"]:checked')[0];
+      const selected = questionParts(
+        question,
+        'input[type="radio"]:checked',
+      )[0];
       const feedback = questionParts(question, "[data-feedback]")[0];
       const explanation = questionParts(question, "[data-explanation]")[0];
       if (!feedback || !explanation) return;
@@ -319,26 +338,32 @@
       explanation.hidden = false;
     }),
   );
-  document.querySelectorAll("[data-question] input, [data-question] textarea, [data-question] select").forEach((input) => {
-    const changed = () => {
-      const question = input.closest("[data-question]");
-      // Keep disclosure visible and retain that the learner has seen the solution.
-      if (question.dataset.checked === "true") {
-        question.dataset.answerChanged = "true";
-        const feedback = questionParts(question, "[data-feedback]")[0];
-        if (feedback) {
-          feedback.textContent =
-            "Answer changed after viewing feedback. Check again to compare.";
-          feedback.dataset.state = "changed";
+  document
+    .querySelectorAll(
+      "[data-question] input, [data-question] textarea, [data-question] select",
+    )
+    .forEach((input) => {
+      const changed = () => {
+        const question = input.closest("[data-question]");
+        // Keep disclosure visible and retain that the learner has seen the solution.
+        if (question.dataset.checked === "true") {
+          question.dataset.answerChanged = "true";
+          const feedback = questionParts(question, "[data-feedback]")[0];
+          if (feedback) {
+            feedback.textContent =
+              "Answer changed after viewing feedback. Check again to compare.";
+            feedback.dataset.state = "changed";
+          }
         }
-      }
-    };
-    input.addEventListener("input", changed);
-    input.addEventListener("change", changed);
-  });
-  document.querySelectorAll("form[data-quiz]").forEach((form) =>
-    form.addEventListener("submit", (event) => event.preventDefault()),
-  );
+      };
+      input.addEventListener("input", changed);
+      input.addEventListener("change", changed);
+    });
+  document
+    .querySelectorAll("form[data-quiz]")
+    .forEach((form) =>
+      form.addEventListener("submit", (event) => event.preventDefault()),
+    );
   const status = document.querySelector("[data-export-status]");
   const chat = document.querySelector("[data-chat]");
   if (chat)

@@ -17,11 +17,12 @@ This repository packages project-based teaching skills. Read the relevant skill 
 - `teach/references/visual-language.md` defines HTML composition, reusable components and theme-token use.
 - `teach/references/quiz.md` defines practice templates, response boundaries, feedback and custom interactions.
 - `teach/references/writing.md` defines prose guidance for teaching and maintained Markdown.
-- `teach/references/PREFERENCES.md` is a concise template for optional project overrides. The skills and references must work fully without it.
+- `teach/references/templates/PREFERENCES.md` is a concise template for optional project overrides. The skills and references must work fully without it.
 - Templates and components live with `teach`; other skills link to shared guidance.
 
 ## Changes
 
+- Backward compatibility is not required. Remove obsolete files and code when replacing behaviour, while preserving useful user-authored learning material.
 - Keep instructions concise, human-readable and grouped by purpose. Prefer useful headings and short lists to dense rule paragraphs.
 - Keep state thin, evidence in selective records, and passive teaching controlled by its marked AGENTS block.
 - Reflect changes across skill entry points, references, templates, helpers, installer and README. Avoid runtime dependencies on this checkout's absolute path.

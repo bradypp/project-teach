@@ -12,7 +12,7 @@ Open [the learning notebook](.learning/index.html) to browse the rendered artifa
 4. Practice stays self-contained in the browser. Revealing quiz feedback does not silently alter learning state.
 5. Review records only demonstrated reasoning. The two records here are clearly labelled fictional examples; they must never be treated as evidence about a real user.
 
-The scenario is deliberately small, but the output is not a style gallery. It is a plausible project notebook with reciprocal links, a glossary, durable records and honest uncertainty.
+The scenario is deliberately small, but the output is not a style gallery. It is a plausible project notebook with reciprocal links, a glossary, an [annotated resource collection](.learning/references/resources.html), durable records and honest uncertainty.
 
 ## Suggested tour
 

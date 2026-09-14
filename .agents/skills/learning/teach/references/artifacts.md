@@ -2,6 +2,19 @@
 
 Use the bundled shell to create and deliver directly browsable learning material. Read the [artifact visual language](visual-language.md) before composing page content or changing shared presentation.
 
+## Choose a page
+
+| Page | Use it for |
+| --- | --- |
+| Lesson | A substantial explanation with mechanisms, examples and application |
+| Topic | One current synthesis across accumulated lessons and application |
+| Quiz | Optional retrieval and transfer practice with feedback |
+| Reference | Concise lookup answers, checklists, algorithms or comparisons |
+| Glossary | Vocabulary the learner can use meaningfully, with concise definitions and lesson links |
+| Resource | Annotated tutorials, courses, videos, articles, documentation, books and practical tools worth studying or using |
+
+Glossary and resource pages belong to the Reference section. Use their dedicated templates and follow [collection scope and maintenance](learning-system.md#reference-collections). These distinctions guide authoring; keep instructional hints out of finished page content.
+
 ## Start with the lean base
 
 Resolve [library helper](../scripts/library.py) from the installed teach skill:
@@ -40,14 +53,24 @@ Create the vocabulary page with the [library helper](../scripts/library.py):
 python3 /path/to/teach/scripts/library.py new /project/.learning glossary glossary --title "My glossary"
 ```
 
-The [glossary shell](../assets/templates/glossary.html) lives at `references/glossary.html`. Fill its term navigation and stable term sections with actual vocabulary. Update that page in place and link directly to term anchors from lessons or learning state.
+The [glossary shell](../assets/templates/glossary.html) creates `references/glossary.html` by default with the command above. Fill its term navigation and stable term sections with actual vocabulary. Update entries in place and link directly to term anchors from lessons or learning state. For a useful category split, use a descriptive slug such as `glossary-networking`.
+
+### Resource pages
+
+Create an annotated collection with the [resource shell](../assets/templates/resource.html):
+
+```sh
+python3 /path/to/teach/scripts/library.py new /project/.learning resource resources --title "Useful resources"
+```
+
+This creates `references/resources.html`. Use a descriptive slug for a useful category split. Follow [collection guidance](learning-system.md#reference-collections) for selection, annotations and maintenance.
 
 ## Metadata and navigation
 
 - The helper records creation time in UTC and displays it beneath the title. Keep it stable when editing; there is no updated-time field.
-- Add subject tags with `--tags "queues,reliability"`; maintain the comma-separated `tags` meta value as content changes. Reuse a small set of existing tags.
+- Add subject tags with `--tags "queues,reliability"`; maintain the comma-separated `tags` meta value as content changes. Reuse a small set of existing tags. The helper adds mandatory `glossary` and `resource` tags for those page kinds; preserve them during edits and include them on manually authored pages.
 - Keep descriptive filenames stable.
-- The home page groups nonempty content types and filters entries by type and subject. The glossary has its own section and participates in reference filtering.
+- The home page uses collection labels Lessons, Topics, Quizzes and Reference for sections and type filters. Individual page labels stay singular. It groups actual HTML files by folder; all glossary and resource pages appear under Reference and can be filtered by their mandatory tags.
 
 ## Shared controls and export
 
@@ -75,8 +98,8 @@ A textual snapshot cannot preserve an interactive simulation. Check new/custom w
 
 The user pastes the copied prompt into an existing conversation or a new local chat:
 
-- **Copy follow-up** on lessons, topics and references asks to use the `teach` skill with the page kind, title, optional tags and absolute local file path. The receiving chat needs access to that file.
-- **Copy for chat** on quizzes includes a discussion prompt and the current responses.
+- **Copy follow-up** on lessons, topics, references and resource pages asks to use the `teach` skill with the page kind, title, optional tags and absolute local file path. The receiving chat needs access to that file.
+- **Copy for chat** on quizzes includes a discussion prompt, the absolute local HTML file path and the current responses.
 
 Both actions offer manual copying if clipboard access fails. They do not send messages or update learning records. Glossaries retain only the Markdown actions.
 

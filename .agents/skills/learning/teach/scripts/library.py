@@ -10,8 +10,9 @@ import shutil
 from urllib.parse import quote
 
 ASSETS = Path(__file__).resolve().parent.parent / 'assets'
-KINDS = {'lesson': 'lessons', 'quiz': 'quizzes', 'reference': 'references', 'glossary': 'references', 'topic': 'topics'}
+KINDS = {'lesson': 'lessons', 'quiz': 'quizzes', 'reference': 'references', 'glossary': 'references', 'resource': 'references', 'topic': 'topics'}
 
+SECTION_LABELS = {'lessons': 'Lessons', 'topics': 'Topics', 'quizzes': 'Quizzes', 'references': 'Reference'}
 
 def date_label(value):
     if not value: return 'Undated'
@@ -63,11 +64,11 @@ def index(root):
     root = copy_assets(root)
     sections = []
     tags = set()
-    for folder in ('lessons', 'topics', 'quizzes', 'references', 'glossary'):
+    for folder in SECTION_LABELS:
         entries = []
-        pages = [root / 'references/glossary.html'] if folder == 'glossary' else sorted((root / folder).glob('*.html'))
+        pages = sorted((root / folder).glob('*.html'))
         for page in pages:
-            if not page.is_file() or (folder == 'references' and page.name == 'glossary.html'):
+            if not page.is_file():
                 continue
             parser = TitleParser()
             parser.feed(page.read_text(encoding='utf-8'))
@@ -83,10 +84,9 @@ def index(root):
             entries.append((created, title, entry))
         if not entries: continue
         entries.sort(key=lambda item: (item[0], item[1]), reverse=True)
-        section_type = 'references' if folder == 'glossary' else folder
-        filterable = f' data-library-section="{section_type}"'
-        sections.append(f'<section class="library-section"{filterable}><h2>{folder.capitalize()}</h2><ul class="library-entries">' + ''.join(item[2] for item in entries) + '</ul></section>')
-    types = '<div class="type-filters" aria-label="Filter by type">' + ''.join(f'<button class="secondary tag-pill" data-type="{kind}" aria-pressed="{str(not kind).lower()}">{label}</button>' for kind, label in [('', 'All types'), ('lessons', 'Lessons'), ('topics', 'Topics'), ('quizzes', 'Quizzes'), ('references', 'References')]) + '</div>'
+        filterable = f' data-library-section="{folder}"'
+        sections.append(f'<section class="library-section"{filterable}><h2>{SECTION_LABELS[folder]}</h2><ul class="library-entries">' + ''.join(item[2] for item in entries) + '</ul></section>')
+    types = '<div class="type-filters" aria-label="Filter by type">' + ''.join(f'<button class="secondary tag-pill" data-type="{kind}" aria-pressed="{str(not kind).lower()}">{label}</button>' for kind, label in [('', 'All types'), *SECTION_LABELS.items()]) + '</div>'
     sort_control = (
         '<div class="library-sort">'
         '<button type="button" class="secondary" id="library-sort" data-sort-value="newest" aria-label="Sort entries" aria-haspopup="menu" aria-expanded="false" aria-controls="library-sort-menu">'
@@ -97,8 +97,8 @@ def index(root):
         '<button type="button" class="library-sort-option" data-sort-option data-sort-value="title" role="menuitemradio" aria-checked="false">Alphabetical</button>'
         '</div></div>'
     )
-    filters = '<div class="library-controls" data-export-ui>' + types + '<div class="tag-filters" aria-label="Filter by subject">'
-    filters += '<button class="secondary tag-pill" data-tag="" aria-pressed="true">All subjects</button>'
+    filters = '<div class="library-controls" data-export-ui>' + types + '<div class="tag-filters" aria-label="Filter by tag">'
+    filters += '<button class="secondary tag-pill" data-tag="" aria-pressed="true">All tags</button>'
     filters += ''.join(f'<button class="secondary tag-pill" data-tag="{escape(tag, quote=True)}" aria-pressed="false">{escape(tag)}</button>' for tag in sorted(tags))
     filters += '</div><div class="filter-row"><p data-filter-status role="status"></p>' + sort_control + '</div></div>'
     template = (ASSETS / 'templates/index.html').read_text(encoding='utf-8')
@@ -110,6 +110,10 @@ def index(root):
 def new(root, kind, slug, title, tags=""):
     if not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', slug):
         raise ValueError('Use a lowercase hyphen-separated slug, e.g. queue-backpressure.')
+    page_tags = {tag.strip().lower() for tag in tags.split(',') if tag.strip()}
+    if kind in ('glossary', 'resource'):
+        page_tags.add(kind)
+    tags = ','.join(sorted(page_tags))
     root = Path(root)
     page = root / KINDS[kind] / f'{slug}.html'
     if page.exists():
@@ -136,7 +140,7 @@ def main():
     create.add_argument('kind', choices=KINDS)
     create.add_argument('slug')
     create.add_argument('--title', required=True)
-    create.add_argument('--tags', default='', help='Comma-separated subject tags')
+    create.add_argument('--tags', default='', help='Comma-separated tags; glossary/resource tags are added automatically')
     args = parser.parse_args()
     try:
         if args.command == 'new': result = new(args.root, args.kind, args.slug, args.title, args.tags)

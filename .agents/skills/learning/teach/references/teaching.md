@@ -56,4 +56,4 @@ When practical wisdom benefits from other people, answer what the evidence suppo
 
 ## Reference material
 
-Create reference sheets, algorithms, examples or a glossary when repeated use warrants them. Keep them concise, easy to scan and linked to the deeper lessons. `references/glossary.html` owns vocabulary; learning records own evidence. Neither is required for every explanation.
+Create reference sheets, algorithms, examples or a glossary when repeated use warrants them. Keep them concise, easy to scan and linked to the deeper lessons. Glossary pages own vocabulary; learning records own evidence. Use [page selection guidance](artifacts.md#choose-a-page) to distinguish references, glossary and resource collections. Neither is required for every explanation.

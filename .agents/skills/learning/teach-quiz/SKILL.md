@@ -33,6 +33,7 @@ Use [teaching guidance](../teach/references/teaching.md) for practice design and
 1. Use the [library helper](../teach/scripts/library.py) to create the quiz shell under `quizzes/`.
 2. Inspect related lessons, topics, references and glossary entries. Add useful reciprocal links while keeping answer-bearing links inside feedback.
 3. Check the content and answer keys. For new/custom interactions, try a response and copy it before and after feedback; confirm the prompt, context and current state survive without leaking unrevealed answers. Then complete [artifact maintenance and verification](../teach/references/artifacts.md#maintain-and-verify), which owns link-checker and index-rebuild conditions.
-4. Return an absolute file link using the [artifact delivery](../teach/references/artifacts.md#deliver) guidance.
+4. Use the `teach-update` skill to reconcile useful new exposure, study intent and links under the [learning evidence rules](../teach/references/learning-system.md#learning-records).
+5. Return an absolute file link using the [artifact delivery](../teach/references/artifacts.md#deliver) guidance.
 
-Quizzes are a fun aside meant as supplementary material and practice. Under the [learning evidence rules](../teach/references/learning-system.md#learning-records), creating, opening, completing or exporting one does not update learning state. Discuss answers if the user brings them back; use the `teach-update` skill when understanding is demonstrated or meaningful teaching interaction occurs.
+Quizzes remain optional supplementary practice. Browser completion and export do not write learning state; when the user brings back responses or a study account, use the `teach-update` skill to reconcile what it supports.

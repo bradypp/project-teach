@@ -12,7 +12,7 @@ Read [writing guidance](../teach/references/writing.md) before drafting project 
 
 1. Read [project storage](../teach/references/learning-system.md) and inspect the project and any existing learning files.
 2. Establish the starting point: topic-first, project-first, or both. Complete the setup path in [research guidance](../teach/references/research.md), share a concise source-linked orientation, then propose a concrete mission and observable capabilities. When no project exists yet, agree on a small real outcome or experiment.
-3. Offer optional customisation through the [teaching-style template](../teach/references/PREFERENCES.md). Preserve an existing project style; when customisation is skipped, rely on the complete baseline and create no preferences file.
+3. Offer optional customisation through the [teaching-style template](../teach/references/templates/PREFERENCES.md). Preserve an existing project style; when customisation is skipped, rely on the complete baseline and create no preferences file.
 4. Ask whether `.learning/` should be tracked or git ignored. Use [integration guidance](../teach/references/integrations.md) to offer the learning-project AGENTS integration and user-selected workflow wrappers.
 
 Use the research to inform scope and learning opportunities without turning setup into a compulsory curriculum.
