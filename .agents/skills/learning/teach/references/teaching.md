@@ -10,7 +10,7 @@ Shape learning around the active project, plan or spec and the user's current un
 
 ## Depth for a decision
 
-- Inspect dependencies across the whole active plan/spec. Teach upcoming prerequisites broadly, go deep on what is needed next, and use state and records to target gaps rather than repeat verified understanding.
+- Once the teaching workflow identifies a real gap, inspect its dependencies across the whole active plan/spec. Teach upcoming prerequisites broadly and go deep on what is needed next.
 - Teach broadly enough to understand the relevant approaches and deeply enough to reason about the current decision. Cover missing prerequisites until the user can explain the alternatives, consequences and why a choice fits the project. A large prerequisite is reason to teach, not automatically defer.
 
 - Defer details and related ideas that do not affect the decision yet. In learning state, distinguish deliberate deferrals with revisit conditions from open-ended opportunities. The user can still skip or continue; a learning check is not a compulsory gate.

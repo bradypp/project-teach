@@ -29,7 +29,7 @@ Research and resource lists appear only when useful. There is no global store or
 
 ## Teaching and presentation
 
-Teaching inspects prerequisites across the active plan/spec, teaches upcoming concepts broadly and goes deeply into what is needed next. The mission guides direction; state and records guide known understanding and gaps. Substantive teaching includes research and useful further reading.
+Teaching first reuses supported understanding, existing artifacts and sound research. It resumes the project when the learner already understands enough, links suitable material when the topic is already covered, and researches or creates only the unresolved gap. The mission guides direction; state and records distinguish understanding from exposure.
 
 Detailed HTML lessons are the default for substantial topics; short explanations can stay in chat. Worthwhile short explanations may also be retained as compact HTML, while tiny clarifications need not become artifacts.
 
@@ -39,7 +39,7 @@ Quiz practice can mix quick-fire choices, short reflections, multi-step problems
 
 Setup offers optional customisation through the [teaching-style template](.agents/skills/learning/teach/references/templates/PREFERENCES.md). Skipping the questions creates no style file; you can add your own later. The skills and references supply the full baseline. Preferences can override teacher personality, depth, pace and presentation. Optional integration adds a brief project purpose, learning-oriented development rules and a marked passive-teaching block together in `AGENTS.md`. Removing that block disables passive teaching. User-selected workflows can receive small new wrappers; original skills remain untouched.
 
-Teaching, quiz creation and reviews use the `teach-update` skill to reconcile useful exposure, study intent and affected learning files. Later discussion, reported study and relevant task evidence refine the assessment. Artifact delivery introduces material; understanding depends on the user’s contribution. Browser actions never write learning state, and unchanged evidence needs no update.
+Teaching, quiz creation and reviews use the `teach-update` skill to reconcile useful exposure, study intent and affected learning files. Later discussion, reported study and relevant task evidence refine the assessment. Artifact delivery introduces material; understanding depends on the user’s contribution. Relinking existing material, browser actions and unchanged evidence need no update.
 
 ## Example notebook
 

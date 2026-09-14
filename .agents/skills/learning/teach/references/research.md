@@ -5,14 +5,14 @@ Build enough verified understanding to explain the mechanism, compare relevant a
 ## When to research
 
 - **Setup:** Investigate the project and supplied topics before proposing the mission and learning opportunities. Provide a concise, source-linked orientation to core concepts, prerequisites, major approaches and current developments. Reuse sound existing research when revising setup.
-- **Teaching:** Complete research for substantive lessons before drafting. Ground core concepts and consequential claims in inspected sources.
+- **Teaching:** Let sound existing research satisfy covered, current claims. Investigate the uncovered mechanism, alternatives and consequential uncertainty before drafting new teaching.
 - **Updates:** Research claims or topic syntheses needing verification; otherwise reconcile the available account and evidence.
 - **Reviews and quizzes:** Reuse existing lessons and evidence, checking current developments when they affect the assessment or answer.
 
 ## Research workflow
 
-1. **Frame the investigation.** Inspect relevant project files, versions, plans and supplied topics. Search existing lessons and resources. Identify the decision, prerequisite gaps and likely unfamiliar concepts worth discovering.
-2. **Discover evidence.** Find primary grounding, meaningful alternatives and complementary experience using the source guidance below. Use discovery workers where appropriate; broaden searches beyond the user's initial terminology to expose missing concepts.
+1. **Frame the investigation.** Inspect relevant project files, versions, plans and supplied topics. Search existing lessons, topics, retained research and resources. Identify the decision and the claims that existing material does not cover with suitable scope and freshness.
+2. **Discover evidence.** For those claims, find primary grounding, meaningful alternatives and complementary experience using the source guidance below. Use discovery workers where appropriate; broaden searches beyond the user's initial terminology to expose missing concepts.
 3. **Inspect and verify.** Read the actual source content. Check consequential claims against the relevant documentation, specification, research or source code; retain the exact supporting URL and useful section. A title or search snippet is a discovery lead, not verification.
 4. **Compare and synthesise.** Explain mechanisms, alternatives, trade-offs and the scope of agreement or disagreement. Resolve discrepancies in version, context or assumptions before treating sources as conflicting.
 5. **Check readiness.** Proceed when the core mechanism and prerequisites can be explained, relevant alternatives compared, consequential claims supported, and important limitations identified. Investigate unresolved issues that could change the lesson or recommendation. Stop when these needs are covered and further searching adds little.
@@ -59,5 +59,5 @@ Build enough verified understanding to explain the mechanism, compare relevant a
 
 ## Retention and efficiency
 
-- Reuse verified sources where their scope and freshness still fit. Keep discovery bounded by the readiness criteria and synthesise findings rather than collecting sources indefinitely.
-- Persist only material that will improve future understanding or decisions, following [maintenance guidance](learning-system.md#retain-and-connect). Retain a synthesis with its question, sources, scope/date and limitations; citations alone do not require a separate research archive.
+- Keep discovery bounded by the readiness criteria and synthesise findings rather than collecting sources indefinitely.
+- After research, apply [retention and connection guidance](learning-system.md#retain-and-connect) to decide whether the investigation or unused sources earn a durable home.
