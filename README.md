@@ -1,15 +1,17 @@
 # Project Teach
 
-Project Teach is a set of five skills that help your AI coding agent teach you through the project you're building. Ask about a design decision, work through an explanation using your code, and try a small exercise before returning to the implementation.
+PLearn the ideas behind the code you're building with a coding agent that keeps a project notebook you can return to later. 
 
-Lessons, practice and notes live in a browsable `.learning/` notebook inside your project. The agent records what has been introduced separately from what your reasoning has demonstrated, so a later session can pick up without treating a generated lesson as something you've mastered.
+Ask about a design decision, work through an explanation using your code, and try a small exercise before returning to the implementation.
+
+Lessons, practice and notes live in a browsable `.learning/` notebook inside your project where your agent also records what's been introduced and what your own reasoning has demonstrated, giving the next session a useful starting point.
 
 ## Install and use
 
 Run this from the project you want to learn in. It installs the teaching package from this repository's `skills/` folder:
 
 ```sh
-npx skills@latest add bradypp/project-teach --skill '*'
+npx skills@latest add bradypp/project-teach
 ```
 
 Choose your coding agent when prompted. Install all five skills: they share references, templates and helpers. You need Node.js for the installer and Python 3 for the notebook helper. Generated pages open in a browser without a server.
