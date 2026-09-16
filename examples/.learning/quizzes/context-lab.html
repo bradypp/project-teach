@@ -30,10 +30,10 @@
           Created <time datetime="2026-09-16T21:44:39+00:00">16th Sept 2026 · 21:44</time>
         </p>
       </header>
-<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>Predict how much evidence reaches the model. Change the retrieval depth, chunk size and context allowance, then run a deliberately simple packing model.</p></div>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>Search can return more evidence than the prompt can hold. Try retrieving twelve chunks instead of eight without changing the token budget. Predict how many reach the model, then run the packer.</p></div>
 <form data-quiz><fieldset data-question id="context-experiment"><legend>Pack the evidence</legend>
 <p>Assume equally sized, already ranked chunks. Instructions and history cost 2,000 tokens; reserve another 2,000 for output. The packer takes whole chunks in order. This model shows capacity, not answer quality or a particular model’s limits.</p>
-<label for="prediction">Your prediction: will retrieving more chunks always help?</label><textarea id="prediction" class="response-short" rows="2"></textarea>
+<label for="prediction">At 8,000 total tokens and 800 tokens per chunk, how many of twelve retrieved chunks will fit? Explain your prediction.</label><textarea id="prediction" class="response-short" rows="2"></textarea>
 <label for="budget">Total context allowance</label><select id="budget"><option value="6000">6,000 tokens</option><option value="8000" selected>8,000 tokens</option><option value="12000">12,000 tokens</option></select>
 <label for="chunks">Chunks retrieved: <output id="chunks-value">8</output></label><input id="chunks" type="range" min="1" max="16" value="8">
 <label for="size">Tokens per chunk</label><select id="size"><option value="400">400 tokens</option><option value="800" selected>800 tokens</option><option value="1200">1,200 tokens</option></select>

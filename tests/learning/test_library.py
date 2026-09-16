@@ -4,7 +4,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-SCRIPT = Path(__file__).resolve().parents[2] / '.agents/skills/learning/teach/scripts/library.py'
+SCRIPT = Path(__file__).resolve().parents[2] / 'skills/teach/scripts/library.py'
 spec = importlib.util.spec_from_file_location('library', SCRIPT)
 library = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(library)

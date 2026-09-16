@@ -10,7 +10,7 @@ const assert = require("node:assert/strict");
 (async () => {
   const root = mkdtempSync(join(tmpdir(), "learning follow-up-"));
   const helper = resolve(
-    ".agents/skills/learning/teach/scripts/library.py",
+    "skills/teach/scripts/library.py",
   );
   let browser;
   try {

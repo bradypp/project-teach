@@ -6,7 +6,7 @@ import shutil
 
 
 def install(destination):
-    source = Path(__file__).resolve().parents[1] / '.agents/skills/learning'
+    source = Path(__file__).resolve().parents[1] / 'skills'
     skills = sorted(path for path in source.iterdir() if (path / 'SKILL.md').is_file())
     destination = Path(destination).expanduser().resolve()
     conflicts = [destination / skill.name for skill in skills if (destination / skill.name).exists()]

@@ -51,7 +51,7 @@
   <button type="button" data-check>Check answer</button>
   <p class="feedback" data-feedback aria-live="polite" hidden></p>
   <div data-explanation hidden>
-    <h3>Why this works</h3>
+    <h3>Where the source disappeared</h3>
     <p>The required source reached retrieval but disappeared during packing. Inspect budget and selection before tuning search. The final unsupported claim also warrants an answer-support check. <a href="../lessons/evals-that-find-the-failure.html#diagnose">Review the evaluation boundaries.</a></p>
     
   </div>
@@ -71,7 +71,7 @@
   <button type="button" data-check>Check answer</button>
   <p class="feedback" data-feedback aria-live="polite" hidden></p>
   <div data-explanation hidden>
-    <h3>Why this works</h3>
+    <h3>The retry still refers to the accepted job</h3>
     <p>The accepted job still exists even though the response was lost. Tenant-scoped request keys make the retry resolve to the same job. A fresh deadline would also let retries evade the original budget. <a href="../lessons/agent-runtime.html#contract">Review the acceptance contract.</a></p>
     
   </div>
@@ -91,11 +91,11 @@
     <summary>Compare your reasoning</summary>
     <div data-explanation>
       <p>
-        Freeze the case, corpus and model settings. Replace only the packing policy, then check whether pool-metrics-42 survives into the model input. Compare support of the final claims as a separate outcome. Mention that one successful answer is insufficient evidence of general reliability. <a href="../lessons/evals-that-find-the-failure.html#experiment">Compare with the experiment workflow.</a>
+        Keep the question, corpus, retrieved candidates and model settings fixed. Change only the packing policy, then inspect whether <code>pool-metrics-42</code> reaches the model input. That checks the packing fix. Separately check whether the final diagnosis follows from the evidence; including a source does not guarantee the model uses it correctly. <a href="../lessons/evals-that-find-the-failure.html#experiment">Compare with the experiment workflow.</a>
       </p>
       <ul>
-        <li>Name the assumption that makes your reasoning work.</li>
-        <li>Describe one consequence or case where you would choose differently.</li>
+        <li>Which saved evidence IDs would distinguish a packing change from a retrieval change?</li>
+        <li>If the metrics reach the prompt but the answer still blames the migration, which stage would you inspect next?</li>
       </ul>
       
     </div>

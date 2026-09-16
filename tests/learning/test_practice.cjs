@@ -9,8 +9,8 @@ const assert = require("node:assert/strict");
 
 (async () => {
   const root = mkdtempSync(join(tmpdir(), "teach mixed practice-"));
-  const assets = resolve(".agents/skills/learning/teach/assets");
-  const helper = resolve(".agents/skills/learning/teach/scripts/library.py");
+  const assets = resolve("skills/teach/assets");
+  const helper = resolve("skills/teach/scripts/library.py");
   const components = ["choice-question", "open-question", "multi-step-question", "scenario-question", "visual-experiment"]
     .map((name) => readFileSync(join(assets, `templates/${name}.html`), "utf8"))
     .join("\n").replace("data-question disabled", "data-question");

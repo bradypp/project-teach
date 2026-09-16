@@ -29,7 +29,7 @@
           Created <time datetime="2026-09-16T21:44:39+00:00">16th Sept 2026 · 21:44</time>
         </p>
       </header>
-<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>Build Switchboard, an incident-investigation agent that explains a failing deployment using runbooks and deployment events. Start by deciding who owns a request after the browser disappears.</p></div>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>An engineer starts an investigation, then closes the browser. Should the work stop? For Switchboard, it should continue. That choice gives the Go API and the graph worker different responsibilities.</p></div>
 <section id="boundary"><h2>One investigation, two kinds of state</h2>
 <p>An engineer asks: “Why did checkout errors spike after release 42?” The Go API authenticates the caller and accepts the investigation. A Python worker runs a LangGraph workflow that retrieves evidence, decides whether another read-only tool call would help, and drafts a cited answer. These components have different responsibilities even though they serve one user action.</p>
 <p>The platform owns identity, admission, deadlines and durable job status. The graph owns the investigation’s current evidence and next step. A graph checkpoint describes progress inside an investigation; a job record describes the promise made to the caller. Neither automatically replaces the other.</p></section><figure class="diagram"><pre class="mermaid">flowchart TD
@@ -51,6 +51,7 @@
 <tr><th scope="row">Graph</th><td>Evidence IDs, tool outcomes, remaining budget</td><td>A tool times out midway through reasoning</td></tr>
 <tr><th scope="row">Result store</th><td>Answer, citations, terminal status</td><td>A stale worker tries to overwrite a newer result</td></tr></tbody></table>
 <p>Claim a job with an expiring lease. Renew it during execution and attach a monotonically increasing claim generation. A result write succeeds only if its generation still matches the current claim. Otherwise, a worker whose lease expired could finish late and overwrite the replacement worker’s answer.</p></section>
+<p>Suppose worker A holds generation 7 and pauses during a model call. Its lease expires; worker B claims generation 8. When A returns, its answer may be perfectly usable, but its generation-7 write must fail. The store checks ownership, not answer quality. B is now responsible for finishing the job.</p>
 <section id="deadlines"><h2>A request deadline is not a job deadline</h2>
 <p>In Go, an HTTP request context bounds work performed for that request. Our asynchronous contract deliberately ends that request after acceptance. The worker therefore reads an explicit job deadline instead of borrowing a context that disappears with the connection.</p><pre><code class="language-go">// Illustrative worker-side budget check; storage and error handling omitted.
 remaining := time.Until(job.Deadline)

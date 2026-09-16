@@ -3,7 +3,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-script = Path(__file__).resolve().parents[2] / '.agents/skills/learning/teach/scripts/check_links.py'
+script = Path(__file__).resolve().parents[2] / 'skills/teach/scripts/check_links.py'
 spec = importlib.util.spec_from_file_location('links', script)
 links = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(links)

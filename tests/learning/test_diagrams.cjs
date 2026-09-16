@@ -10,7 +10,7 @@ const assert = require('node:assert/strict');
  const root = mkdtempSync(join(tmpdir(), 'teach-diagrams-'));
  const browser = await chromium.launch({headless:true, executablePath:process.env.CHROMIUM_PATH});
  try {
-  execFileSync('python3', [resolve('.agents/skills/learning/teach/scripts/library.py'), 'new', root, 'lesson', 'diagrams', '--title', 'Readable diagrams']);
+  execFileSync('python3', [resolve('skills/teach/scripts/library.py'), 'new', root, 'lesson', 'diagrams', '--title', 'Readable diagrams']);
   const source = `flowchart LR
  A["Authenticate the caller"] --> B["Persist the investigation"] --> C["Retrieve authorised evidence"] --> D["Deduplicate candidates"] --> E["Pack the model context"] --> F["Generate a supported answer"] --> G["Persist the result"]`;
   const compact = 'flowchart LR\n A[Request] --> B[Retrieve] --> C[Pack] --> D[Answer] --> E[Check]';

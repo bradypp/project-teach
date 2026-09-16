@@ -1,6 +1,6 @@
 # Maintaining project-teach
 
-The reusable package is `.agents/skills/learning/`. Its five skill folders must remain siblings: supporting skills refer to shared guidance, templates and helpers in `teach/`.
+The reusable package is `skills/`. Its five skill folders must remain siblings: supporting skills refer to shared guidance, templates and helpers in `teach/`. The repository's `.agents/skills/` directory is for local authoring guidance, not the teaching package.
 
 ## Install from a checkout
 
@@ -14,20 +14,20 @@ Python 3 runs the library helper. Generated pages open directly in a browser. Th
 
 ## Guidance
 
-- [Learning state and evidence](../.agents/skills/learning/teach/references/learning-system.md)
-- [Teaching methods](../.agents/skills/learning/teach/references/teaching.md)
-- [Research](../.agents/skills/learning/teach/references/research.md)
-- [Artifact workflow](../.agents/skills/learning/teach/references/artifacts.md)
-- [Visual language](../.agents/skills/learning/teach/references/visual-language.md)
-- [Practice components](../.agents/skills/learning/teach/references/quiz.md)
-- [Writing](../.agents/skills/learning/teach/references/writing.md)
-- [Optional integrations](../.agents/skills/learning/teach/references/integrations.md)
+- [Learning state and evidence](../skills/teach/references/learning-system.md)
+- [Teaching methods](../skills/teach/references/teaching.md)
+- [Research](../skills/teach/references/research.md)
+- [Artifact workflow](../skills/teach/references/artifacts.md)
+- [Visual language](../skills/teach/references/visual-language.md)
+- [Practice components](../skills/teach/references/quiz.md)
+- [Writing](../skills/teach/references/writing.md)
+- [Optional integrations](../skills/teach/references/integrations.md)
 
 ## Checks
 
 ```sh
 python3 -m unittest discover -s tests/learning -p 'test_*.py'
-python3 .agents/skills/learning/teach/scripts/check_links.py examples/.learning
+python3 skills/teach/scripts/check_links.py examples/.learning
 ```
 
 The `test_*.cjs` scripts under `tests/learning/` cover browser controls, themes, notebook navigation, components, practice and exports. `test_diagrams.cjs` creates a fresh template-based fixture and checks bounded shrink-to-fit, wrapped labels, keyboard scrolling, resize/theme behaviour and source export. They require Playwright and Chromium; `CHROMIUM_PATH` can select a browser executable. Routine authored pages need content and link checks. New interactions also need response/export checks before and after feedback, as described in the artifact guidance.
@@ -41,7 +41,7 @@ The examples are synthetic teaching artifacts, not learning evidence or backend 
 Rebuild the notebook index after changing page titles, tags or membership:
 
 ```sh
-python3 .agents/skills/learning/teach/scripts/library.py index examples/.learning
+python3 skills/teach/scripts/library.py index examples/.learning
 ```
 
 Keep README screenshots in `docs/images/` representative of the live pages. The title card combines browser captures of the notebook, architecture lesson and context lab.

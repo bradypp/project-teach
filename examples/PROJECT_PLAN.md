@@ -24,4 +24,4 @@ An on-call engineer asks why a deployment failed. Switchboard gathers authorised
 
 ## Deliberate limits
 
-No automated rollback, shell execution or production integrations. Code snippets illustrate design decisions rather than a pinned framework API. Research is skipped for this demonstration at the author's request; no source-checking or measured application performance is claimed.
+No automated rollback, shell execution or production integrations. Code snippets illustrate design decisions rather than a pinned framework API. The initial lessons were written without research; later recovery lessons cite documentation in the notebook's research section. No backend tests or application performance measurements are claimed.

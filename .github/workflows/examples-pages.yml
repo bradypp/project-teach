@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - 'examples/.learning/**'
-      - '.agents/skills/learning/teach/scripts/check_links.py'
+      - 'skills/teach/scripts/check_links.py'
       - '.github/workflows/examples-pages.yml'
   workflow_dispatch:
 
@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check notebook links
-        run: python3 .agents/skills/learning/teach/scripts/check_links.py examples/.learning
+        run: python3 skills/teach/scripts/check_links.py examples/.learning
       - name: Prepare public notebook
         run: |
           mkdir -p _site

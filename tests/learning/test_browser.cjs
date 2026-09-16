@@ -11,7 +11,7 @@ const assert = require("node:assert/strict");
   let browser;
   try {
     execFileSync("python", [
-      resolve(".agents/skills/learning/teach/scripts/library.py"),
+      resolve("skills/teach/scripts/library.py"),
       "new",
       root,
       "quiz",
@@ -23,7 +23,7 @@ const assert = require("node:assert/strict");
     writeFileSync(
       file,
       readFileSync(file, "utf8")
-        .replace("</form>", readFileSync(resolve(".agents/skills/learning/teach/assets/templates/choice-question.html"), "utf8") + "</form>")
+        .replace("</form>", readFileSync(resolve("skills/teach/assets/templates/choice-question.html"), "utf8") + "</form>")
         .replace("data-question disabled", "data-question")
         .replace(
           "<!-- Add relative lesson link, e.g. ../lessons/queue-backpressure.html -->",
@@ -147,7 +147,7 @@ const assert = require("node:assert/strict");
     // Open questions are self-checks; their actual writing is still exportable.
     const openQuestion = readFileSync(
       resolve(
-        ".agents/skills/learning/teach/assets/templates/open-question.html",
+        "skills/teach/assets/templates/open-question.html",
       ),
       "utf8",
     );

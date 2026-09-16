@@ -3,7 +3,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import unittest
 
-SCRIPT = Path(__file__).resolve().parents[2] / '.agents/skills/learning/teach/scripts/transcript.py'
+SCRIPT = Path(__file__).resolve().parents[2] / 'skills/teach/scripts/transcript.py'
 spec = importlib.util.spec_from_file_location('transcript_helper', SCRIPT)
 helper = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(helper)

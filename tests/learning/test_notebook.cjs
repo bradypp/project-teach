@@ -10,7 +10,7 @@ const assert=require('node:assert/strict');
  const root=mkdtempSync(join(tmpdir(),'teach-notebook-'));
  let browser;
  try {
-  const helper=resolve('.agents/skills/learning/teach/scripts/library.py');
+  const helper=resolve('skills/teach/scripts/library.py');
   execFileSync('python3',[helper,'new',root,'lesson','mechanism','--title','A small experiment']);
   const file=join(root,'lessons/mechanism.html');
   const content=`<article><h2 id="model">A useful model</h2><p>Keep <em>meaning</em> and <a href="../index.html#notes">sources</a>.</p>

@@ -4,8 +4,8 @@ This repository packages project-based teaching skills. Read the relevant skill 
 
 ## Boundaries
 
-- The reusable package is `.agents/skills/learning/`; its five skills remain siblings.
-- Skills outside that package are reference-only and may be deleted. The package must work without them.
+- The reusable package is `skills/`; its five skills remain siblings. These are the project's deliverables, not locally installed agent skills.
+- Skills under `.agents/skills/` are reference-only. The package must work without them.
 - Work locally without subagents.
 - Preserve existing user-authored learning material and original workflow skills.
 
