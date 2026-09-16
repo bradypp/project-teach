@@ -31,14 +31,14 @@
       </header>
 <div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>A fluent explanation of the wrong incident is still wrong. Follow one question from a search query to a bounded evidence packet, then decide when Switchboard should decline to answer.</p></div>
 <section id="retrieval"><h2>Retrieval supplies candidates</h2><p>Retrieval-augmented generation (RAG) gives a model outside material to use when answering. For Switchboard, the material is versioned runbooks and incident notes. A search score says that a chunk resembles the query under a retrieval method. It does not establish that the chunk explains this incident, belongs to the right tenant, or is current.</p>
-<p>Suppose “checkout errors after release 42” retrieves a current checkout runbook, an old connection-pool incident, and a billing outage that uses similar language. An answer built from all three can confidently mix unrelated causes. The retrieval stage has found candidates; evidence selection still has work to do.</p></section><figure class="diagram"><pre class="mermaid">flowchart LR
-  Q[Question and tenant] --&gt; F[Authorised corpus]
-  F --&gt; S[Retrieve candidates]
-  S --&gt; R[Rerank and deduplicate]
-  R --&gt; P[Pack bounded evidence]
-  P --&gt; G[Generate with citations]
-  G --&gt; V[Check support]
-  V --&gt; A[Answer or abstain]</pre><figcaption>Apply access scope before material reaches the model. Keep source identity through selection, packing and generation.</figcaption></figure>
+<p>Suppose “checkout errors after release 42” retrieves a current checkout runbook, an old connection-pool incident, and a billing outage that uses similar language. An answer built from all three can confidently mix unrelated causes. The retrieval stage has found candidates; evidence selection still has work to do.</p></section><figure class="diagram"><pre class="mermaid">flowchart TD
+  Q["`Question and tenant`"] --&gt; F["`Authorised corpus`"]
+  F --&gt; S["`Retrieve candidates`"]
+  S --&gt; R["`Rerank and deduplicate`"]
+  R --&gt; P["`Pack bounded evidence`"]
+  P --&gt; G["`Generate with citations`"]
+  G --&gt; V["`Check support`"]
+  V --&gt; A["`Answer or abstain`"]</pre><figcaption>Apply access scope before material reaches the model. Keep source identity through selection, packing and generation.</figcaption></figure>
 <section id="chunks"><h2>Choose chunks that preserve the rule</h2><p>Chunking splits documents into units the retriever can return. Fixed windows are easy to implement but may separate a runbook step from its prerequisite. Section-based chunks can keep “if the pool is saturated” attached to the restart instruction. Overlap can preserve a boundary but also return the same evidence twice.</p>
 <table><thead><tr><th scope="col">Candidate</th><th scope="col">What it contributes</th><th scope="col">Decision</th></tr></thead><tbody>
 <tr><th scope="row">Runbook v7 · pool saturation</th><td>Diagnostic rule and required metric</td><td>Keep, with section and version</td></tr>

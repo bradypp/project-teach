@@ -98,6 +98,42 @@
       return { figure, source, view };
     })
     .filter(Boolean);
+  // Keep Mermaid's intrinsic text size. Overflow belongs to this region,
+  // never to the page; scaling a wide viewBox to 100% makes labels illegible.
+  function sizeDiagram(item, graphic) {
+    const bounds = graphic.viewBox.baseVal;
+    if (bounds.width > 0 && bounds.height > 0) {
+      graphic.style.width = `${bounds.width}px`;
+      graphic.style.maxWidth = "none";
+      graphic.setAttribute("width", bounds.width);
+      graphic.setAttribute("height", bounds.height);
+    }
+    if (!item.scrollHint) {
+      const hint = document.createElement("p");
+      hint.className = "diagram-scroll-hint";
+      hint.dataset.exportUi = "";
+      hint.textContent = "Scroll horizontally to see the full diagram. Focus the diagram and use the arrow keys, or swipe.";
+      hint.hidden = true;
+      item.view.before(hint);
+      item.scrollHint = hint;
+      const updateOverflow = () => {
+        const overflowing = item.view.scrollWidth > item.view.clientWidth + 1;
+        hint.hidden = !overflowing;
+        if (overflowing) {
+          item.view.tabIndex = 0;
+          item.view.setAttribute("role", "region");
+          item.view.setAttribute("aria-label", "Scrollable diagram");
+        } else {
+          item.view.removeAttribute("tabindex");
+          item.view.removeAttribute("role");
+          item.view.removeAttribute("aria-label");
+        }
+      };
+      item.updateOverflow = updateOverflow;
+      new ResizeObserver(updateOverflow).observe(item.view);
+    }
+    item.updateOverflow();
+  }
   let sequence = 0;
   let chain = Promise.resolve();
   let initialAnchorAligned = false;
@@ -202,10 +238,12 @@
           securityLevel: "strict",
           theme: "base",
           themeVariables: variables,
+          markdownAutoWrap: true,
           flowchart: {
             htmlLabels: false,
             curve: "basis",
             diagramPadding: 12,
+            wrappingWidth: 180,
             useMaxWidth: true,
           },
           sequence: {
@@ -226,6 +264,7 @@
             fitSingleLineSequenceNotes(item.view);
             const graphic = item.view.querySelector("svg");
             if (graphic) {
+              sizeDiagram(item, graphic);
               graphic.setAttribute("role", "img");
               const caption = item.figure.querySelector("figcaption");
               if (caption)

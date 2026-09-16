@@ -36,7 +36,7 @@ Choose the element by meaning. A central takeaway can be a paragraph; genuinely 
 ## Enhanced components
 
 - **Code:** Start from the [code-block template](../assets/templates/code-block.html). Use `language-*` on the `code` element; `language-text` keeps plain text or ASCII unhighlighted. The component script adds the label and Copy code control.
-- **Diagrams:** Start from the [diagram template](../assets/templates/diagram.html) and follow [Mermaid guidance](mermaid.md). Keep themes and palette directives out of individual diagrams.
+- **Diagrams:** Start from the [diagram template](../assets/templates/diagram.html) and follow [Mermaid guidance](mermaid.md). Prefer compact vertical flows and wrapped labels for multi-step explanations; the shared renderer preserves text size and allows local scrolling. Follow the Mermaid guidance for composition and readability checks. Keep themes and palette directives out of individual diagrams.
 - **Practice:** Read [quiz practice guidance](quiz.md) when composing quizzes, exercises embedded in other pages, or custom practice interactions.
 - **Custom interactions:** Keep the core explanation usable without JavaScript. Put reusable behaviour in `assets/components.js`; use semantic HTML and shared tokens for its static state.
 

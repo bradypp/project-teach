@@ -1,5 +1,7 @@
+<!-- Prefer a vertical flow for multiple steps. Markdown labels wrap at the
+     shared width; keep qualifications in prose and split crowded diagrams. -->
 <figure class="diagram">
-  <pre class="mermaid">flowchart LR
-    Input --> Process --> Output</pre>
+  <pre class="mermaid">flowchart TD
+    Input["`Input`"] --> Process["`Process`"] --> Output["`Output`"]</pre>
   <figcaption>Explain the relationship shown here in words.</figcaption>
 </figure>

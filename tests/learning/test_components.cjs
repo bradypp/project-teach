@@ -6,7 +6,7 @@ const assert=require('node:assert/strict');
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH});
  try {
  const page=await browser.newPage({viewport:{width:1100,height:900}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
- const base=pathToFileURL(resolve('examples/.learning/index.html')).href;
+ const base=pathToFileURL(resolve('examples/lantern/.learning/index.html')).href;
  await page.goto(base);
  assert.equal(await page.locator('.notebook-hero').evaluate(node=>getComputedStyle(node).animationName),'none');
  const controls=await page.evaluate(()=>{const box=(selector)=>{const rect=document.querySelector(selector).getBoundingClientRect();return {x:rect.x,y:rect.y,width:rect.width,height:rect.height,center:rect.y+rect.height/2}};return {tags:box('.tag-filters'),status:box('[data-filter-status]'),sort:box('#library-sort')}});
@@ -46,6 +46,7 @@ const assert=require('node:assert/strict');
  await page.locator('[data-type="references"]').click();
  assert.equal(await page.locator('[data-library-section]:visible').count(),1);
  assert.equal(await page.locator('[data-library-section="references"]').isVisible(),true);
+ await page.locator('[data-tag=""]').click();
  await page.locator('[data-type="research"]').click();
  assert.equal(await page.locator('[data-library-section]:visible .library-entry:visible').count(),1);
  await page.locator('[data-type=""]').click();

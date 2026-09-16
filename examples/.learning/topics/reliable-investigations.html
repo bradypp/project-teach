@@ -31,14 +31,14 @@
       </header>
 <div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>Switchboard connects a durable platform request to a bounded evidence-gathering workflow. This page brings the lessons together around the contracts that make failures diagnosable.</p></div>
 <section id="model"><h2>Follow the promise</h2><p>The Go API promises to track accepted work. The graph promises to spend a bounded amount of time gathering relevant evidence. The answer promises that its claims can be traced to that evidence. Each promise needs an observable boundary and a failure outcome.</p></section><figure class="diagram"><pre class="mermaid">flowchart TD
-  A[Accept job and deadline] --&gt; B[Claim with a lease]
-  B --&gt; C[Retrieve authorised evidence]
-  C --&gt; D[Pack context within budget]
-  D --&gt; E[Reason and choose next step]
-  E --&gt;|Need evidence and budget remains| C
-  E --&gt;|Supported result| F[Persist cited answer]
-  E --&gt;|No support or no budget| G[Persist partial result or abstention]
-  F --&gt; H[Evaluate trace and answer]
+  A["`Accept job and deadline`"] --&gt; B["`Claim with a lease`"]
+  B --&gt; C["`Retrieve authorised evidence`"]
+  C --&gt; D["`Pack context within budget`"]
+  D --&gt; E["`Reason and choose next step`"]
+  E --&gt;|Need evidence; time remains| C
+  E --&gt;|Supported result| F["`Persist cited answer`"]
+  E --&gt;|No support or no time| G["`Persist partial result or abstention`"]
+  F --&gt; H["`Evaluate trace and answer`"]
   G --&gt; H</pre><figcaption>The investigation loop stops on evidence sufficiency or a budget limit. Both answer and abstention become inspectable terminal results.</figcaption></figure>
 <section id="decisions"><h2>Decisions for the first version</h2><ul><li>Use read-only deployment and runbook tools. Keep permissions in the tool service.</li><li>Persist jobs before acknowledging them; make request keys tenant-scoped.</li><li>Record candidate IDs separately from packed evidence IDs.</li><li>Require citations and allow an explicit insufficient-evidence outcome.</li><li>Evaluate each boundary before spending time on a more elaborate agent loop.</li></ul><p>The costs are additional state, a worker process and a test corpus to maintain. A single synchronous RAG call is easier to build and may be sufficient for a smaller product. This project deliberately explores the point where recovery and conditional tool use justify the extra machinery.</p></section>
 <section id="route"><h2>Read around the next decision</h2><ul class="page-list"><li><a href="../lessons/agent-runtime.html">Where the agent ends and the platform begins</a> — ownership, leases and deadlines.</li><li><a href="../lessons/evidence-before-answers.html">Retrieve evidence before writing the answer</a> — candidate selection and context budgets.</li><li><a href="../lessons/evals-that-find-the-failure.html">An eval should tell you what broke</a> — isolate a failure before tuning a prompt.</li></ul></section>

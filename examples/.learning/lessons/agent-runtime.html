@@ -33,15 +33,15 @@
 <section id="boundary"><h2>One investigation, two kinds of state</h2>
 <p>An engineer asks: “Why did checkout errors spike after release 42?” The Go API authenticates the caller and accepts the investigation. A Python worker runs a LangGraph workflow that retrieves evidence, decides whether another read-only tool call would help, and drafts a cited answer. These components have different responsibilities even though they serve one user action.</p>
 <p>The platform owns identity, admission, deadlines and durable job status. The graph owns the investigation’s current evidence and next step. A graph checkpoint describes progress inside an investigation; a job record describes the promise made to the caller. Neither automatically replaces the other.</p></section><figure class="diagram"><pre class="mermaid">flowchart TD
-  UI[Engineer] --&gt; API[Go API]
+  UI["`Engineer`"] --&gt; API["`Go API`"]
   API --&gt; Jobs[(Job store)]
-  Jobs --&gt; Worker[Python worker]
-  Worker --&gt; Graph[LangGraph]
-  Graph --&gt; Retrieve[Runbook retrieval]
-  Graph --&gt; Events[Deployment events]
-  Retrieve --&gt; Evidence[Evidence and citations]
+  Jobs --&gt; Worker["`Python worker`"]
+  Worker --&gt; Graph["`LangGraph`"]
+  Graph --&gt; Retrieve["`Runbook retrieval`"]
+  Graph --&gt; Events["`Deployment events`"]
+  Retrieve --&gt; Evidence["`Evidence and citations`"]
   Events --&gt; Evidence
-  Evidence --&gt; Answer[Answer or abstain]
+  Evidence --&gt; Answer["`Answer or abstain`"]
   Answer --&gt; Jobs</pre><figcaption>The Go service accepts durable work. The worker gathers evidence and stores a result for the engineer to retrieve.</figcaption></figure>
 <section id="contract"><h2>Make acceptance mean something</h2>
 <p>For this project, <code>POST /investigations</code> returns <code>202 Accepted</code> only after a job is committed. A client-generated request key is unique within a tenant. Repeating the request returns the same job ID, preventing a network retry from creating a second investigation.</p>
