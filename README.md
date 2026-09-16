@@ -1,6 +1,6 @@
 # Project Teach
 
-PLearn the ideas behind the code you're building with a coding agent that keeps a project notebook you can return to later. 
+Learn the ideas behind the code you're building with a coding agent that keeps a project notebook you can return to later. 
 
 Ask about a design decision, work through an explanation using your code, and try a small exercise before returning to the implementation.
 
