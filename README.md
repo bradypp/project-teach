@@ -26,14 +26,6 @@ Ask your agent for the skill by name, or use its skill picker. Start with the qu
 | `teach-review` | “Use the teach-review skill. I'm about to add worker retries. Help me check what I understand about leases and what I should revisit first.” |
 | `teach-update` | “Use the teach-update skill. I traced the duplicate investigation to a retry after a lost response. Two tenants can use the same request key, so I think the lookup needs both tenant and key. Check my reasoning against the code and update my notes.” |
 
-Setup can also enable teaching during ordinary development. It stays off until you choose it; you can always ask for a lesson directly.
-
-If you have a checkout and prefer to copy the package yourself, run this from the repository root:
-
-```sh
-python3 scripts/install.py /path/to/your-project/.agents/skills
-```
-
 Use your agent's skill directory as the destination. This installer refuses to overwrite existing skills.
 
 ## What it teaches
@@ -46,7 +38,7 @@ The notebook keeps useful explanations close to the code. Topic pages connect re
 
 ## Explore an example
 
-The [Switchboard notebook](https://bradypp.github.io/project-teach/) follows a fictional incident-investigation agent.
+The [Switchboard notebook](https://bradypp.github.io/project-teach/) follows an incident-investigation agent.
 
 [![Project Teach: lessons, an interactive context lab and a browsable learning notebook](docs/images/title-card.png)](https://bradypp.github.io/project-teach/)
 
@@ -57,10 +49,6 @@ The [Switchboard notebook](https://bradypp.github.io/project-teach/) follows a f
 | [Incident room](https://bradypp.github.io/project-teach/quizzes/incident-room.html) | Find where the trace lost the useful evidence, then compare your diagnosis with the feedback. |
 | [An eval should tell you what broke](https://bradypp.github.io/project-teach/lessons/evals-that-find-the-failure.html) | Separate retrieval, packing and answer failures before changing the prompt. |
 | [Replay is not resume](https://bradypp.github.io/project-teach/lessons/replay-is-not-resume.html) | Work out why repeating a read-only tool call can change an investigation's answer. |
-
-[![Context lab with token controls, an evidence-packing result and a reflection prompt](docs/images/context-lab.png)](https://bradypp.github.io/project-teach/quizzes/context-lab.html)
-
-Switchboard is a teaching example, not a running backend. Its traces and evaluation counts are synthetic, and it makes no claims about a learner's achievements. The initial lessons explain design mechanisms; later recovery lessons link to framework documentation. [Read the project brief and tour](examples/README.md).
 
 ## Your files, in your project
 
