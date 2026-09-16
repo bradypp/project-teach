@@ -1,77 +1,88 @@
 # Teach through projects
 
-A small, project-based teaching system: build useful things, understand consequential ideas and retain enough learning to guide the next session.
+Learn the ideas behind the code you're building, with an AI coding agent that keeps a project notebook you can return to.
 
-## Commands
+[![Project Teach: lessons, an interactive context lab and a browsable learning notebook](docs/images/title-card.png)](https://bradypp.github.io/project-teach/)
 
-| Skill | Purpose |
-| --- | --- |
-| `teach [question]` | Learn in context or discover a worthwhile topic |
-| `teach-setup` | Establish the project mission, preferences and optional integrations |
-| `teach-update [account]` | Reconcile meaningful learning and its evidence |
-| `teach-review` | Review understanding, uncertainty and useful next practice |
-| `teach-quiz [topic]` | Create enjoyable practice with feedback and lesson links |
+**[Explore the live example →](https://bradypp.github.io/project-teach/)**
 
-Use your host's skill syntax or point the agent at the relevant `SKILL.md` in [.agents/skills/learning](.agents/skills/learning). Teaching works before setup. Ordinary implementation stays quiet unless passive teaching is enabled.
+You can ask an agent to build a RAG pipeline and get working code without understanding why it retrieves the wrong evidence. These skills help you pause at that decision, work through an explanation tied to your project, and try the idea yourself.
 
-## Project files
+The agent saves substantial lessons as readable HTML pages, connects related topics, and creates practice with feedback. It keeps track of what's been introduced and what your own reasoning has demonstrated, so the next session has somewhere to start.
 
-Everything lives under `.learning/`:
+## Try it
 
-- `MISSION.md`: purpose, goals and scope.
-- `PREFERENCES.md`: optional, editable preference overrides.
-- `LEARNING_STATE.md`: current understanding, uncertainty, opportunities and links.
-- `records/`: selective learning insights with evidence.
-- `references/*.html`: concise lookup material, glossary pages tagged `glossary`, and annotated tutorials, courses, videos, articles, documentation, books and tools tagged `resource`. Default to one glossary and one resource collection; split only for useful, distinct categories.
-- `lessons/`, `topics/`, `quizzes/`, `references/`, `research/`, `assets/`, `index.html`: the browsable local library.
-
-Research and resource lists appear only when useful. There is no global store or automatic cross-project synchronisation.
-
-## Teaching and presentation
-
-Teaching first reuses supported understanding, existing artifacts and sound research. It resumes the project when the learner already understands enough, links suitable material when the topic is already covered, and researches or creates only the unresolved gap. The mission guides direction; state and records distinguish understanding from exposure.
-
-Detailed HTML lessons are the default for substantial topics; short explanations can stay in chat. Worthwhile short explanations may also be retained as compact HTML, while tiny clarifications need not become artifacts.
-
-The notebook groups pages under Lessons, Topics, Quizzes, Reference and Research, with glossary and resource collections in Reference and retained investigations in Research. The bundled HTML/CSS supplies a lean base. Lessons can use diagrams, visualisations, simulations and custom widgets suited to the concept. Shared components keep the library consistent without imposing fixed layouts. Content pages support themes, Markdown export and clipboard handoffs for continuing in chat; standalone pages never submit or update learning state directly.
-
-Quiz practice can mix quick-fire choices, short reflections, multi-step problems, explorative scenarios and visual experiments. The bundled [practice templates](.agents/skills/learning/teach/references/quiz.md#practice-components) support independent feedback and a queue experiment you can adapt. Custom widgets retain responses through the shared [export contract](.agents/skills/learning/teach/references/artifacts.md#markdown-export), including current settings and results.
-
-Setup offers optional customisation through the [teaching-style template](.agents/skills/learning/teach/references/templates/PREFERENCES.md). Skipping the questions creates no style file; you can add your own later. The skills and references supply the full baseline. Preferences can override teacher personality, depth, pace and presentation. Optional integration adds a brief project purpose, learning-oriented development rules and a marked passive-teaching block together in `AGENTS.md`. Removing that block disables passive teaching. User-selected workflows can receive small new wrappers; original skills remain untouched.
-
-Selected integrations share one execution mode. Inline is the default and retains the current teaching flow. Background delegates integrated investigation, research, artifact creation and learning updates to one medium-reasoning teaching subagent while the primary workflow continues and finishes without waiting; that subagent can use bounded low-reasoning discovery workers. Explicit teach commands stay in the foreground. When the host cannot deliver background subagent results, the primary workflow continues and reports a qualifying teaching opportunity as skipped rather than falling back inline.
-
-Teaching, quiz creation and reviews use the `teach-update` skill to reconcile useful exposure, study intent and affected learning files. Later discussion, reported study and relevant task evidence refine the assessment. Artifact delivery introduces material; understanding depends on the user’s contribution. Relinking existing material, browser actions and unchanged evidence need no update.
-
-## Example notebook
-
-Open [the example notebook](examples/.learning/index.html) to try the theme, diagrams, highlighted code, quizzes, tags and sorting. Its content is synthetic, not learning evidence.
-
-The helper adds creation timestamps automatically. The home page groups nonempty content types and supports type, subject and sort controls. Use `--tags "subject,another-subject"` when creating pages.
-
-Mermaid and Highlight.js are bundled locally. Supported diagrams and code blocks inherit the notebook theme; custom layouts remain flexible. Diagram source and code survive Markdown export.
-
-## Install elsewhere
-
-From this repository:
+From the project you want to learn in, install all five skills:
 
 ```sh
-python3 scripts/install.py /path/to/project/.agents/skills
+npx skills@latest add bradypp/project-teach \
+  --skill teach teach-setup teach-quiz teach-review teach-update
 ```
 
-The installer copies only the five sibling teach skills, including the practice templates, and preserves existing destinations. Existing libraries keep their authored assets; review and copy updated shared assets deliberately when upgrading them.
+Choose your coding agent when prompted. The skills share templates and references, so install the whole set. You need Node.js for the installer and Python 3 for the notebook helper. The generated pages open in a browser without a server.
 
-Python 3 runs the artifact helper; the generated library opens directly in a browser. The optional transcript helper uses [youtube-transcript-api](https://github.com/jdepoix/youtube-transcript-api). No server or build pipeline is required.
+Then ask your agent:
 
-## Maintenance
+```text
+Use the teach skill to explain how retrieval and context packing
+should work in this project. Help me reason about what to keep
+when the evidence doesn't fit.
+```
 
-- [State and records](.agents/skills/learning/teach/references/learning-system.md)
-- [Teaching guidance](.agents/skills/learning/teach/references/teaching.md)
-- [Research guidance](.agents/skills/learning/teach/references/research.md)
-- [Artifact mechanics](.agents/skills/learning/teach/references/artifacts.md)
-- [Artifact visual language](.agents/skills/learning/teach/references/visual-language.md)
-- [Quiz practice](.agents/skills/learning/teach/references/quiz.md)
-- [Writing guidance](.agents/skills/learning/teach/references/writing.md)
-- [Optional integrations](.agents/skills/learning/teach/references/integrations.md)
+Teaching works before setup. If you'd like to establish a learning goal first:
 
-Helper tests: `python3 -m unittest discover -s tests/learning -p 'test_*.py'`. Browser tests in `tests/learning/test_browser.cjs`, `test_follow_up.cjs`, `test_notebook.cjs`, `test_components.cjs` and `test_practice.cjs` cover shared controls, exports and themes, including mixed practice and custom state across every content page kind (Playwright and a Chromium browser required). These are executable regression checks; the example notebook is a synthetic demonstration, not evidence of learning. Routine pages and link-checking conditions are defined once in [artifact maintenance and verification](.agents/skills/learning/teach/references/artifacts.md#maintain-and-verify).
+```text
+Use the teach-setup skill. I'm building an incident-investigation
+agent with a Go API and LangGraph. I want to understand the
+architecture decisions as I implement them.
+```
+
+Setup helps define the mission and offers optional teaching preferences. You can also enable teaching during ordinary development; it stays off until you choose it.
+
+## See what you'd get
+
+The [Switchboard example](https://bradypp.github.io/project-teach/) follows a fictional incident agent through runtime design, retrieval, context engineering and evals. It uses the same templates shipped with the skills.
+
+| Open an example | What you can do |
+| --- | --- |
+| [Where the agent ends and the platform begins](https://bradypp.github.io/project-teach/lessons/agent-runtime.html) | Follow a Go request into a durable job and graph worker; reason through lease expiry. |
+| [Context lab](https://bradypp.github.io/project-teach/quizzes/context-lab.html) | Change chunk sizes and token budgets, predict what fits, then inspect the result. |
+| [Incident room](https://bradypp.github.io/project-teach/quizzes/incident-room.html) | Debug a plausible wrong answer, reveal feedback, and copy your reasoning back to chat. |
+| [An eval should tell you what broke](https://bradypp.github.io/project-teach/lessons/evals-that-find-the-failure.html) | Separate retrieval, packing and answer failures before changing a prompt. |
+
+[![Context lab with token controls, an evidence-packing result and a reflection prompt](docs/images/context-lab.png)](https://bradypp.github.io/project-teach/quizzes/context-lab.html)
+
+The example is a teaching notebook, not a running incident-agent backend. Research was skipped for this demonstration, and no learner achievements are invented. [Read the project brief and tour](examples/README.md).
+
+## Use it while you build
+
+Ask for a lesson when a design choice feels fuzzy. Keep coding when you have enough understanding to proceed. Later, ask for a quiz or bring back a debugging experience to work through.
+
+```text
+Use the teach-quiz skill to test whether I can distinguish
+retrieval failures from context-packing failures.
+```
+
+```text
+Use the teach-update skill. I found that our retry created a
+second investigation. Here's why I think the request key needs
+to be scoped by tenant: ...
+```
+
+| Skill | When to use it |
+| --- | --- |
+| `teach` | Explain a project question or find a useful topic to explore. |
+| `teach-setup` | Set a mission, preferences and optional workflow integrations. |
+| `teach-quiz` | Practise with predictions, debugging scenarios and experiments. |
+| `teach-review` | Revisit understanding and choose useful next practice. |
+| `teach-update` | Reconcile what you've studied or demonstrated with the learning files. |
+
+Use your agent's skill picker or ask for the skill by name. Lessons have follow-up controls; quizzes can copy your current responses for discussion. Copying prepares text to paste into chat. It doesn't send anything or mark a topic as learned.
+
+## A notebook that stays with the project
+
+Everything is stored under `.learning/`: the mission, a short learning-state summary, lessons, quizzes and supporting references. Meaningful insights get selective evidence records. Generating a lesson records that material was introduced; it doesn't count as understanding.
+
+Open `.learning/index.html` to browse by topic or page type, switch themes, or save a page as Markdown. The HTML and Markdown files are yours to edit and track in Git. There's no separate learning account or global progress store.
+
+For installation from a checkout, optional integrations and contributor checks, see the [maintenance guide](docs/maintenance.md). The reusable package lives in [.agents/skills/learning](.agents/skills/learning).

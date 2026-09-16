@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T21:44:39+00:00" />
+    <meta name="tags" content="architecture,evals,rag" />
+    <title>A reliable investigation, end to end</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="topic">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Topic</p>
+        <h1>A reliable investigation, end to end</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T21:44:39+00:00">16th Sept 2026 · 21:44</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>Switchboard connects a durable platform request to a bounded evidence-gathering workflow. This page brings the lessons together around the contracts that make failures diagnosable.</p></div>
+<section id="model"><h2>Follow the promise</h2><p>The Go API promises to track accepted work. The graph promises to spend a bounded amount of time gathering relevant evidence. The answer promises that its claims can be traced to that evidence. Each promise needs an observable boundary and a failure outcome.</p></section><figure class="diagram"><pre class="mermaid">flowchart TD
+  A[Accept job and deadline] --&gt; B[Claim with a lease]
+  B --&gt; C[Retrieve authorised evidence]
+  C --&gt; D[Pack context within budget]
+  D --&gt; E[Reason and choose next step]
+  E --&gt;|Need evidence and budget remains| C
+  E --&gt;|Supported result| F[Persist cited answer]
+  E --&gt;|No support or no budget| G[Persist partial result or abstention]
+  F --&gt; H[Evaluate trace and answer]
+  G --&gt; H</pre><figcaption>The investigation loop stops on evidence sufficiency or a budget limit. Both answer and abstention become inspectable terminal results.</figcaption></figure>
+<section id="decisions"><h2>Decisions for the first version</h2><ul><li>Use read-only deployment and runbook tools. Keep permissions in the tool service.</li><li>Persist jobs before acknowledging them; make request keys tenant-scoped.</li><li>Record candidate IDs separately from packed evidence IDs.</li><li>Require citations and allow an explicit insufficient-evidence outcome.</li><li>Evaluate each boundary before spending time on a more elaborate agent loop.</li></ul><p>The costs are additional state, a worker process and a test corpus to maintain. A single synchronous RAG call is easier to build and may be sufficient for a smaller product. This project deliberately explores the point where recovery and conditional tool use justify the extra machinery.</p></section>
+<section id="route"><h2>Read around the next decision</h2><ul class="page-list"><li><a href="../lessons/agent-runtime.html">Where the agent ends and the platform begins</a> — ownership, leases and deadlines.</li><li><a href="../lessons/evidence-before-answers.html">Retrieve evidence before writing the answer</a> — candidate selection and context budgets.</li><li><a href="../lessons/evals-that-find-the-failure.html">An eval should tell you what broke</a> — isolate a failure before tuning a prompt.</li></ul></section>
+<section id="open"><h2>Still to explore</h2><p>How should a user cancel a running investigation? What must survive graph replay? How should a corpus update affect a job already in progress? These are follow-on implementation questions. This notebook teaches the design mechanisms; it does not claim a deployed backend or verified framework API.</p><p class="muted">Synthetic project notebook. Research skipped for this demonstration; no external sources were consulted for these lessons.</p></section><footer><a href="../quizzes/incident-room.html">Try a debugging scenario</a> · <a href="../references/investigation-contract.html">Keep the contract nearby</a></footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T21:44:39+00:00" />
+    <meta name="tags" content="context,rag" />
+    <title>Retrieve evidence before writing the answer</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="lesson">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Lesson</p>
+        <h1>Retrieve evidence before writing the answer</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T21:44:39+00:00">16th Sept 2026 · 21:44</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>A fluent explanation of the wrong incident is still wrong. Follow one question from a search query to a bounded evidence packet, then decide when Switchboard should decline to answer.</p></div>
+<section id="retrieval"><h2>Retrieval supplies candidates</h2><p>Retrieval-augmented generation (RAG) gives a model outside material to use when answering. For Switchboard, the material is versioned runbooks and incident notes. A search score says that a chunk resembles the query under a retrieval method. It does not establish that the chunk explains this incident, belongs to the right tenant, or is current.</p>
+<p>Suppose “checkout errors after release 42” retrieves a current checkout runbook, an old connection-pool incident, and a billing outage that uses similar language. An answer built from all three can confidently mix unrelated causes. The retrieval stage has found candidates; evidence selection still has work to do.</p></section><figure class="diagram"><pre class="mermaid">flowchart LR
+  Q[Question and tenant] --&gt; F[Authorised corpus]
+  F --&gt; S[Retrieve candidates]
+  S --&gt; R[Rerank and deduplicate]
+  R --&gt; P[Pack bounded evidence]
+  P --&gt; G[Generate with citations]
+  G --&gt; V[Check support]
+  V --&gt; A[Answer or abstain]</pre><figcaption>Apply access scope before material reaches the model. Keep source identity through selection, packing and generation.</figcaption></figure>
+<section id="chunks"><h2>Choose chunks that preserve the rule</h2><p>Chunking splits documents into units the retriever can return. Fixed windows are easy to implement but may separate a runbook step from its prerequisite. Section-based chunks can keep “if the pool is saturated” attached to the restart instruction. Overlap can preserve a boundary but also return the same evidence twice.</p>
+<table><thead><tr><th scope="col">Candidate</th><th scope="col">What it contributes</th><th scope="col">Decision</th></tr></thead><tbody>
+<tr><th scope="row">Runbook v7 · pool saturation</th><td>Diagnostic rule and required metric</td><td>Keep, with section and version</td></tr>
+<tr><th scope="row">Incident 18 · old pool limit</th><td>Historical hypothesis</td><td>Keep only if current configuration matches</td></tr>
+<tr><th scope="row">Billing timeout note</th><td>Similar words, different service</td><td>Exclude from checkout evidence</td></tr></tbody></table>
+<p>Store an evidence envelope with document ID, section, version, tenant and the retrieved text. A citation should resolve to the exact version used. Otherwise a runbook edit can make yesterday’s answer impossible to audit.</p></section>
+<section id="budget"><h2>Context engineering is choosing what survives</h2><p>The model sees a finite input. Instructions, the question, tool schemas, prior turns and retrieved chunks all compete for space, and output needs a reserve. For a deliberately small teaching budget:</p><pre><code class="language-text">Total context allowance                 8,000 tokens
+Instructions + tool schemas            -1,500
+Question + useful history                -500
+Reserved output                        -2,000
+Available evidence                      4,000 tokens</code></pre>
+<p>At 800 tokens per chunk, five chunks fit exactly. Ten do not. Increasing retrieval depth can improve the candidate pool while leaving the final packet unchanged: retrieve broadly, rank, deduplicate, then pack. “Top k” for search and “chunks in the prompt” need not be the same number.</p>
+<p>A simple packing policy takes high-ranked chunks while they fit. It can waste room on redundant evidence or skip a long but essential section. For this project, require service identity and incident time first, then select distinct supporting evidence. Record omitted evidence IDs so a failure can be traced to retrieval or packing.</p>
+<p class="callout">Treat retrieved text as untrusted data. A runbook can contain a sentence that looks like an instruction to the agent. Tool permissions and tenant isolation must be enforced outside the model.</p></section>
+<section id="support"><h2>A citation is a claim to check</h2><p>“Release 42 exhausted the pool” requires evidence about that release and the pool. A runbook saying pool exhaustion can cause errors supports a hypothesis, not a diagnosis. If no deployment metrics are available, the answer should say what is missing and propose a read-only check.</p><p>Distinguish an empty search, inaccessible evidence, stale evidence and conflicting evidence in the trace. They can all end in an abstention, but each points to a different repair. Prompt tuning cannot recover a source that never entered the packet.</p></section>
+<section id="apply"><h2>Change one assumption</h2><p>The right runbook is ranked sixth. Would you increase retrieval depth, increase the evidence budget, or change the ranking? First identify which stage excluded it. Then use the context lab to see why simply asking for more chunks can backfire.</p></section><footer><a href="../quizzes/context-lab.html">Try the context lab</a> · <a href="../lessons/evals-that-find-the-failure.html">Next: evaluate each boundary</a> · <a href="../references/investigation-contract.html">Evidence contract</a></footer>
+</main>
+</body>
+</html>

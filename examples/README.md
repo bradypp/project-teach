@@ -1,25 +1,33 @@
-# Lantern: an example learning notebook
+# Switchboard: learn by building an incident agent
 
-This folder is a **synthetic walkthrough** of the learning skills in use. It follows a fictional learner building Lantern, a tiny Python and SQLite webhook inbox. The files show what the teacher would leave behind after setup, connected lessons, practice, review and reconciliation.
+[Open the live notebook](https://bradypp.github.io/project-teach/).
 
-Open [the learning notebook](.learning/index.html) to browse the rendered artifacts.
+Switchboard is a fictional applied AI and platform project: a Go API accepts investigations, a LangGraph worker gathers evidence from runbooks and deployment events, and evaluations help locate failures. The [project brief](PROJECT_PLAN.md) supplies the context a teaching agent would normally read.
 
-## What this demonstrates
+The notebook was created from scratch using the five-skill system's setup, teaching, quiz and update guidance. Pages use the bundled library helper, page templates and practice components, with an authored context-packing experiment. There is no custom demo theme. Research was deliberately skipped; the lessons describe design mechanisms, not verified framework APIs.
 
-1. Setup turns the project goal into a short [`MISSION.md`](.learning/MISSION.md) and a thin [`LEARNING_STATE.md`](.learning/LEARNING_STATE.md).
-2. Teaching creates focused HTML lessons with mechanisms, worked examples, failure cases, project questions and inspected primary sources.
-3. Related lessons are consolidated into one current topic synthesis and a compact reference sheet.
-4. Practice stays self-contained in the browser. Revealing quiz feedback does not silently alter learning state.
-5. Review records only demonstrated reasoning. The two records here are clearly labelled fictional examples; they must never be treated as evidence about a real user.
+## Take a tour
 
-The scenario is deliberately small, but the output is not a style gallery. It is a plausible project notebook with reciprocal links, a glossary, an [annotated resource collection](.learning/references/resources.html), durable records and honest uncertainty.
+1. [Where the agent ends and the platform begins](.learning/lessons/agent-runtime.html): follow a request through a Go API, durable job and graph worker.
+2. [Retrieve evidence before writing the answer](.learning/lessons/evidence-before-answers.html): inspect retrieval, context packing and citations.
+3. [Context lab](.learning/quizzes/context-lab.html): predict what fits, change the inputs and compare the result.
+4. [An eval should tell you what broke](.learning/lessons/evals-that-find-the-failure.html): separate failure stages and choose a useful test.
+5. [Incident room](.learning/quizzes/incident-room.html): debug a plausible wrong answer and copy your reasoning back to chat.
 
-## Suggested tour
+The [system synthesis](.learning/topics/reliable-investigations.html) connects the lessons. The [contract reference](.learning/references/investigation-contract.html) keeps implementation decisions close at hand.
 
-- Start with [What an acknowledgement promises](.learning/lessons/what-an-acknowledgement-promises.html).
-- Continue to [Make retries boring](.learning/lessons/make-retries-boring.html) and [Bound the inbox](.learning/lessons/bound-the-inbox.html).
-- Use [Reliable webhook delivery](.learning/topics/reliable-webhook-delivery.html) to connect the ideas.
-- Try [Inbox under failure](.learning/quizzes/inbox-under-failure.html), then keep [the checklist](.learning/references/webhook-reliability-checklist.html) nearby while implementing.
-- Explore [Burst lab](.learning/quizzes/burst-lab.html) for independent problem steps, a diagram-supported scenario and a visual experiment. Change rates, run the model and copy its current settings, latest result and your reasoning back to chat.
+## What a session leaves behind
 
-The previous example set remains untouched in `../backup/`.
+The [mission](.learning/MISSION.md) defines the intended capabilities. [Learning state](.learning/LEARNING_STATE.md) records introduced material and questions worth checking. It makes no claim that a learner read or understood these pages. There are no invented evidence records, glossary achievements or research notes.
+
+The public site is a static copy of `.learning/`. Interactive answers stay in the page; copy or save them before leaving. On your own machine, chat handoffs refer to local files. A public demo URL does not give a new agent access to your local project.
+
+## Run locally
+
+Open `.learning/index.html` directly, or serve it:
+
+```sh
+python3 -m http.server 8000 --directory examples/.learning
+```
+
+Run that command from the repository root. The previous [Lantern notebook](lantern/README.md) is preserved separately.

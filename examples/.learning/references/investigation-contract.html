@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T21:44:39+00:00" />
+    <meta name="tags" content="architecture,context,go" />
+    <title>Switchboard: the investigation contract</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="reference">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Reference</p>
+        <h1>Switchboard: the investigation contract</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T21:44:39+00:00">16th Sept 2026 · 21:44</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>A compact implementation aid for the first read-only investigation path. These are proposed project decisions, ready to compare against code and traces.</p></div>
+<section id="request"><h2>At the API boundary</h2><table><thead><tr><th scope="col">Field</th><th scope="col">Invariant</th></tr></thead><tbody><tr><th scope="row">tenant_id</th><td>Derived from verified identity; applied to jobs and evidence access</td></tr><tr><th scope="row">request_key</th><td>Unique with tenant_id; a retry resolves to the same job</td></tr><tr><th scope="row">deadline</th><td>Absolute job deadline; never reset by a retry</td></tr><tr><th scope="row">claim_generation</th><td>Required for ownership-sensitive writes</td></tr><tr><th scope="row">status</th><td>Queued, running, completed, failed, cancelled or expired</td></tr></tbody></table></section>
+<section id="evidence"><h2>Inside the evidence packet</h2><ul><li>Source ID, section, version and tenant.</li><li>Relevant excerpt and retrieval provenance.</li><li>Incident time and source freshness where they affect interpretation.</li><li>Actual packed token cost, plus reserved output allowance.</li></ul><p>Keep the full candidate list in the trace and the selected packet in graph state. A source ID without its version is insufficient for reproducing an answer after a document edit.</p></section>
+<section id="result"><h2>At completion</h2><ul><li>Persist the answer and citations, or a clear abstention/partial-result reason.</li><li>Reject writes from a superseded claim generation.</li><li>Record time, tool calls, token usage and relevant policy versions.</li><li>Keep “job completed” separate from “answer supported” in evaluation.</li></ul></section><footer><a href="../lessons/agent-runtime.html">Runtime reasoning</a> · <a href="../lessons/evidence-before-answers.html">Evidence reasoning</a> · <a href="../lessons/evals-that-find-the-failure.html">Evaluation reasoning</a></footer>
+</main>
+</body>
+</html>

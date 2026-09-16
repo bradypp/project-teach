@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T21:44:39+00:00" />
+    <meta name="tags" content="evals,rag" />
+    <title>An eval should tell you what broke</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="lesson">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Lesson</p>
+        <h1>An eval should tell you what broke</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T21:44:39+00:00">16th Sept 2026 · 21:44</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>Switchboard gives a polished answer with a real citation—and still blames the wrong release. Build an evaluation that can distinguish missing evidence, bad reasoning and a platform failure.</p></div>
+<section id="layers"><h2>Start with a case you can inspect</h2><p>An evaluation is a repeatable test of behaviour against a stated expectation. For an incident assistant, “sounds helpful” is too vague. A useful case includes the question, tenant, incident timestamp, corpus snapshot, expected evidence and acceptable answer claims. Include cases where the correct behaviour is to say that the evidence is insufficient.</p><pre><code class="language-json">{
+  &quot;id&quot;: &quot;checkout-pool-42&quot;,
+  &quot;tenant&quot;: &quot;demo-shop&quot;,
+  &quot;question&quot;: &quot;Why did errors rise after release 42?&quot;,
+  &quot;corpus_snapshot&quot;: &quot;runbooks-fixture-v1&quot;,
+  &quot;required_evidence&quot;: [&quot;deploy-42&quot;, &quot;pool-metrics-42&quot;],
+  &quot;must_not_claim&quot;: [&quot;a rollback was executed&quot;],
+  &quot;expected_outcome&quot;: &quot;supported_hypothesis&quot;
+}</code></pre>
+<p>This fixture is synthetic. Its expected outcome is an author-reviewed contract for a test, not a measurement of the application’s quality. Keep a separate held-out set for judging changes; repeatedly tuning against the same cases makes them less informative.</p></section>
+<section id="diagnose"><h2>Score the boundaries separately</h2><table><thead><tr><th scope="col">Boundary</th><th scope="col">Question</th><th scope="col">If it fails</th></tr></thead><tbody>
+<tr><th scope="row">Retrieval</th><td>Did the required evidence enter the candidate set?</td><td>Inspect query, filters, corpus and ranking</td></tr>
+<tr><th scope="row">Context packing</th><td>Did it survive into the actual model input?</td><td>Inspect budget, deduplication and truncation</td></tr>
+<tr><th scope="row">Answer support</th><td>Does each consequential claim follow from cited evidence?</td><td>Inspect synthesis and support checking</td></tr>
+<tr><th scope="row">Tool policy</th><td>Were all tool calls allowed for this tenant and operation?</td><td>Inspect enforcement outside the model</td></tr>
+<tr><th scope="row">Runtime</th><td>Did the job finish within its limits with one durable result?</td><td>Inspect deadlines, leases and retry policy</td></tr></tbody></table>
+<p>Exact checks work for source IDs, forbidden tool calls and terminal status. A rubric is needed for statements such as “the answer correctly distinguishes correlation from cause.” A model judge can help apply that rubric, but its decisions need calibration against human-reviewed examples. Record judge and prompt versions so a score change is interpretable.</p></section>
+<section id="worked"><h2>Why a single average hides the bug</h2><p>In a toy set of ten cases, eight have an answer in the corpus and two should abstain. Variant A answers seven of the eight correctly but invents answers for both unsupported cases. Variant B answers six correctly and abstains on both unsupported cases. Their raw correct-case counts are 7/10 and 8/10, but that still hides the operational trade-off: A misses less answerable material while fabricating in every unsupported case.</p>
+<p>Report supported-answer performance and appropriate abstention separately. Slice by tenant, source freshness and incident type where enough cases exist. With only two unsupported cases, the observed 0/2 versus 2/2 is a useful debugging signal, not a precise estimate of future performance.</p></section>
+<section id="experiment"><h2>Run a comparison you can explain</h2><ol><li>Freeze the corpus snapshot, cases, model settings and tool fixtures.</li><li>Change one policy, such as context packing. Save candidates and packed evidence IDs for both runs.</li><li>Inspect changed outcomes, especially new unsupported claims and policy violations.</li><li>Repeat stochastic runs when outcomes vary. Report spread and failures, not just the best run.</li><li>Promote the policy only after reviewing the held-out cases and operational cost.</li></ol>
+<p>An offline suite gives repeatable conditions. It does not reproduce every live outage, changing document or adversarial input. Production traces supply future test cases after appropriate redaction; they should not silently become a training set for the same evaluation.</p></section>
+<section id="apply"><h2>Choose the next experiment</h2><p>A required source appears in retrieval results but is absent from the model input. The answer invents a cause. What would you hold fixed, what would you change, and which intermediate result would prove your fix reached the right stage?</p></section><footer><a href="../quizzes/incident-room.html">Practice in the incident room</a> · <a href="../topics/reliable-investigations.html">Connect the system</a></footer>
+</main>
+</body>
+</html>

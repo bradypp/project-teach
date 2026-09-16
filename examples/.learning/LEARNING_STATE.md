@@ -1,33 +1,25 @@
 # Learning state
 
-> Synthetic example: this file demonstrates the shape of maintained state. Its learner evidence is fictional and must not be attributed to a real user.
+This demonstration contains generated teaching material, not evidence about a real learner. Reading, practice completion and understanding remain unverified. No evidence records or mastery claims have been created.
 
-## Current understanding
+## Exposure and study
 
-- Can distinguish **accepted for later processing** from **processing completed**, and places the acknowledgement after the durable inbox commit. Evidence: [acknowledgement is a boundary](records/0001-acknowledgement-is-a-boundary.md).
-- Can explain why a stable event ID plus a uniqueness constraint makes duplicate intake a no-op. Evidence: [retries need stable identity](records/0002-retries-need-stable-identity.md).
+- Runtime ownership, job leases and deadlines: introduced in [the runtime lesson](lessons/agent-runtime.html).
+- RAG evidence selection and context packing: introduced in [the evidence lesson](lessons/evidence-before-answers.html); [context lab](quizzes/context-lab.html) offers optional practice.
+- Boundary-level evaluation: introduced in [the eval lesson](lessons/evals-that-find-the-failure.html); [incident room](quizzes/incident-room.html) offers debugging practice.
+- The [current system synthesis](topics/reliable-investigations.html) connects these topics; the [contract reference](references/investigation-contract.html) supports implementation.
 
-## Useful exposure — not yet verified
+## Uncertainty and next practice
 
-- [Bound the inbox](lessons/bound-the-inbox.html) introduced queue limits, message age and overload policy; [Burst lab](quizzes/burst-lab.html) provides related practice. Reading, quiz completion and understanding remain unverified.
-- [Recover abandoned work](lessons/recover-abandoned-work.html) introduced expiring worker leases and atomic claims. No learner explanation or application has been observed yet.
-- [Read the shape of a backlog](lessons/read-backlog-shape.html) introduced the relationship between depth, age and rates. No learner interpretation has been observed yet.
-- [Reliable webhook delivery](topics/reliable-webhook-delivery.html) connects durable acknowledgement, deduplication and backpressure into one design.
+- Can the learner distinguish retrieval failure from evidence omitted during packing?
+- Can they explain why a stale worker must lose permission to persist a result?
+- Can they design an eval with a meaningful abstention case and identify its limitations?
 
-## Uncertainty and next checks
+## Deferred
 
-- Verify that the learner can reason about the crash after the external side effect but before marking an event complete.
-- Ask the learner to choose and justify Lantern's overload response when SQLite writes are saturated.
-- Check whether the same-key/different-payload case is rejected rather than quietly treated as a duplicate.
+- Graph checkpoint and replay APIs: revisit when selecting a framework version and implementing recovery; this example skips research.
+- Vector index tuning: revisit after a fixture corpus demonstrates a retrieval bottleneck.
 
-## Deferred scope
+## Opportunities
 
-- Provider-specific signature verification and secret rotation.
-- Choosing and validating lease duration against real worker runtimes.
-- The transactional outbox pattern for side effects that leave SQLite.
-
-## Useful lessons
-
-- [What an acknowledgement promises](lessons/what-an-acknowledgement-promises.html) — revisit when deciding where the HTTP response belongs.
-- [Make retries boring](lessons/make-retries-boring.html) — revisit when defining identity, uniqueness and transaction boundaries.
-- [Webhook reliability checklist](references/webhook-reliability-checklist.html) — use during implementation and review.
+- Corpus versioning and tenant-aware caching may become useful when reproducing an answer across runbook edits or repeated investigations.

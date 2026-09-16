@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T21:44:39+00:00" />
+    <meta name="tags" content="context,rag" />
+    <title>Context lab: what fits in the prompt?</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="quiz">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a
+      ><span>Make the idea your own</span>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">quiz</p>
+        <h1>Context lab: what fits in the prompt?</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T21:44:39+00:00">16th Sept 2026 · 21:44</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>Predict how much evidence reaches the model. Change the retrieval depth, chunk size and context allowance, then run a deliberately simple packing model.</p></div>
+<form data-quiz><fieldset data-question id="context-experiment"><legend>Pack the evidence</legend>
+<p>Assume equally sized, already ranked chunks. Instructions and history cost 2,000 tokens; reserve another 2,000 for output. The packer takes whole chunks in order. This model shows capacity, not answer quality or a particular model’s limits.</p>
+<label for="prediction">Your prediction: will retrieving more chunks always help?</label><textarea id="prediction" class="response-short" rows="2"></textarea>
+<label for="budget">Total context allowance</label><select id="budget"><option value="6000">6,000 tokens</option><option value="8000" selected>8,000 tokens</option><option value="12000">12,000 tokens</option></select>
+<label for="chunks">Chunks retrieved: <output id="chunks-value">8</output></label><input id="chunks" type="range" min="1" max="16" value="8">
+<label for="size">Tokens per chunk</label><select id="size"><option value="400">400 tokens</option><option value="800" selected>800 tokens</option><option value="1200">1,200 tokens</option></select>
+<div class="actions"><button type="button" id="run-packing">Run the packer</button></div>
+<section aria-label="Latest experiment result"><h2>Latest result</h2><p id="packing-result" aria-live="polite">With 8,000 tokens, 8 retrieved chunks and 800 tokens per chunk: 5 chunks fit; 3 are omitted; 0 evidence tokens remain unused.</p><div id="packing-bars" data-export-ignore aria-hidden="true" style="display:flex;gap:8px;flex-wrap:wrap;margin:24px 0"></div></section>
+<label for="reflection">What would you change if the needed evidence were ranked sixth?</label><textarea id="reflection" class="response-short" rows="3"></textarea>
+<details data-self-check><summary>Compare your reasoning</summary><div data-explanation><p>At the default settings, evidence has 4,000 tokens, so five 800-token chunks fit. Increasing retrieval from eight to twelve changes the candidate pool but not capacity. Ranking the needed evidence higher or reducing redundant content can help it survive. A larger allowance also fits more, but this model says nothing about latency, cost or whether the model uses the extra material correctly.</p><p>Look for a distinction between retrieving a source and presenting it to the model. Explain which setting you changed and what the experiment cannot prove. <a href="../lessons/evidence-before-answers.html#budget">Revisit the context budget.</a></p></div></details>
+</fieldset></form><p class="muted">Copy for chat includes your prediction, current controls and the settings used for the latest run. Feedback stays hidden from export until revealed. No responses are sent automatically.</p>
+<script>
+(() => {
+ const root=document.getElementById('context-experiment');
+ const budget=document.getElementById('budget'), chunks=document.getElementById('chunks'), size=document.getElementById('size');
+ let latest='';
+ function snapshot(){root.dataset.exportSummary='Current controls: '+budget.value+' total tokens, '+chunks.value+' retrieved chunks, '+size.value+' tokens per chunk. Latest run: '+latest;document.getElementById('chunks-value').textContent=chunks.value;}
+ function run(){const b=Number(budget.value), k=Number(chunks.value), s=Number(size.value), fit=Math.min(k,Math.floor((b-4000)/s));latest='With '+b.toLocaleString('en-US')+' tokens, '+k+' retrieved chunks and '+s+' tokens per chunk: '+fit+' chunks fit; '+(k-fit)+' are omitted; '+(b-4000-fit*s)+' evidence tokens remain unused.';document.getElementById('packing-result').textContent=latest;const bars=document.getElementById('packing-bars');bars.replaceChildren();for(let i=0;i<k;i++){const bar=document.createElement('span');bar.textContent=String(i+1);bar.style.cssText='display:grid;place-items:center;width:46px;height:58px;border-radius:var(--radius-sm);border:1px solid var(--line);background:var('+(i<fit?'--surface-accent':'--surface-soft')+');color:var(--ink);opacity:'+(i<fit?'1':'.45');bars.append(bar);}snapshot();}
+ [budget,chunks,size].forEach(el=>el.addEventListener('input',snapshot));document.getElementById('run-packing').addEventListener('click',run);run();
+})();
+</script>
+</main>
+</body>
+</html>

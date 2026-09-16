@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T21:44:39+00:00" />
+    <meta name="tags" content="architecture,go,langgraph" />
+    <title>Where the agent ends and the platform begins</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="lesson">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Lesson</p>
+        <h1>Where the agent ends and the platform begins</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T21:44:39+00:00">16th Sept 2026 · 21:44</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>Build Switchboard, an incident-investigation agent that explains a failing deployment using runbooks and deployment events. Start by deciding who owns a request after the browser disappears.</p></div>
+<section id="boundary"><h2>One investigation, two kinds of state</h2>
+<p>An engineer asks: “Why did checkout errors spike after release 42?” The Go API authenticates the caller and accepts the investigation. A Python worker runs a LangGraph workflow that retrieves evidence, decides whether another read-only tool call would help, and drafts a cited answer. These components have different responsibilities even though they serve one user action.</p>
+<p>The platform owns identity, admission, deadlines and durable job status. The graph owns the investigation’s current evidence and next step. A graph checkpoint describes progress inside an investigation; a job record describes the promise made to the caller. Neither automatically replaces the other.</p></section><figure class="diagram"><pre class="mermaid">flowchart TD
+  UI[Engineer] --&gt; API[Go API]
+  API --&gt; Jobs[(Job store)]
+  Jobs --&gt; Worker[Python worker]
+  Worker --&gt; Graph[LangGraph]
+  Graph --&gt; Retrieve[Runbook retrieval]
+  Graph --&gt; Events[Deployment events]
+  Retrieve --&gt; Evidence[Evidence and citations]
+  Events --&gt; Evidence
+  Evidence --&gt; Answer[Answer or abstain]
+  Answer --&gt; Jobs</pre><figcaption>The Go service accepts durable work. The worker gathers evidence and stores a result for the engineer to retrieve.</figcaption></figure>
+<section id="contract"><h2>Make acceptance mean something</h2>
+<p>For this project, <code>POST /investigations</code> returns <code>202 Accepted</code> only after a job is committed. A client-generated request key is unique within a tenant. Repeating the request returns the same job ID, preventing a network retry from creating a second investigation.</p>
+<table><thead><tr><th scope="col">Owner</th><th scope="col">State it keeps</th><th scope="col">Failure it must handle</th></tr></thead><tbody>
+<tr><th scope="row">Go API</th><td>Tenant, request key, job ID, deadline</td><td>Client retries after a lost response</td></tr>
+<tr><th scope="row">Worker</th><td>Lease owner, expiry, attempt count</td><td>Process dies after claiming work</td></tr>
+<tr><th scope="row">Graph</th><td>Evidence IDs, tool outcomes, remaining budget</td><td>A tool times out midway through reasoning</td></tr>
+<tr><th scope="row">Result store</th><td>Answer, citations, terminal status</td><td>A stale worker tries to overwrite a newer result</td></tr></tbody></table>
+<p>Claim a job with an expiring lease. Renew it during execution and attach a monotonically increasing claim generation. A result write succeeds only if its generation still matches the current claim. Otherwise, a worker whose lease expired could finish late and overwrite the replacement worker’s answer.</p></section>
+<section id="deadlines"><h2>A request deadline is not a job deadline</h2>
+<p>In Go, an HTTP request context bounds work performed for that request. Our asynchronous contract deliberately ends that request after acceptance. The worker therefore reads an explicit job deadline instead of borrowing a context that disappears with the connection.</p><pre><code class="language-go">// Illustrative worker-side budget check; storage and error handling omitted.
+remaining := time.Until(job.Deadline)
+if remaining &lt;= 0 {
+    return ErrJobExpired
+}
+ctx, cancel := context.WithTimeout(workerContext, remaining)
+defer cancel()
+return runInvestigation(ctx, job)</code></pre>
+<p>If the investigation has 12 seconds left, a tool cannot receive a fresh 30-second allowance. Give it the smaller of its per-call limit and the remaining job time, leaving room to persist the result. Count retry time against that same budget.</p>
+<p class="callout">Cancellation is cooperative. Every network call must receive a deadline, and every state write must reject expired ownership. Merely storing a deadline does not stop execution.</p></section>
+<section id="choices"><h2>When a simpler design wins</h2>
+<p>A synchronous handler is a reasonable first prototype when one retrieval and one model call reliably fit the request budget. A durable job adds polling, leases and recovery work. It earns that complexity when investigations outlive connections, need several tools, or must survive worker restarts. The graph likewise earns its place through conditional steps and recoverable state; a fixed retrieve-and-answer chain may be enough at first.</p>
+<p>Switchboard starts with read-only tools. If it later gains a rollback tool, a checkpoint cannot prove that a rollback did or did not happen before a crash. That operation needs its own idempotency and authorisation contract, plus a human approval boundary.</p></section>
+<section id="apply"><h2>Try the failure on paper</h2><p>A worker calls the model, loses its lease, then receives a complete answer. A second worker has already claimed the job. Which write must fail, and what field lets the store decide? Explain this before adding automatic retries.</p></section>
+<p class="muted">Design example, not a runnable server or a version-specific LangGraph tutorial. Research was intentionally skipped for this demonstration.</p><footer><a href="../lessons/evidence-before-answers.html">Next: evidence before answers</a> · <a href="../topics/reliable-investigations.html">Whole-system view</a></footer>
+</main>
+</body>
+</html>

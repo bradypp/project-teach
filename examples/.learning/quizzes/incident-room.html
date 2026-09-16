@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T21:44:39+00:00" />
+    <meta name="tags" content="evals,go,rag" />
+    <title>Incident room: the plausible wrong answer</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="quiz">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a
+      ><span>Make the idea your own</span>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">quiz</p>
+        <h1>Incident room: the plausible wrong answer</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T21:44:39+00:00">16th Sept 2026 · 21:44</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>It is 09:17. Checkout errors rose after release 42. Switchboard blames a database migration, but the on-call engineer suspects the connection pool. Inspect the trace before changing the prompt.</p></div>
+<section class="practice-group"><h2>The trace on your desk</h2><pre><code class="language-text">09:17:00  job accepted; deadline 09:17:30
+09:17:02  retrieved: deploy-42, pool-metrics-42, migration-11
+09:17:03  packed: migration-11 (others dropped by budget)
+09:17:08  answer: &quot;The migration caused checkout failures.&quot;
+09:17:08  cited: migration-11
+09:17:09  job marked completed</code></pre><p>The migration note concerns a different release. The retrieved pool metrics describe the current incident. This is a synthetic trace; all information needed for the exercise is above.</p></section><form data-quiz><fieldset data-question>
+  <legend>1. Which stage should you inspect first?</legend>
+  <label class="option"
+    ><input type="radio" name="stage" value="a" />The retrieval query that found the pool metrics</label
+  >
+  <label class="option"
+    ><input type="radio" name="stage" value="b" data-correct="true" />The packing policy that dropped the pool metrics</label
+  >
+  <details data-hint>
+    <summary>A hint</summary>
+    <p>Compare what was retrieved with what the model actually received.</p>
+  </details>
+  <button type="button" data-check>Check answer</button>
+  <p class="feedback" data-feedback aria-live="polite" hidden></p>
+  <div data-explanation hidden>
+    <h3>Why this works</h3>
+    <p>The required source reached retrieval but disappeared during packing. Inspect budget and selection before tuning search. The final unsupported claim also warrants an answer-support check. <a href="../lessons/evals-that-find-the-failure.html#diagnose">Review the evaluation boundaries.</a></p>
+    
+  </div>
+</fieldset>
+<fieldset data-question>
+  <legend>2. A client retries after losing the acceptance response. What should happen?</legend>
+  <label class="option"
+    ><input type="radio" name="retry" value="a" data-correct="true" />Return the existing job for the same tenant and request key</label
+  >
+  <label class="option"
+    ><input type="radio" name="retry" value="b" />Create a new job with a fresh deadline for the retry</label
+  >
+  <details data-hint>
+    <summary>A hint</summary>
+    <p>What promise was already recorded before the response was sent?</p>
+  </details>
+  <button type="button" data-check>Check answer</button>
+  <p class="feedback" data-feedback aria-live="polite" hidden></p>
+  <div data-explanation hidden>
+    <h3>Why this works</h3>
+    <p>The accepted job still exists even though the response was lost. Tenant-scoped request keys make the retry resolve to the same job. A fresh deadline would also let retries evade the original budget. <a href="../lessons/agent-runtime.html#contract">Review the acceptance contract.</a></p>
+    
+  </div>
+</fieldset>
+<fieldset data-question>
+  <legend>
+    3. Design one experiment that could expose the packing bug
+  </legend>
+  <label for="reasoning-1">Your reasoning</label>
+  <textarea
+    id="reasoning-1"
+    class="response-short"
+    rows="3"
+    placeholder="Try the question before revealing the explanation."
+  ></textarea>
+  <details data-self-check>
+    <summary>Compare your reasoning</summary>
+    <div data-explanation>
+      <p>
+        Freeze the case, corpus and model settings. Replace only the packing policy, then check whether pool-metrics-42 survives into the model input. Compare support of the final claims as a separate outcome. Mention that one successful answer is insufficient evidence of general reliability. <a href="../lessons/evals-that-find-the-failure.html#experiment">Compare with the experiment workflow.</a>
+      </p>
+      <ul>
+        <li>Name the assumption that makes your reasoning work.</li>
+        <li>Describe one consequence or case where you would choose differently.</li>
+      </ul>
+      
+    </div>
+  </details>
+</fieldset>
+</form><p class="muted">Answers remain in this page until you copy or save them. Copy for chat prepares a handoff; it does not submit responses or update learning state.</p>
+</main>
+</body>
+</html>
