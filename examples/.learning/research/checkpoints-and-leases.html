@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T22:32:28+00:00" />
+    <meta name="tags" content="go,langgraph,reliability" />
+    <title>Do checkpoints replace job leases?</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="research">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Research</p>
+        <h1>Do checkpoints replace job leases?</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T22:32:28+00:00">16th Sept 2026 · 22:32</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>Investigate whether Switchboard can use graph persistence as its only recovery mechanism, or whether the Go service still needs a job ownership protocol.</p></div>
+<section id="scope"><h2>Decision and scope</h2><p>For the proposed self-hosted Go API and Python graph worker, which component owns accepted work, resumed graph state and permission to write the final result? Sources inspected on 16 September 2026: current LangGraph Python documentation, PostgreSQL 18 documentation and the Go cancellation guide. The example has no pinned backend dependencies or production deployment.</p></section>
+<section id="findings"><h2>What the sources establish</h2><table><thead><tr><th scope="col">Source</th><th scope="col">Supported finding</th><th scope="col">Boundary</th></tr></thead><tbody><tr><th scope="row"><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph persistence</a></th><td>Checkpointers retain thread-scoped graph state; stores serve cross-thread data.</td><td>Persistence scope differs from a public job status contract.</td></tr><tr><th scope="row"><a href="https://docs.langchain.com/oss/python/langgraph/interrupts">LangGraph interrupts</a></th><td>An interrupted node restarts from its beginning on resume.</td><td>Earlier work inside that node may run again.</td></tr><tr><th scope="row"><a href="https://www.postgresql.org/docs/18/sql-select.html#SQL-FOR-UPDATE-SHARE">PostgreSQL locking</a></th><td>Queue-like consumers can skip rows locked by other transactions.</td><td>Skipping locks does not itself define a lease or retry policy.</td></tr><tr><th scope="row"><a href="https://go.dev/doc/database/cancel-operations">Go cancellation</a></th><td>Context lets operations observe cancellation or a timeout.</td><td>Our proposed ownership guard still decides whether a late write is accepted.</td></tr></tbody></table><p>The sources describe complementary mechanisms, not contradictory advice. The right comparison is which promise each mechanism enforces.</p></section>
+<section id="alternatives"><h2>Three viable designs</h2><table><thead><tr><th scope="col">Design</th><th scope="col">Benefit</th><th scope="col">Cost or condition</th></tr></thead><tbody><tr><th scope="row">Synchronous Go request and one model call</th><td>Small operational surface</td><td>Suitable while useful work fits the request lifetime; recovery is limited</td></tr><tr><th scope="row">Go job store plus graph checkpointer</th><td>Explicit ownership and inspectable graph progress</td><td>Two state systems require identity mapping and reconciliation</td></tr><tr><th scope="row">Managed graph runtime behind the Go API</th><td>May delegate persistence and run management</td><td>Verify the chosen service’s admission, cancellation and concurrency guarantees before recreating them</td></tr></tbody></table><p>These are project-level alternatives inferred from the mechanisms. This investigation does not benchmark them or claim that every hosted runtime requires a second custom queue.</p></section>
+<section id="recommendation"><h2>Proposed choice for Switchboard</h2><p>Keep a tenant-scoped job record for admission, deadline, claim generation and terminal status. Associate it with a graph thread for evidence and intermediate reasoning. Use a stable mapping that cannot cross tenants. A checkpoint records progress; the result update must still prove current ownership under our worker design.</p><p>The two stores can disagree temporarily. A graph may finish before the job status is updated. Recovery should recognise an already persisted result and reconcile status without paying for another model call. Conversely, a terminal cancellation should prevent a resumed worker from publishing a late answer. Define these cases before choosing retry loops.</p></section>
+<section id="verify"><h2>What would confirm or change this choice?</h2><ol><li>Pin framework, saver and database versions; inspect their actual recovery and transaction behaviour.</li><li>Kill a worker after a tool result, after a checkpoint, and before the final status write. Record what repeats.</li><li>Race two claims and a cancellation. Confirm that exactly one permitted terminal transition wins.</li><li>Test source-version drift on replay and tenant checks on every evidence lookup.</li><li>If a managed runtime already provides these contracts, remove redundant ownership machinery rather than maintaining two competing authorities.</li></ol></section>
+<section id="limits"><h2>Limitations</h2><p>No implementation, fault-injection run or throughput benchmark was performed for this notebook. Tool side effects need their own idempotency design; graph recovery alone is not evidence of exactly-once execution. Recheck when the deployment model, checkpoint backend, framework version or tool permissions change.</p></section><footer><a href="../lessons/replay-is-not-resume.html">Replay lesson</a> · <a href="../lessons/leases-and-deadlines.html">Ownership lesson</a></footer>
+</main>
+</body>
+</html>

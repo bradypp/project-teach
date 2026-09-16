@@ -30,7 +30,7 @@ python3 -m unittest discover -s tests/learning -p 'test_*.py'
 python3 .agents/skills/learning/teach/scripts/check_links.py examples/.learning
 ```
 
-The `test_*.cjs` scripts under `tests/learning/` cover browser controls, themes, notebook navigation, components, practice and exports. `test_diagrams.cjs` creates a fresh template-based fixture and checks natural text sizing, wrapped labels, keyboard scrolling, resize/theme behaviour and source export. They require Playwright and Chromium; `CHROMIUM_PATH` can select a browser executable. Routine authored pages need content and link checks. New interactions also need response/export checks before and after feedback, as described in the artifact guidance.
+The `test_*.cjs` scripts under `tests/learning/` cover browser controls, themes, notebook navigation, components, practice and exports. `test_diagrams.cjs` creates a fresh template-based fixture and checks bounded shrink-to-fit, wrapped labels, keyboard scrolling, resize/theme behaviour and source export. They require Playwright and Chromium; `CHROMIUM_PATH` can select a browser executable. Routine authored pages need content and link checks. New interactions also need response/export checks before and after feedback, as described in the artifact guidance.
 
 The examples are synthetic teaching artifacts, not learning evidence or backend benchmarks. Current verification results belong in the change report; the presence of a test file does not establish that it ran.
 

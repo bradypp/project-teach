@@ -6,16 +6,16 @@ Read when creating or changing a Mermaid visual. Use the bundled [diagram compon
 
 Use a diagram to expose a relationship or sequence that prose alone obscures.
 
-- Prefer `flowchart TD` or `TB` for multi-step pipelines. Use `LR` for short relationships, usually two or three compact stages, or when horizontal direction carries meaning. Mermaid does not wrap a chain onto a new row.
+- Use `flowchart LR` for up to four or five horizontal stages. For six or more, use `TD`/`TB` or split the sequence into connected diagrams with at most five stages per row. Count the longest horizontal path, not just top-level groups. Mermaid does not wrap a chain onto another row.
 - Give each diagram one explanatory job. Split a large architecture into an overview and focused flows; use matching names and captions to connect them. A tall unreadable diagram also needs splitting.
-- Keep labels to a short phrase. Use Markdown labels (`A["`Authorise the request`"]`) so the shared wrapping width can break them across lines. Put qualifications, long identifiers and implementation details in nearby prose or a table.
+- Keep labels to a short phrase. At around 24 characters, use Markdown labels (`A["`Authorise the request`"]`) so the shared 180px wrapping width breaks them at word boundaries (the character count is an authoring cue, not an exact pixel measure). Put qualifications, long identifiers and implementation details in nearby prose or a table.
 - Shorten edge labels as carefully as node labels. Branches, cross-links and subgraphs can make a vertical diagram wide too. Preserve relationships when changing layout; never reorder a process simply to fit it.
-- Keep shared font sizing. The renderer preserves intrinsic dimensions and provides scrolling when necessary; scrolling is a fallback for a meaningful wide structure, not a substitute for composing a readable lesson.
+- Diagrams shrink to fit the reading column without horizontal scrolling. Choose short labels and a suitable direction before relying on scaling; on narrow screens, split or simplify a diagram if its text becomes too small.
 
 ```mermaid
-flowchart TD
-  Request["`Validate the request`"] --> Queue["`Persist the job`"]
-  Queue --> Worker["`Claim and process`"]
+flowchart LR
+  Request["`Request`"] --> Retrieve["`Retrieve`"] --> Pack["`Pack context`"]
+  Pack --> Answer["`Answer`"] --> Check["`Check support`"]
 ```
 
 ```mermaid
@@ -68,7 +68,7 @@ These chart values are illustrative. Use supported syntax for the bundled versio
 
 - [components.js](../assets/components.js) configures Mermaid from the active CSS tokens at render time and re-renders when the theme changes. Agents author the diagram, not a new palette.
 - Keep colour settings and theme directives out of individual diagram definitions. Improve shared configuration when a diagram family needs additional tokens.
-- The renderer keeps SVG text at its natural size rather than shrinking the whole diagram to the page. Wide diagrams get a focusable scroll region and a visible scroll hint; this also works on narrow screens. Markdown flowchart labels wrap using shared configuration.
+- The renderer uses natural size when it fits and scales down to the available width otherwise. There is no horizontal scroll region or minimum-scale cutoff. Markdown flowchart labels wrap using shared configuration; ordinary plain labels should be converted to Markdown form when long.
 - Captions explain the visual's meaning. Markdown export retains the Mermaid source and caption; it does not preserve an interactive renderer.
 - Use ASCII for a simpler text relationship, or themed custom SVG/canvas for visuals Mermaid cannot express well.
 
@@ -76,6 +76,6 @@ These chart values are illustrative. Use supported syntax for the bundled versio
 
 - Check rendering and readability in both themes after introducing a new diagram form or changing shared rendering code. Routine diagrams need a quick visual/content check.
 - If parsing fails, inspect the visible source fallback. Check diagram type, arrows, quoted labels and HTML escaping first; reduce to a small valid example before restoring complexity.
-- Inspect a new diagram at its actual reading width and a narrow viewport. Labels must be readable without browser zoom, remain inside their nodes, and have no overlaps or clipped arrowheads. For overflow, confirm the region scrolls with keyboard and touch while the page itself stays within the viewport.
-- If a visual is too wide, shorten or wrap labels, change direction, or split the diagram. Check the result rather than assuming `TD` or a larger font fixes the layout. Keep the caption useful when only part of a wide diagram is visible.
+- Inspect a new diagram at its actual reading width and a narrow viewport. Labels must be readable without browser zoom, remain inside their nodes, and have no overlaps or clipped arrowheads. Confirm the complete diagram fits the column without horizontal scrolling.
+- If a visual is too wide, shorten or wrap labels, change direction, or split the diagram. Check the result rather than assuming `TD` or a larger font fixes the layout. Keep the caption useful as a textual explanation of the complete diagram.
 - If colours clash, inspect shared theme variables rather than applying white backgrounds or inline colour patches to the page.

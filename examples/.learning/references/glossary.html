@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T22:32:28+00:00" />
+    <meta name="tags" content="architecture,evals,glossary,rag" />
+    <title>Switchboard glossary</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="glossary">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Glossary</p>
+        <h1>Switchboard glossary</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T22:32:28+00:00">16th Sept 2026 · 22:32</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>A vocabulary aid requested for this example project. These definitions support the lessons; their presence does not imply that a learner has mastered the terms.</p></div>
+<nav aria-label="Terms"><ul class="page-list"><li><a href="#abstention">Abstention</a></li><li><a href="#checkpoint">Checkpoint</a></li><li><a href="#claim-generation">Claim generation</a></li><li><a href="#context-budget">Context budget</a></li><li><a href="#coverage">Coverage</a></li><li><a href="#deadline">Deadline</a></li><li><a href="#idempotency">Idempotency</a></li><li><a href="#lease">Lease</a></li><li><a href="#rag">Retrieval-augmented generation</a></li><li><a href="#replay">Replay</a></li><li><a href="#source-version">Source version</a></li></ul></nav><section id="abstention"><h2>Abstention</h2><p>An explicit decision not to answer because the available evidence does not support the requested claim. Track appropriate abstention separately from unanswered but answerable cases.</p><p><a href="../lessons/abstention-and-coverage.html">See the worked lesson</a></p></section><section id="checkpoint"><h2>Checkpoint</h2><p>A saved graph-state recovery point. It describes progress in an investigation, not permission to perform arbitrary external side effects.</p><p><a href="../lessons/replay-is-not-resume.html">See the worked lesson</a></p></section><section id="claim-generation"><h2>Claim generation</h2><p>A monotonically increasing ownership version. Switchboard includes it in result writes so a superseded worker cannot finish a newer attempt.</p><p><a href="../lessons/leases-and-deadlines.html">See the worked lesson</a></p></section><section id="context-budget"><h2>Context budget</h2><p>The allowance shared by instructions, history, evidence and reserved output. Retrieval depth and the number of chunks actually packed are separate choices.</p><p><a href="../lessons/evidence-before-answers.html">See the worked lesson</a></p></section><section id="coverage"><h2>Coverage</h2><p>The fraction of evaluation cases on which the agent answers. State the denominator and inspect support among those answers separately.</p><p><a href="../lessons/abstention-and-coverage.html">See the worked lesson</a></p></section><section id="deadline"><h2>Deadline</h2><p>The absolute end of a job’s allowed lifetime. Retrying a tool or reclaiming a job does not grant a fresh overall deadline.</p><p><a href="../lessons/leases-and-deadlines.html">See the worked lesson</a></p></section><section id="idempotency"><h2>Idempotency</h2><p>A repeated logical operation has the intended effect once under its contract. A stable request key needs enforcement and a defined scope, such as tenant plus operation.</p><p><a href="../lessons/agent-runtime.html">See the worked lesson</a></p></section><section id="lease"><h2>Lease</h2><p>Permission to work that expires unless renewed. Expiry lets another worker reclaim the job; it does not physically stop the old process.</p><p><a href="../lessons/leases-and-deadlines.html">See the worked lesson</a></p></section><section id="rag"><h2>Retrieval-augmented generation</h2><p>A generation workflow supplied with retrieved material. The candidates still need access checks, selection and an assessment of whether they support the answer.</p><p><a href="../lessons/evidence-before-answers.html">See the worked lesson</a></p></section><section id="replay"><h2>Replay</h2><p>Re-execution from a recovery boundary. A repeated read may return changed data even if it has no side effects.</p><p><a href="../lessons/replay-is-not-resume.html">See the worked lesson</a></p></section><section id="source-version"><h2>Source version</h2><p>The identity of the exact document revision or observation used in an answer, enabling inspection after the live source changes.</p><p><a href="../lessons/replay-is-not-resume.html">See the worked lesson</a></p></section>
+</main>
+</body>
+</html>

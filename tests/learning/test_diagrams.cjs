@@ -13,10 +13,11 @@ const assert = require('node:assert/strict');
   execFileSync('python3', [resolve('.agents/skills/learning/teach/scripts/library.py'), 'new', root, 'lesson', 'diagrams', '--title', 'Readable diagrams']);
   const source = `flowchart LR
  A["Authenticate the caller"] --> B["Persist the investigation"] --> C["Retrieve authorised evidence"] --> D["Deduplicate candidates"] --> E["Pack the model context"] --> F["Generate a supported answer"] --> G["Persist the result"]`;
+  const compact = 'flowchart LR\n A[Request] --> B[Retrieve] --> C[Pack] --> D[Answer] --> E[Check]';
   const wrapped = 'flowchart TD\n A["`Retrieve authorised evidence while retaining source identity and version`"] --> B["`Check support`"]';
   const file = join(root, 'lessons/diagrams.html');
   const figure = (id, text) => `<figure class="diagram" id="${id}"><pre class="mermaid">${text}</pre><figcaption>${id} caption</figcaption></figure>`;
-  writeFileSync(file, readFileSync(file,'utf8').replace('</main>', figure('wide',source)+figure('wrapped',wrapped)+'</main>'));
+  writeFileSync(file, readFileSync(file,'utf8').replace('</main>', figure('wide',source)+figure('compact',compact)+figure('wrapped',wrapped)+'</main>'));
   const page=await browser.newPage({viewport:{width:1100,height:900}});
   const errors=[]; page.on('pageerror', e=>errors.push(e.message));
   for (const width of [1100,390]) {
@@ -31,9 +32,9 @@ const assert = require('node:assert/strict');
       pageWidth:document.documentElement.scrollWidth, viewport:innerWidth,
       left:svg.getBoundingClientRect().left-view.getBoundingClientRect().left};
     });
-    assert.ok(Math.abs(dimensions.rendered-dimensions.natural)<1,'SVG must not scale text down to fit');
+    assert.ok(Math.abs(dimensions.rendered-dimensions.natural*0.875)<1,'Oversized diagrams must stop shrinking at the readability floor');
     assert.ok(dimensions.textSizes.length>0);
-    assert.ok(dimensions.textSizes.every(size=>size>=15),'Labels must remain readable');
+    assert.ok(dimensions.textSizes.every(size=>size>=13.9),'Labels must remain readable');
     assert.ok(dimensions.scroll>dimensions.available,'Wide fixture must scroll');
     assert.ok(dimensions.pageWidth<=dimensions.viewport,'Only diagram may overflow');
     assert.ok(dimensions.left>=0,'Left edge must remain reachable');
@@ -55,6 +56,26 @@ const assert = require('node:assert/strict');
     await page.screenshot({path:`/tmp/teach-diagrams-${width}-${theme}.png`,fullPage:true});
    }
   }
+  // A five-stage horizontal flow can fit with slight shrinking, then grow
+  // back to natural size when room is available without changing direction.
+  await page.setViewportSize({width:1100,height:900});
+  await page.locator('#compact .diagram-view').evaluate(view=>{
+   const width=view.querySelector('svg').viewBox.baseVal.width;
+   const css=getComputedStyle(view);
+   view.style.width=(width*0.95+parseFloat(css.paddingLeft)+parseFloat(css.paddingRight))+'px';
+  });
+  await page.waitForFunction(()=>{
+   const svg=document.querySelector('#compact svg');
+   return Math.abs(svg.getBoundingClientRect().width/svg.viewBox.baseVal.width-0.95)<0.005;
+  });
+  assert.equal(await page.locator('#compact .diagram-scroll-hint').isVisible(),false);
+  const positions=await page.locator('#compact .node').evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().x));
+  assert.ok(positions.every((x,i)=>i===0 || x>positions[i-1]),'Compact flow stays horizontal');
+  await page.locator('#compact .diagram-view').evaluate(view=>view.style.width='');
+  await page.waitForFunction(()=>{
+   const svg=document.querySelector('#compact svg');
+   return Math.abs(svg.getBoundingClientRect().width-svg.viewBox.baseVal.width)<1;
+  });
   // Resize and theme changes must refresh overflow affordances without duplicates.
   await page.setViewportSize({width:1100,height:900});
   await page.waitForFunction(()=>!document.querySelector('#wrapped .diagram-view').hasAttribute('tabindex'));

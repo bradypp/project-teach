@@ -1346,30 +1346,15 @@ pre {
 .diagram-view {
   min-height: 8rem;
   padding: 1.4rem;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
   text-align: center;
 }
 
 .diagram-view svg {
   display: block;
   margin-inline: auto;
-  /* Intrinsic dimensions are set by the renderer; never shrink text to fit. */
-  max-width: none;
+  max-width: 100%;
   height: auto;
   overflow: visible;
-}
-
-.diagram-view:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: -3px;
-}
-
-.diagram-scroll-hint {
-  margin: 0;
-  padding: 0.8rem 1rem 0;
-  color: var(--muted-strong);
-  font-size: 0.85rem;
 }
 
 .diagram figcaption {

@@ -1,7 +1,8 @@
-<!-- Prefer a vertical flow for multiple steps. Markdown labels wrap at the
-     shared width; keep qualifications in prose and split crowded diagrams. -->
+<!-- A compact horizontal flow can contain four or five short stages.
+     Use TD/TB or split for six or more stages, or when a shorter row is crowded.
+     Use Markdown labels around 24 characters or longer to wrap at the shared width; keep qualifications in prose. -->
 <figure class="diagram">
-  <pre class="mermaid">flowchart TD
+  <pre class="mermaid">flowchart LR
     Input["`Input`"] --> Process["`Process`"] --> Output["`Output`"]</pre>
   <figcaption>Explain the relationship shown here in words.</figcaption>
 </figure>

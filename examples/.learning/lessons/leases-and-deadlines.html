@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T22:32:28+00:00" />
+    <meta name="tags" content="go,reliability" />
+    <title>Who may finish this investigation?</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="lesson">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Lesson</p>
+        <h1>Who may finish this investigation?</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T22:32:28+00:00">16th Sept 2026 · 22:32</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>A worker can lose ownership while its model call is still running. Follow a job through expiry, reclamation and cancellation, then make the result write enforce the same rules.</p></div>
+<section id="states"><h2>State names need transition rules</h2><p>Switchboard accepts a job at 09:17:00 with a deadline of 09:17:30. Worker A claims it with generation 7 and a lease expiring at 09:17:10. At 09:17:12, worker B reclaims it with generation 8. A’s network call then completes. Both workers have an answer, but only B has the current claim.</p><p>A <a href="../references/glossary.html#lease">lease</a> is time-bounded permission to work. A deadline bounds the whole job. A worker can have a valid lease on a job whose deadline has passed, so both conditions need checking. Use the database’s clock consistently for ownership decisions in this proposed design.</p></section><figure class="diagram"><pre class="mermaid">stateDiagram-v2
+ direction TB
+ [*] --&gt; Queued
+ Queued --&gt; Running: claim
+ Running --&gt; Queued: lease expires
+ Running --&gt; Completed: valid claim and result
+ Running --&gt; Failed: nonretryable error
+ Queued --&gt; Expired: deadline passed
+ Running --&gt; Expired: deadline passed
+ Running --&gt; Cancelled: cancellation wins
+ Completed --&gt; [*]
+ Failed --&gt; [*]
+ Expired --&gt; [*]
+ Cancelled --&gt; [*]</pre><figcaption>Simplified proposed job lifecycle. Reclaiming increments the claim generation. Completion, cancellation and expiry must be resolved atomically against current state; omitted edges include cancellation while queued.</figcaption></figure>
+<section id="write"><h2>Enforce ownership at the write</h2><p>A worker-side “am I still current?” check is insufficient. A can pass that check, pause, and then write after B takes over. Combine the check and mutation in one database operation. A zero-row result means the worker must treat its attempt as no longer authorised to complete the job.</p><pre><code class="language-sql">-- Proposed result-write guard; illustrative schema, not a migration.
+UPDATE investigations
+SET status = &#x27;completed&#x27;, result = $1
+WHERE id = $2 AND tenant_id = $3
+  AND status = &#x27;running&#x27;
+  AND claim_generation = $4
+  AND lease_until &gt; clock_timestamp()
+  AND deadline &gt; clock_timestamp()
+RETURNING id;</code></pre>
+<p>Cancellation can race with completion. Define the product rule: in this example, the first terminal transition committed wins. A cancellation update changes only an eligible nonterminal job; a completion update changes only a currently running one. Tell the client which state actually won. “Cancel requested” and “cancelled” are different facts.</p></section>
+<section id="claim"><h2>A short claim transaction</h2><p>PostgreSQL documents <code>SKIP LOCKED</code> as a way for queue-like consumers to skip rows another transaction has locked; the resulting view is unsuitable for ordinary consistent reporting. <a href="https://www.postgresql.org/docs/18/sql-select.html#SQL-FOR-UPDATE-SHARE">Source: SELECT locking clause.</a></p><p>Our proposed claim transaction selects eligible work, records a new generation and lease, then commits promptly. The worker performs slow tool calls after that transaction. Holding a row lock through a model call couples database contention to unpredictable network latency. Reclaim eligibility and attempt limits belong in this protocol too; selecting a row alone is not a durable claim.</p></section>
+<section id="budget"><h2>Spend the remaining time</h2><p>At 09:17:22 only eight seconds remain. Reserve two seconds for support checking and storing a result: the next tool call gets at most six seconds, even if its usual limit is ten. If no budget remains, the worker should produce the chosen expired or partial-result outcome rather than start more work.</p><p>Go’s context mechanism propagates cancellation and timeouts to operations that accept it; the official database example also defers the cancellation function to release resources. <a href="https://go.dev/doc/database/cancel-operations">Source: cancelling in-progress operations.</a> In this project that cooperation reduces wasted work, while the result-write guard still protects against late completion.</p></section>
+<section id="apply"><h2>Try the race</h2><p>Pause A after it receives a tool result. Expire its lease, let B claim generation 8, and then allow A to run its update with generation 7. Expect zero updated rows. Next cancel the job before B writes and check that completion also fails. These tests establish platform behaviour; they do not establish answer quality.</p></section><footer><a href="../lessons/agent-runtime.html">Original runtime lesson</a> · <a href="../quizzes/recovery-drill.html">Recovery drill</a> · <a href="../research/checkpoints-and-leases.html">Compare the storage roles</a></footer>
+</main>
+</body>
+</html>

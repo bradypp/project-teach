@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T22:32:28+00:00" />
+    <meta name="tags" content="evals,rag" />
+    <title>When should the agent say “not enough evidence”?</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="lesson">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Lesson</p>
+        <h1>When should the agent say “not enough evidence”?</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T22:32:28+00:00">16th Sept 2026 · 22:32</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>A cautious answer policy can avoid unsupported claims while leaving useful questions unanswered. Use a small synthetic evaluation set to make that trade-off visible.</p></div>
+<section id="cases"><h2>Begin with observable outcomes</h2><p>Suppose an author-reviewed fixture set contains 12 cases: eight are answerable from the supplied corpus and four lack necessary evidence. A policy answers six of the eight answerable cases correctly and abstains on two. It also answers two unsupported cases and abstains on the other two. This is invented teaching data, not a measured Switchboard result.</p>
+<table><caption>Policy A: twelve synthetic cases</caption><thead><tr><th scope="col">Corpus condition</th><th scope="col">Agent answers</th><th scope="col">Agent abstains</th></tr></thead><tbody><tr><th scope="row">Sufficient evidence</th><td>6 supported answers</td><td>2 missed opportunities</td></tr><tr><th scope="row">Insufficient evidence</th><td>2 unsupported answers</td><td>2 appropriate abstentions</td></tr></tbody></table>
+<p>This matrix separates two questions: did the policy choose to answer, and was that answer supported? A real evaluation also needs a category for wrong answers despite sufficient evidence. The simplified fixture removes that case so we can isolate the decision to abstain.</p></section>
+<section id="denominators"><h2>Write the denominator beside the score</h2><ul><li><strong>Coverage:</strong> eight answered cases out of twelve, or 66.7%.</li><li><strong>Support among answers:</strong> six supported answers out of eight answers, or 75%.</li><li><strong>Unsupported-case abstention:</strong> two abstentions out of four unsupported cases, or 50%.</li></ul><p>Calling all three “accuracy” would hide their different meanings. A policy that abstains on every question has zero coverage; support among answers is undefined because it gives no answers. It has not demonstrated perfect answer quality.</p></section><figure class="diagram"><pre class="mermaid">xychart-beta
+ title &quot;Supported answers and unsupported claims&quot;
+ x-axis [Supported, Unsupported, Abstained]
+ y-axis &quot;Cases in policy A&quot; 0 --&gt; 6
+ bar [6, 2, 4]</pre><figcaption>Synthetic counts for Policy A: six supported answers, two unsupported answers, four abstentions. The table above separates helpful abstention from missed opportunities.</figcaption></figure>
+<section id="compare"><h2>Compare a more conservative policy</h2><p>Policy B answers five answerable cases correctly and abstains on the remaining three. It abstains on all four unsupported cases. Coverage falls to 5/12, or 41.7%, and support among its five answers is 100%. The one supported answer lost relative to A may matter, but the two unsupported answers avoided may matter more for an incident assistant.</p><p>That choice is a product decision, not a universal metric ranking. An exploratory assistant might show an explicitly labelled hypothesis; an automated action system needs a much stronger boundary. Changing the wording from “cause” to “hypothesis” also changes what your rubric should count as an unsupported claim.</p></section>
+<section id="threshold"><h2>Thresholds need evidence too</h2><p>A retrieval similarity score ranks matches under a retrieval method; it is not automatically the probability that an answer is correct. Raising a threshold can remove useful evidence as well as irrelevant evidence. Before choosing a threshold, plot behaviour on held-out cases and inspect which services, source ages or query types lose coverage.</p><p>With four unsupported cases, one changed result moves the observed abstention rate by 25 percentage points. Keep the raw counts, repeat unstable generations, and collect more representative cases before interpreting small score differences as durable improvement. Confidence in the estimate and confidence expressed by the model are separate concepts.</p></section>
+<section id="apply"><h2>Specify a useful release gate</h2><p>For a first read-only release, propose separate checks for unauthorised tool calls, unsupported consequential claims and coverage on answerable cases. State the fixture set and acceptance rule for each. A single blended average can allow enough easy successes to hide a critical failure.</p><p>Use the <a href="../lessons/evals-that-find-the-failure.html#experiment">controlled comparison workflow</a> to evaluate a packing change before changing the answer policy at the same time.</p></section><footer><a href="../lessons/evals-that-find-the-failure.html">Boundary-level evaluation</a> · <a href="../quizzes/recovery-drill.html">Apply the counts</a> · <a href="../references/glossary.html#coverage">Coverage vocabulary</a></footer>
+</main>
+</body>
+</html>

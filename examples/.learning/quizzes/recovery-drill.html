@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T22:32:28+00:00" />
+    <meta name="tags" content="evals,langgraph,reliability" />
+    <title>Recovery drill: two workers, one result</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="quiz">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a
+      ><span>Make the idea your own</span>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">quiz</p>
+        <h1>Recovery drill: two workers, one result</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T22:32:28+00:00">16th Sept 2026 · 22:32</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>A model call returns after its worker has lost ownership. Decide what the platform should accept, what graph replay can change, and how the outcome should appear in evaluation.</p></div>
+<section class="practice-group"><h2>The incident timeline</h2><pre><code class="language-text">09:17:00  job accepted; deadline 09:17:30
+09:17:02  A claims generation 7; lease ends 09:17:10
+09:17:12  B claims generation 8; lease ends 09:17:25
+09:17:13  A receives an answer citing runbook v7
+09:17:14  cancellation commits; job status becomes cancelled
+09:17:15  B receives an answer citing runbook v8</code></pre><p>The proposed result-write contract requires running status, a current generation, a live lease and an unexpired job deadline. Every step is independently answerable.</p></section><form data-quiz><fieldset data-question>
+  <legend>1. Which completion may be accepted under this contract?</legend>
+  <label class="option"
+    ><input type="radio" name="owner" value="a" />Only B’s completion, because generation 8 is current</label
+  >
+  <label class="option"
+    ><input type="radio" name="owner" value="b" data-correct="true" />Neither completion, because A lost ownership and B finished after cancellation</label
+  >
+  <details data-hint>
+    <summary>A hint</summary>
+    <p>Check all of the required conditions, not only the generation.</p>
+  </details>
+  <button type="button" data-check>Check answer</button>
+  <p class="feedback" data-feedback aria-live="polite" hidden></p>
+  <div data-explanation hidden>
+    <h3>Why this works</h3>
+    <p>A has generation 7 after the store advanced to 8. B has the current generation but the status is cancelled. Both guarded writes must affect zero rows. <a href="../lessons/leases-and-deadlines.html#write">Review ownership at the write.</a></p>
+    
+  </div>
+</fieldset>
+<fieldset data-question>
+  <legend>
+    2. Why might replay return runbook v8 instead of v7?
+  </legend>
+  <label for="reasoning-1">Your reasoning</label>
+  <textarea
+    id="reasoning-1"
+    class="response-short"
+    rows="3"
+    placeholder="Try the question before revealing the explanation."
+  ></textarea>
+  <details data-self-check>
+    <summary>Compare your reasoning</summary>
+    <div data-explanation>
+      <p>
+        A repeated lookup of a latest-version alias can see changed content. Pin the original version for a snapshot investigation, or explicitly record a refresh and its new time scope. Checkpointing does not make a live data source immutable. <a href="../lessons/replay-is-not-resume.html#identity">Review evidence identity.</a>
+      </p>
+      <ul>
+        <li>Name the assumption that makes your reasoning work.</li>
+        <li>Describe one consequence or case where you would choose differently.</li>
+      </ul>
+      
+    </div>
+  </details>
+</fieldset>
+<section class="practice-group"><h2>Evaluate the recovered answers</h2><p>In another synthetic batch, ten cases produce six answers: four supported and two unsupported. The remaining four cases receive an abstention.</p><fieldset data-question><legend>3. Calculate coverage and support among answers</legend><label for="coverage">Coverage, in percent</label><input id="coverage" type="number" min="0" max="100" step="any"><label for="support">Support among answers, in percent</label><input id="support" type="number" min="0" max="100" step="any"><label for="denominators">Explain your denominators</label><textarea id="denominators" rows="3" class="response-short"></textarea><details data-self-check><summary>Compare the calculation</summary><div data-explanation><p>Coverage is 6/10 = 60%. Support among answers is 4/6, about 66.7%. We cannot calculate appropriate abstention without knowing whether the four unanswered cases had sufficient evidence. <a href="../lessons/abstention-and-coverage.html#denominators">Revisit the denominators.</a></p></div></details></fieldset></section><fieldset data-question>
+  <legend>4. Which observation tests stale-worker protection?</legend>
+  <label class="option"
+    ><input type="radio" name="experiment" value="a" data-correct="true" />A generation-7 write affects zero rows after generation 8 is claimed</label
+  >
+  <label class="option"
+    ><input type="radio" name="experiment" value="b" />The resumed graph produces the same answer text on two runs</label
+  >
+  <details data-hint>
+    <summary>A hint</summary>
+    <p>Separate the platform contract from answer quality.</p>
+  </details>
+  <button type="button" data-check>Check answer</button>
+  <p class="feedback" data-feedback aria-live="polite" hidden></p>
+  <div data-explanation hidden>
+    <h3>Why this works</h3>
+    <p>The rejected write directly checks stale ownership. Identical answer text does not prove that the store rejected a late worker or enforced cancellation. <a href="../lessons/leases-and-deadlines.html#apply">Try the race.</a></p>
+    
+  </div>
+</fieldset>
+</form><p class="muted">Responses stay in this page. Copy for chat prepares a discussion; it does not submit answers or update learning records.</p>
+</main>
+</body>
+</html>

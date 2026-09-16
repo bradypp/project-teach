@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-16T22:32:28+00:00" />
+    <meta name="tags" content="langgraph,reliability" />
+    <title>Replay is not resume</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="lesson">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Lesson</p>
+        <h1>Replay is not resume</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-16T22:32:28+00:00">16th Sept 2026 · 22:32</time>
+        </p>
+      </header>
+<div class="page-intro"><div class="page-tags" data-page-tags aria-label="Subjects" hidden></div><p>A paused investigation can run earlier code again. Trace a read-only tool call across an interruption, then decide which results and identities must survive recovery.</p></div>
+<section id="boundary"><h2>Two meanings of “continue”</h2><p>A normal function continues from its current instruction because its process still holds the call stack. A durable workflow may reconstruct progress from stored state in another process. That reconstruction has a boundary: work before it may be remembered, repeated or deliberately recomputed.</p><p>LangGraph documents that resuming an interrupted node starts that node again from its beginning. Code before the interrupt can run again. That is narrower than saying every completed node always reruns. The checkpoint and the interruption location matter. <a href="https://docs.langchain.com/oss/python/langgraph/interrupts">Source: interrupt behaviour and replay rules.</a></p></section><figure class="diagram"><pre class="mermaid">sequenceDiagram
+  participant W as Worker
+  participant T as Read tool
+  participant C as Checkpointer
+  W-&gt;&gt;T: Read deployment events
+  T--&gt;&gt;W: Snapshot v12
+  W-&gt;&gt;C: Pause for clarification
+  Note over W,C: Worker may restart
+  C--&gt;&gt;W: Resume interrupted node
+  W-&gt;&gt;T: Earlier read runs again
+  T--&gt;&gt;W: Snapshot v13</pre><figcaption>This hypothetical node reads events before asking for clarification. Re-executing the read may return a newer snapshot even though it has no external side effect.</figcaption></figure>
+<section id="identity"><h2>A harmless read can still change the answer</h2><p>At 09:20 the deployment feed says release 42 is active. The engineer answers a clarification at 09:24, after a rollback. A replayed read sees release 41. Both observations can be correct, but combining the old question with the new environment silently changes the investigation.</p><p>For Switchboard, choose an incident timestamp and pin source versions where possible. Record whether each tool result is a historical snapshot or a live observation. If a live refresh is necessary, give it a new evidence identity and explain the changed time scope. A cached tool result is useful only when its key includes the scope that makes the result valid.</p>
+<table><thead><tr><th scope="col">Operation</th><th scope="col">Risk on replay</th><th scope="col">Project response</th></tr></thead><tbody><tr><th scope="row">Read versioned runbook</th><td>Latest alias points to new content</td><td>Keep the version actually used</td></tr><tr><th scope="row">Read live metrics</th><td>Window moves forward</td><td>Use explicit interval bounds</td></tr><tr><th scope="row">Append audit event</th><td>Duplicate event</td><td>Stable operation key with uniqueness enforcement</td></tr><tr><th scope="row">Generate text</th><td>Different answer and extra cost</td><td>Retain completed output at the chosen recovery boundary</td></tr></tbody></table></section>
+<section id="layout"><h2>Choose a node boundary around a decision</h2><p>One large node is easy to sketch but makes a lot of work share a replay boundary. Smaller nodes expose intermediate states and failure locations, while creating more state to persist and maintain. Splitting every line is usually unhelpful; separate stages whose outputs are useful to recover or inspect.</p><pre><code class="language-text">Illustrative investigation stages
+1. Resolve incident scope -&gt; timestamp, tenant, service
+2. Gather evidence       -&gt; immutable evidence references
+3. Ask clarification     -&gt; resolved user intent
+4. Draft answer          -&gt; claims linked to evidence
+5. Check support         -&gt; answer or abstention</code></pre>
+<p>These are conceptual boundaries, not a complete LangGraph API example. Pin the framework and saver versions before implementing them. Test a crash at each boundary, rather than assuming the diagram establishes persistence guarantees.</p><p>LangGraph distinguishes thread-scoped graph checkpoints from cross-thread stores. For this design, keep investigation progress in its thread and use separate records for reusable data. An in-memory saver is useful for a demonstration but does not survive a process restart. <a href="https://docs.langchain.com/oss/python/langgraph/persistence">Source: persistence systems and storage lifetime.</a></p></section>
+<section id="apply"><h2>Design the replay test</h2><p>Use a fake event source that returns v12 on its first call and v13 on its second. Pause the graph after retrieval, restart the worker, and resume. Inspect which evidence version is in the final answer and how many calls were made. Neither outcome is automatically correct: the intended snapshot policy determines the expected result.</p><p>Then move the read before and after the interruption boundary. Explain what changed, and why saving a graph checkpoint does not prove that every external operation happened exactly once.</p></section><footer><a href="../research/checkpoints-and-leases.html">Research: checkpoints and leases</a> · <a href="../quizzes/recovery-drill.html">Try the recovery drill</a> · <a href="../references/glossary.html#checkpoint">Checkpoint vocabulary</a></footer>
+</main>
+</body>
+</html>
