@@ -1,14 +1,14 @@
 # Teach through projects
 
-Learn the ideas behind the code you're building, with an AI coding agent that keeps a project notebook you can return to.
+Learn the ideas behind the code you're building. Your AI coding agent keeps a project notebook you can return to later.
 
 [![Project Teach: lessons, an interactive context lab and a browsable learning notebook](docs/images/title-card.png)](https://bradypp.github.io/project-teach/)
 
-**[Explore the live example →](https://bradypp.github.io/project-teach/)**
+**[Explore the live example](https://bradypp.github.io/project-teach/)**
 
-You can ask an agent to build a RAG pipeline and get working code without understanding why it retrieves the wrong evidence. These skills help you pause at that decision, work through an explanation tied to your project, and try the idea yourself.
+An agent can build a working RAG pipeline while leaving you unsure why it retrieves the wrong evidence. These skills let you pause at that decision, work through an explanation tied to your project, and try the idea yourself.
 
-The agent saves substantial lessons as readable HTML pages, connects related topics, and creates practice with feedback. It keeps track of what's been introduced and what your own reasoning has demonstrated, so the next session has somewhere to start.
+The agent saves substantial lessons as readable HTML pages, connects related topics, and creates practice with feedback. It records what's been introduced and what your own reasoning has demonstrated, giving the next session a useful starting point.
 
 ## Try it
 
@@ -37,11 +37,11 @@ agent with a Go API and LangGraph. I want to understand the
 architecture decisions as I implement them.
 ```
 
-Setup helps define the mission and offers optional teaching preferences. You can also enable teaching during ordinary development; it stays off until you choose it.
+Setup helps you define the mission and choose optional teaching preferences. You can also enable teaching during ordinary development. It stays off until you choose it.
 
 ## See what you'd get
 
-The [Switchboard example](https://bradypp.github.io/project-teach/) follows a fictional incident agent through runtime design, retrieval, context engineering and evals. It uses the same templates shipped with the skills.
+The [Switchboard example](https://bradypp.github.io/project-teach/) follows a fictional incident agent through decisions about runtime design, retrieval, context engineering and evals. It uses the templates that ship with the skills.
 
 | Open an example | What you can do |
 | --- | --- |
@@ -56,7 +56,7 @@ The example is a teaching notebook, not a running incident-agent backend. Resear
 
 ## Use it while you build
 
-Ask for a lesson when a design choice feels fuzzy. Keep coding when you have enough understanding to proceed. Later, ask for a quiz or bring back a debugging experience to work through.
+Ask for a lesson when a design choice feels fuzzy, then keep coding once you understand enough to proceed. Later, you can ask for a quiz or bring back a debugging experience to work through.
 
 ```text
 Use the teach-quiz skill to test whether I can distinguish
@@ -77,11 +77,11 @@ to be scoped by tenant: ...
 | `teach-review` | Revisit understanding and choose useful next practice. |
 | `teach-update` | Reconcile what you've studied or demonstrated with the learning files. |
 
-Use your agent's skill picker or ask for the skill by name. Lessons have follow-up controls; quizzes can copy your current responses for discussion. Copying prepares text to paste into chat. It doesn't send anything or mark a topic as learned.
+Use your agent's skill picker or ask for the skill by name. Lessons include follow-up controls, and quizzes can copy your current responses for discussion. Copying prepares text to paste into chat. It doesn't send anything or mark a topic as learned.
 
 ## A notebook that stays with the project
 
-Everything is stored under `.learning/`: the mission, a short learning-state summary, lessons, quizzes and supporting references. Meaningful insights get selective evidence records. Generating a lesson records that material was introduced; it doesn't count as understanding.
+Everything is stored under `.learning/`: the mission, a short learning-state summary, lessons, quizzes and supporting references. The agent keeps selective evidence records for meaningful insights. Generating a lesson records that the material was introduced; it doesn't count as understanding.
 
 Open `.learning/index.html` to browse by topic or page type, switch themes, or save a page as Markdown. The HTML and Markdown files are yours to edit and track in Git. There's no separate learning account or global progress store.
 
