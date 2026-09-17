@@ -44,6 +44,7 @@ Build enough verified understanding to explain the mechanism, compare relevant a
 
 ## Sources and further reading
 
+- Internal learning artifacts provide context and lineage; they complement rather than replace inspected external evidence. When adapting them, carry forward sources relevant to reused claims and inspect appropriate sources for new, changed or time-sensitive claims.
 - Link important factual claims to the inspected source that supports them, preferably its relevant section. “The docs say” without checking and linking the documentation is insufficient.
 - Provide useful, inspectable further reading in setup orientations and substantive lessons, especially for core topics and fast-moving spaces. Explain what each selected source adds; avoid an unannotated link dump.
 - Distinguish supported facts from project inference and attributed opinion. Preserve relevant version scope and meaningful uncertainty.

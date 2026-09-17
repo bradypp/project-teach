@@ -13,28 +13,28 @@ Help the user understand the project they are planning or building, including th
 - Find related lessons, topics, references and retained research by concept, aliases, titles, tags and links. For a follow-up, read the complete supplied page and relevant linked material.
 - Apply explicit teaching-style overrides when present. Teaching works without a preferences file or completed setup.
 
-## 2. Pass the reuse gate
+## 2. Reuse with judgement
 
-Decide whether teaching or authoring is warranted before doing either:
+Before teaching or authoring, use this heuristic and combine responses where useful:
 
-- **Requested revisit:** Honour an explicit request even when understanding is supported. Reuse and deepen existing material and address only the requested weak point; when that material covers the refresh, link it without new research or authoring.
-- **Understood:** Without an explicit request, when current evidence supports enough understanding for the decision, continue the original work without automatic teaching.
-- **Already covered:** When an existing artifact fits but understanding is unverified, link and use it without repeating its research or creating another artifact.
-- **Needs focus:** For partial coverage or stale consequential claims, preserve the useful material and isolate only the uncovered or outdated part. Extend the current topic synthesis when it owns the explanation; create a linked lesson only for distinct durable scope.
-- **New gap:** When neither evidence nor suitable material covers the need, continue with the full teaching flow.
+- **Reuse directly:** Link current material when it fits both the concept and the present problem.
+- **Adapt or extend:** Build on a sound foundation when the current problem needs different depth, framing, examples, trade-offs or application. Link earlier artifacts for context and lineage, and follow [source guidance](references/research.md#sources-and-further-reading) when reusing their claims.
+- **Author anew:** Create a new explanation when existing material offers no coherent foundation or adapting it would distort its original purpose.
+- Honour explicit requests to revisit or deepen material. Without one, continue the original work when current evidence supports enough understanding for the decision.
+- Keep small clarifications inline. Create or update a lesson or topic when a durable project-grounded explanation would help.
 
-Leave the gate with one unresolved learning gap, or return to the original work with the useful existing link.
+Continue with the teaching needs that merit attention, or return to the original work with useful existing links.
 
 ## 3. Select prerequisites and depth
 
-- Follow an explicit topic within the unresolved gap. Otherwise map prerequisites across the active plan/spec: teach upcoming concepts broadly and go deeply into what is needed next.
+- Follow explicit topics within the selected teaching needs. Otherwise map prerequisites across the active plan/spec: teach upcoming concepts broadly and go deeply into what is needed next.
 - Apply [teaching guidance](references/teaching.md) for depth, lesson design and practice. Supply missing prerequisites for the current decision, even when they form a substantial topic.
 - Retain later prerequisites as deferred topics with a reason and revisit condition. Keep valuable unknown unknowns as opportunities, without creating a compulsory curriculum.
 - If context provides no useful topic, ask what work to explore.
 
-## 4. Research and ground the gap
+## 4. Research and ground the needs
 
-- For substantive teaching, follow [research guidance](references/research.md) to decide whether existing research satisfies readiness and what remains to investigate.
+- For substantive teaching, follow [research guidance](references/research.md) to decide which selected needs existing research satisfies and what remains to investigate.
 
 ## 5. Teach and apply
 
