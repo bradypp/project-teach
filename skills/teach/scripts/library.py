@@ -10,6 +10,10 @@ import shutil
 from urllib.parse import quote
 
 ASSETS = Path(__file__).resolve().parent.parent / 'assets'
+THEME_ORDER = ('parchment', 'ocean', 'forest', 'plum', 'graphite')
+THEME_ALIASES = {'warm': 'parchment', 'blue': 'ocean'}
+THEMES = {name: ASSETS / 'themes' / f'{name}.css' for name in THEME_ORDER}
+THEME_MARKER = re.compile(r'\A/\* teach:theme:([a-z0-9-]+) \*/$')
 KINDS = {'lesson': 'lessons', 'quiz': 'quizzes', 'reference': 'references', 'glossary': 'references', 'resource': 'references', 'topic': 'topics', 'research': 'research'}
 
 SECTION_LABELS = {'lessons': 'Lessons', 'topics': 'Topics', 'quizzes': 'Quizzes', 'references': 'Reference', 'research': 'Research'}
@@ -33,7 +37,97 @@ def copy_assets(root):
             destination.parent.mkdir(parents=True, exist_ok=True)
             if not destination.exists():
                 shutil.copyfile(source, destination)
+    theme = target / 'theme.css'
+    if not theme.exists():
+        theme.write_text(compiled_theme('parchment'), encoding='utf-8')
+    else:
+        existing = theme.read_text(encoding='utf-8')
+        marker = theme_marker(existing)
+        if marker in (*THEME_ORDER, *THEME_ALIASES):
+            selected = canonical_theme(marker)
+            generated = compiled_theme(selected)
+            if existing != generated:
+                theme.write_text(generated, encoding='utf-8')
     return root
+
+
+def canonical_theme(name):
+    return THEME_ALIASES.get(name, name)
+
+
+def theme_marker(content):
+    marker = THEME_MARKER.match(content.splitlines()[0] if content else '')
+    return marker.group(1) if marker else None
+
+
+def compiled_theme(name):
+    name = canonical_theme(name)
+    if name not in THEMES:
+        choices = ', '.join(THEME_ORDER)
+        raise ValueError(f'Unknown theme {name!r}; choose one of: {choices}.')
+    sections = [
+        f'/* teach:theme:{name} */',
+        '/* Generated theme bundle. Change the project default through library.py. */',
+        f':root {{ --teach-default-palette: {name}; }}',
+    ]
+    for palette in THEME_ORDER:
+        source = THEMES[palette].read_text(encoding='utf-8').rstrip()
+        if palette == name:
+            selector = f':root[data-palette="{palette}"]'
+            source = source.replace(
+                selector + ' {',
+                f':root:not([data-palette]),\n{selector} {{',
+                1,
+            )
+            dark_selector = selector + '[data-theme="dark"]'
+            source = source.replace(
+                dark_selector + ' {',
+                f':root:not([data-palette])[data-theme="dark"],\n{dark_selector} {{',
+                1,
+            )
+        sections.append(source)
+    return '\n\n'.join(sections) + '\n'
+
+
+def add_theme_link(page):
+    content = page.read_text(encoding='utf-8')
+    if 'data-teach-theme' in content or re.search(r'href=["\'][^"\']*assets/theme\.css["\']', content):
+        return False
+    lines = content.splitlines(keepends=True)
+    for index, line in enumerate(lines):
+        if '<link' not in line or 'stylesheet' not in line or 'assets/index.css' not in line:
+            continue
+        match = re.search(r'href=(["\'])([^"\']*assets/index\.css)\1', line)
+        if not match:
+            continue
+        indent = line[:len(line) - len(line.lstrip())]
+        href = match.group(2).replace('index.css', 'theme.css')
+        newline = '\r\n' if line.endswith('\r\n') else '\n'
+        lines.insert(index + 1, f'{indent}<link rel="stylesheet" href="{href}" data-teach-theme />{newline}')
+        page.write_text(''.join(lines), encoding='utf-8')
+        return True
+    return False
+
+
+def set_theme(root, name):
+    name = canonical_theme(name)
+    if name not in THEMES:
+        raise ValueError(f'Unknown theme {name!r}; choose one of: {", ".join(THEME_ORDER)}.')
+    root = Path(root)
+    destination = root / 'assets/theme.css'
+    if destination.exists():
+        existing = destination.read_text(encoding='utf-8')
+        marker = theme_marker(existing)
+        if marker not in (*THEME_ORDER, *THEME_ALIASES):
+            raise FileExistsError(f'Custom theme preserved: {destination}')
+    root = copy_assets(root)
+    existing = destination.read_text(encoding='utf-8')
+    selected = compiled_theme(name)
+    if existing != selected:
+        destination.write_text(selected, encoding='utf-8')
+    for page in root.rglob('*.html'):
+        add_theme_link(page)
+    return destination
 
 
 def init(root):
@@ -135,6 +229,9 @@ def main():
     sub = parser.add_subparsers(dest='command', required=True)
     for command in ('init', 'index'):
         sub.add_parser(command).add_argument('root', type=Path)
+    theme = sub.add_parser('theme')
+    theme.add_argument('root', type=Path)
+    theme.add_argument('name', choices=sorted((*THEME_ORDER, *THEME_ALIASES)))
     create = sub.add_parser('new')
     create.add_argument('root', type=Path)
     create.add_argument('kind', choices=KINDS)
@@ -144,6 +241,7 @@ def main():
     args = parser.parse_args()
     try:
         if args.command == 'new': result = new(args.root, args.kind, args.slug, args.title, args.tags)
+        elif args.command == 'theme': result = set_theme(args.root, args.name)
         elif args.command == 'init': result = init(args.root)
         else: result = index(args.root)
     except (ValueError, OSError) as error:

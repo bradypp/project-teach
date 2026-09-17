@@ -20,9 +20,67 @@ class LibraryTests(unittest.TestCase):
         content = page.read_text()
         self.assertIn('&lt;Queues&gt; &amp; &quot;buffers&quot;', content)
         self.assertIn('href="../index.html"', content)
+        self.assertIn('href="../assets/theme.css" data-teach-theme', content)
         self.assertTrue((page.parent / '../assets/index.js').resolve().is_file())
+        theme = (self.root / 'assets/theme.css').read_text()
+        self.assertTrue(theme.startswith('/* teach:theme:parchment */'))
+        self.assertIn('--teach-default-palette: parchment;', theme)
+        self.assertIn(':root:not([data-palette])[data-theme="dark"]', theme)
+        for palette in library.THEME_ORDER:
+            self.assertIn(f':root[data-palette="{palette}"]', theme)
         self.assertIn('href="lessons/queues.html"', (self.root / 'index.html').read_text())
         self.assertNotIn('<Queues>', (self.root / 'index.html').read_text())
+
+    def test_theme_can_be_selected_before_pages_and_switched_globally(self):
+        theme = library.set_theme(self.root, 'ocean')
+        self.assertEqual(theme, self.root / 'assets/theme.css')
+        self.assertIn('--paper: #0d1117;', theme.read_text())
+        self.assertIn('--paper-deep: #0b0f14;', theme.read_text())
+
+        first = library.new(self.root, 'lesson', 'queues', 'Queues')
+        legacy = self.root / 'references/legacy.html'
+        legacy.parent.mkdir(parents=True)
+        legacy.write_text('<head>\n  <link rel="stylesheet" href="../assets/index.css" />\n</head>\n<p>Authored</p>')
+        library.set_theme(self.root, 'ocean')
+        library.set_theme(self.root, 'ocean')
+
+        self.assertEqual(first.read_text().count('data-teach-theme'), 1)
+        self.assertEqual(legacy.read_text().count('data-teach-theme'), 1)
+        self.assertIn('<p>Authored</p>', legacy.read_text())
+        self.assertEqual((self.root / 'index.html').read_text().count('data-teach-theme'), 1)
+        self.assertTrue(theme.read_text().startswith('/* teach:theme:ocean */'))
+        self.assertIn('--teach-default-palette: ocean;', theme.read_text())
+
+        second = library.new(self.root, 'quiz', 'practice', 'Practice')
+        self.assertIn('data-teach-theme', second.read_text())
+        self.assertTrue(theme.read_text().startswith('/* teach:theme:ocean */'))
+
+        for palette in library.THEME_ORDER:
+            library.set_theme(self.root, palette)
+            self.assertTrue(theme.read_text().startswith(f'/* teach:theme:{palette} */'))
+            self.assertIn(f'--teach-default-palette: {palette};', theme.read_text())
+
+    def test_legacy_names_and_markers_migrate_to_canonical_palettes(self):
+        theme = library.set_theme(self.root, 'blue')
+        self.assertTrue(theme.read_text().startswith('/* teach:theme:ocean */'))
+        library.set_theme(self.root, 'warm')
+        self.assertTrue(theme.read_text().startswith('/* teach:theme:parchment */'))
+
+        theme.write_text('/* teach:theme:blue */\n:root { --paper: old; }\n')
+        library.init(self.root)
+        migrated = theme.read_text()
+        self.assertTrue(migrated.startswith('/* teach:theme:ocean */'))
+        self.assertIn('--teach-default-palette: ocean;', migrated)
+        self.assertIn(':root[data-palette="graphite"]', migrated)
+
+    def test_unmarked_custom_theme_is_preserved(self):
+        assets = self.root / 'assets'
+        assets.mkdir(parents=True)
+        theme = assets / 'theme.css'
+        theme.write_text(':root { --paper: rebeccapurple; }')
+        with self.assertRaises(FileExistsError):
+            library.set_theme(self.root, 'ocean')
+        self.assertEqual(theme.read_text(), ':root { --paper: rebeccapurple; }')
 
     def test_initialization_preserves_authored_assets_and_pages(self):
         page = library.new(self.root, 'lesson', 'queues', 'Queues')
@@ -51,7 +109,7 @@ class LibraryTests(unittest.TestCase):
         self.assertEqual(page, self.root / 'references/glossary.html')
         content = page.read_text()
         self.assertIn('aria-label="Terms"', content)
-        for asset in ('index.css', 'theme.js', 'index.js', 'vendor/turndown.js'):
+        for asset in ('index.css', 'theme.css', 'theme.js', 'index.js', 'vendor/turndown.js'):
             self.assertIn('../assets/' + asset, content)
             self.assertTrue((self.root / 'assets' / asset).is_file())
         index = (self.root / 'index.html').read_text()
@@ -139,6 +197,7 @@ class LibraryTests(unittest.TestCase):
         page = library.index(self.root)
         self.assertTrue(page.is_file())
         self.assertTrue((self.root / 'assets/index.css').is_file())
+        self.assertTrue((self.root / 'assets/theme.css').is_file())
         self.assertIn('Nothing here yet.', page.read_text())
 
 if __name__ == '__main__': unittest.main()

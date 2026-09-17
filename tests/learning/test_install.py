@@ -23,6 +23,8 @@ class InstallTests(unittest.TestCase):
             self.assertEqual(integration_text.count('<!-- teach:execution:inline -->'), 1)
             self.assertEqual(integration_text.count('<!-- teach:execution:background -->'), 1)
             self.assertTrue((destination / 'teach/assets/templates/lesson.html').is_file())
+            for palette in ('parchment', 'ocean', 'forest', 'plum', 'graphite'):
+                self.assertTrue((destination / f'teach/assets/themes/{palette}.css').is_file())
             self.assertTrue((destination / 'teach/references/templates/PREFERENCES.md').is_file())
             wrapper = destination / 'teach/references/templates/wrapper.md'
             self.assertTrue(wrapper.is_file())

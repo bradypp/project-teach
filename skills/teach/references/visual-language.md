@@ -1,6 +1,6 @@
 # Artifact visual language
 
-Read when authoring learning HTML or changing shared assets. This file owns page composition, component usage and theme-token guidance. [Artifact guidance](artifacts.md) owns creation, export and delivery; [Mermaid guidance](mermaid.md) owns diagram syntax and troubleshooting. `assets/index.css` remains the implementation source for literal token values.
+Read when authoring learning HTML or changing shared assets. This file owns page composition, component usage and theme-token guidance. [Artifact guidance](artifacts.md) owns creation, export and delivery; [Mermaid guidance](mermaid.md) owns diagram syntax and troubleshooting. Maintained literal values live in `assets/themes/`; the helper compiles them into the project's generated `assets/theme.css` and marks its default palette.
 
 ## Compose a personal notebook
 
@@ -42,7 +42,7 @@ Choose the element by meaning. A central takeaway can be a paragraph; genuinely 
 
 ## Theme tokens
 
-Use the semantic custom properties already defined in `assets/index.css`:
+Use the semantic custom properties supplied by the selected `assets/theme.css`:
 
 - Text: `--ink`, `--ink-soft`, `--muted`, `--muted-strong`
 - Canvas and surfaces: `--paper`, `--paper-deep`, `--surface`, `--surface-raised`, `--surface-soft`, `--surface-accent`
@@ -50,7 +50,7 @@ Use the semantic custom properties already defined in `assets/index.css`:
 - Structure: `--line`, `--line-strong`, the `--shadow-*` tokens and the `--radius-*` scale
 - Specialised visuals: the `--code-*` and `--chart-*` groups
 
-Shared tokens supply both light and dark values. Add a semantic token when a recurring meaning is missing; keep one-off layout rules near their custom component and avoid inline colour values.
+Parchment, Ocean, Forest, Plum and Graphite each supply complete light and dark values. Add a semantic token to every palette source when a recurring meaning is missing; keep one-off layout rules near their custom component and avoid inline colour values. Keep structure in `assets/index.css` and palette values in the theme sources.
 
 ## Extend deliberately
 
@@ -59,4 +59,4 @@ Shared tokens supply both light and dark values. Add a semantic token when a rec
 - Add shared CSS or JavaScript when the same visual meaning or behaviour recurs across pages. Preserve existing pages and synchronise maintained examples after shared asset changes.
 - Give custom SVG, canvas or simulators accessible text and the export fallback described in [artifact guidance](artifacts.md#markdown-export).
 
-After introducing a component or changing shared presentation, check light and dark themes, a narrow viewport, keyboard-visible states and Markdown export. Routine use of an established primitive follows the quick checks in [artifact guidance](artifacts.md#maintain-and-verify).
+After introducing a component or changing shared presentation, check all affected palettes in light and dark appearance, a narrow viewport, keyboard-visible states and Markdown export. Routine use of an established primitive follows the quick checks in [artifact guidance](artifacts.md#maintain-and-verify).

@@ -1,0 +1,532 @@
+/* teach:theme:parchment */
+
+/* Generated theme bundle. Change the project default through library.py. */
+
+:root { --teach-default-palette: parchment; }
+
+/* teach:palette:parchment */
+/* Warm paper and terracotta, retained from the original notebook palette. */
+:root:not([data-palette]),
+:root[data-palette="parchment"] {
+  color-scheme: light;
+  --ink: #29231f;
+  --ink-soft: #413934;
+  --muted: #756a61;
+  --muted-strong: #5e544c;
+  --paper: #eee8de;
+  --paper-deep: #e3dacd;
+  --surface: #fffdf8;
+  --surface-raised: #ffffff;
+  --surface-soft: #f7f1e8;
+  --surface-accent: #f7e5dc;
+  --soft: var(--surface-soft);
+  --line: #ded3c5;
+  --line-strong: #cfc1b0;
+  --accent: #9f452f;
+  --accent-hover: #823624;
+  --accent-soft: #efc7b7;
+  --secondary: #315f61;
+  --button-ink: #fffaf5;
+  --focus: #c45b36;
+  --success: #2f6b4f;
+  --danger: #9b3b32;
+  --code-bg: #262321;
+  --code-surface: #302c29;
+  --code-ink: #f6efe7;
+  --code-muted: #aaa097;
+  --code-keyword: #f3a7c7;
+  --code-string: #d8ca83;
+  --code-number: #f0a47c;
+  --code-function: #9dc7e8;
+  --code-shadow:
+    0 0 0 1px oklch(0 0 0 / 0.18),
+    0 10px 28px -18px oklch(0 0 0 / 0.7);
+  --code-tools-line: oklch(1 0 0 / 0.08);
+  --code-control-bg: oklch(1 0 0 / 0.06);
+  --code-control-border: oklch(1 0 0 / 0.09);
+  --code-control-hover-bg: oklch(1 0 0 / 0.1);
+  --code-control-hover-border: oklch(1 0 0 / 0.16);
+  --code-control-hover-ink: #ffffff;
+  --chart-1: #a34b34;
+  --chart-2: #376d70;
+  --chart-3: #9a712c;
+  --chart-4: #7660a0;
+  --chart-5: #4f7654;
+  --image-outline: oklch(0 0 0 / 0.1);
+  --shadow-border:
+    0 0 0 1px oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06),
+    0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0 0 0 1px oklch(0 0 0 / 0.08), 0 1px 2px -1px oklch(0 0 0 / 0.08),
+    0 4px 10px -2px oklch(0 0 0 / 0.08);
+  --shadow-paper:
+    0 0 0 1px oklch(0 0 0 / 0.035), 0 3px 8px -4px oklch(0 0 0 / 0.12),
+    0 22px 70px -34px oklch(0 0 0 / 0.26);
+}
+
+:root:not([data-palette])[data-theme="dark"],
+:root[data-palette="parchment"][data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #f3ece3;
+  --ink-soft: #ddd3c9;
+  --muted: #b8ada2;
+  --muted-strong: #ccc0b5;
+  --paper: #171614;
+  --paper-deep: #11110f;
+  --surface: #211f1c;
+  --surface-raised: #292622;
+  --surface-soft: #2b2824;
+  --surface-accent: #3a2923;
+  --line: #413b35;
+  --line-strong: #554c44;
+  --accent: #efa07e;
+  --accent-hover: #ffc0a2;
+  --accent-soft: #6b3d2f;
+  --secondary: #8fc4c3;
+  --button-ink: #281711;
+  --focus: #ffc09a;
+  --success: #8dc8a3;
+  --danger: #f29a91;
+  --code-bg: #11110f;
+  --code-surface: #1b1a18;
+  --code-ink: #f2ebe3;
+  --code-muted: #a99f96;
+  --code-keyword: #f0a6c8;
+  --code-string: #d9c77f;
+  --code-number: #f0a17b;
+  --code-function: #9dc9eb;
+  --code-shadow:
+    0 0 0 1px oklch(1 0 0 / 0.09),
+    0 12px 30px -18px oklch(0 0 0 / 0.85);
+  --chart-1: #efa07e;
+  --chart-2: #8fc4c3;
+  --chart-3: #e1bd70;
+  --chart-4: #bdace3;
+  --chart-5: #9bc4a0;
+  --image-outline: oklch(1 0 0 / 0.1);
+  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
+  --shadow-paper:
+    0 0 0 1px oklch(1 0 0 / 0.06),
+    0 24px 80px -36px oklch(0 0 0 / 0.9);
+}
+
+/* teach:palette:ocean */
+/* Cool-neutral blue with the original deep navy dark canvas. */
+:root[data-palette="ocean"] {
+  color-scheme: light;
+  --ink: #1f2328;
+  --ink-soft: #343b43;
+  --muted: #656d76;
+  --muted-strong: #4b5563;
+  --paper: #f6f8fa;
+  --paper-deep: #eaeff5;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-soft: #eff3f7;
+  --surface-accent: #eaf2ff;
+  --soft: var(--surface-soft);
+  --line: #d0d7de;
+  --line-strong: #8c959f;
+  --accent: #0969da;
+  --accent-hover: #0550ae;
+  --accent-soft: #b6d7fe;
+  --secondary: #176b87;
+  --button-ink: #ffffff;
+  --focus: #0969da;
+  --success: #1a7f37;
+  --danger: #cf222e;
+  --code-bg: #0b0f14;
+  --code-surface: #161b22;
+  --code-ink: #f0f6fc;
+  --code-muted: #c9d1d9;
+  --code-keyword: #ffa198;
+  --code-string: #a5d6ff;
+  --code-number: #79c0ff;
+  --code-function: #d2a8ff;
+  --code-shadow:
+    0 0 0 1px oklch(0 0 0 / 0.2),
+    0 10px 28px -18px oklch(0 0 0 / 0.72);
+  --code-tools-line: oklch(1 0 0 / 0.08);
+  --code-control-bg: oklch(1 0 0 / 0.06);
+  --code-control-border: oklch(1 0 0 / 0.09);
+  --code-control-hover-bg: oklch(1 0 0 / 0.1);
+  --code-control-hover-border: oklch(1 0 0 / 0.16);
+  --code-control-hover-ink: #ffffff;
+  --chart-1: #0969da;
+  --chart-2: #176b87;
+  --chart-3: #9a6700;
+  --chart-4: #8250df;
+  --chart-5: #1a7f37;
+  --image-outline: oklch(0 0 0 / 0.1);
+  --shadow-border:
+    0 0 0 1px oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06),
+    0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0 0 0 1px oklch(0 0 0 / 0.08), 0 1px 2px -1px oklch(0 0 0 / 0.08),
+    0 4px 10px -2px oklch(0 0 0 / 0.08);
+  --shadow-paper:
+    0 0 0 1px oklch(0 0 0 / 0.035), 0 3px 8px -4px oklch(0 0 0 / 0.12),
+    0 22px 70px -34px oklch(0 0 0 / 0.26);
+}
+
+:root[data-palette="ocean"][data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #f0f6fc;
+  --ink-soft: #d8dee4;
+  --muted: #c9d1d9;
+  --muted-strong: #d0d7de;
+  --paper: #0d1117;
+  --paper-deep: #0b0f14;
+  --surface: #161b22;
+  --surface-raised: #1c2128;
+  --surface-soft: #21262d;
+  --surface-accent: #172f4f;
+  --line: #30363d;
+  --line-strong: #6e7781;
+  --accent: #79c0ff;
+  --accent-hover: #a5d6ff;
+  --accent-soft: #1f3a5f;
+  --secondary: #76c7c0;
+  --button-ink: #0d1117;
+  --focus: #a5d6ff;
+  --success: #7ee787;
+  --danger: #ffa198;
+  --code-bg: #0b0f14;
+  --code-surface: #161b22;
+  --code-ink: #f0f6fc;
+  --code-muted: #c9d1d9;
+  --code-keyword: #ffa198;
+  --code-string: #a5d6ff;
+  --code-number: #79c0ff;
+  --code-function: #d2a8ff;
+  --code-shadow:
+    0 0 0 1px oklch(1 0 0 / 0.09),
+    0 12px 30px -18px oklch(0 0 0 / 0.88);
+  --chart-1: #79c0ff;
+  --chart-2: #76c7c0;
+  --chart-3: #f2cc60;
+  --chart-4: #d2a8ff;
+  --chart-5: #7ee787;
+  --image-outline: oklch(1 0 0 / 0.1);
+  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
+  --shadow-paper:
+    0 0 0 1px oklch(1 0 0 / 0.06),
+    0 24px 80px -36px oklch(0 0 0 / 0.92);
+}
+
+/* teach:palette:forest */
+/* Sage paper, evergreen actions, and a cool-green dark canvas. */
+:root[data-palette="forest"] {
+  color-scheme: light;
+  --ink: #1f2923;
+  --ink-soft: #34443a;
+  --muted: #5c6b61;
+  --muted-strong: #46564c;
+  --paper: #f4f7f2;
+  --paper-deep: #e7eee4;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-soft: #edf3ea;
+  --surface-accent: #e3f2e1;
+  --soft: var(--surface-soft);
+  --line: #cbd8c7;
+  --line-strong: #82927f;
+  --accent: #247a43;
+  --accent-hover: #195c31;
+  --accent-soft: #aed7b6;
+  --secondary: #2e6f6a;
+  --button-ink: #ffffff;
+  --focus: #247a43;
+  --success: #1e7040;
+  --danger: #b83243;
+  --code-bg: #0b110d;
+  --code-surface: #172019;
+  --code-ink: #eef7f0;
+  --code-muted: #b9c8bd;
+  --code-keyword: #ff9c9c;
+  --code-string: #9be7b6;
+  --code-number: #f2cc60;
+  --code-function: #8fc7ff;
+  --code-shadow:
+    0 0 0 1px oklch(0 0 0 / 0.2),
+    0 10px 28px -18px oklch(0 0 0 / 0.72);
+  --code-tools-line: oklch(1 0 0 / 0.08);
+  --code-control-bg: oklch(1 0 0 / 0.06);
+  --code-control-border: oklch(1 0 0 / 0.09);
+  --code-control-hover-bg: oklch(1 0 0 / 0.1);
+  --code-control-hover-border: oklch(1 0 0 / 0.16);
+  --code-control-hover-ink: #ffffff;
+  --chart-1: #247a43;
+  --chart-2: #2e6f6a;
+  --chart-3: #8a6500;
+  --chart-4: #7652a8;
+  --chart-5: #a53f50;
+  --image-outline: oklch(0 0 0 / 0.1);
+  --shadow-border:
+    0 0 0 1px oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06),
+    0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0 0 0 1px oklch(0 0 0 / 0.08), 0 1px 2px -1px oklch(0 0 0 / 0.08),
+    0 4px 10px -2px oklch(0 0 0 / 0.08);
+  --shadow-paper:
+    0 0 0 1px oklch(0 0 0 / 0.035), 0 3px 8px -4px oklch(0 0 0 / 0.12),
+    0 22px 70px -34px oklch(0 0 0 / 0.26);
+}
+
+:root[data-palette="forest"][data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #eef7f0;
+  --ink-soft: #d5e2d8;
+  --muted: #b9c8bd;
+  --muted-strong: #c9d7cc;
+  --paper: #0f1712;
+  --paper-deep: #0b110d;
+  --surface: #172019;
+  --surface-raised: #1d2920;
+  --surface-soft: #233027;
+  --surface-accent: #173a25;
+  --line: #2f4435;
+  --line-strong: #6f8575;
+  --accent: #73d99a;
+  --accent-hover: #9be7b6;
+  --accent-soft: #1d5233;
+  --secondary: #79cbc1;
+  --button-ink: #0f1712;
+  --focus: #9be7b6;
+  --success: #7ee2a8;
+  --danger: #ff9c9c;
+  --code-bg: #0b110d;
+  --code-surface: #172019;
+  --code-ink: #eef7f0;
+  --code-muted: #b9c8bd;
+  --code-keyword: #ff9c9c;
+  --code-string: #9be7b6;
+  --code-number: #f2cc60;
+  --code-function: #8fc7ff;
+  --code-shadow:
+    0 0 0 1px oklch(1 0 0 / 0.09),
+    0 12px 30px -18px oklch(0 0 0 / 0.88);
+  --chart-1: #73d99a;
+  --chart-2: #79cbc1;
+  --chart-3: #f2cc60;
+  --chart-4: #c6a6f2;
+  --chart-5: #ff9c9c;
+  --image-outline: oklch(1 0 0 / 0.1);
+  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
+  --shadow-paper:
+    0 0 0 1px oklch(1 0 0 / 0.06),
+    0 24px 80px -36px oklch(0 0 0 / 0.92);
+}
+
+/* teach:palette:plum */
+/* Lilac paper, plum actions, and an aubergine dark canvas. */
+:root[data-palette="plum"] {
+  color-scheme: light;
+  --ink: #27222b;
+  --ink-soft: #413a47;
+  --muted: #6b6172;
+  --muted-strong: #574d5f;
+  --paper: #f8f6fa;
+  --paper-deep: #eee9f2;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-soft: #f3eff6;
+  --surface-accent: #f3e9fa;
+  --soft: var(--surface-soft);
+  --line: #d9d0de;
+  --line-strong: #978a9f;
+  --accent: #7b3fb2;
+  --accent-hover: #612a91;
+  --accent-soft: #dcc2f0;
+  --secondary: #9b3f65;
+  --button-ink: #ffffff;
+  --focus: #7b3fb2;
+  --success: #26734d;
+  --danger: #b83243;
+  --code-bg: #100c13;
+  --code-surface: #1e1822;
+  --code-ink: #f7effa;
+  --code-muted: #c9bacf;
+  --code-keyword: #ffa3ad;
+  --code-string: #a9dc76;
+  --code-number: #f2cc60;
+  --code-function: #d2a8ff;
+  --code-shadow:
+    0 0 0 1px oklch(0 0 0 / 0.2),
+    0 10px 28px -18px oklch(0 0 0 / 0.72);
+  --code-tools-line: oklch(1 0 0 / 0.08);
+  --code-control-bg: oklch(1 0 0 / 0.06);
+  --code-control-border: oklch(1 0 0 / 0.09);
+  --code-control-hover-bg: oklch(1 0 0 / 0.1);
+  --code-control-hover-border: oklch(1 0 0 / 0.16);
+  --code-control-hover-ink: #ffffff;
+  --chart-1: #7b3fb2;
+  --chart-2: #9b3f65;
+  --chart-3: #8a6500;
+  --chart-4: #2e6f8f;
+  --chart-5: #26734d;
+  --image-outline: oklch(0 0 0 / 0.1);
+  --shadow-border:
+    0 0 0 1px oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06),
+    0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0 0 0 1px oklch(0 0 0 / 0.08), 0 1px 2px -1px oklch(0 0 0 / 0.08),
+    0 4px 10px -2px oklch(0 0 0 / 0.08);
+  --shadow-paper:
+    0 0 0 1px oklch(0 0 0 / 0.035), 0 3px 8px -4px oklch(0 0 0 / 0.12),
+    0 22px 70px -34px oklch(0 0 0 / 0.26);
+}
+
+:root[data-palette="plum"][data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #f7effa;
+  --ink-soft: #e1d5e6;
+  --muted: #c9bacf;
+  --muted-strong: #d8c9de;
+  --paper: #151118;
+  --paper-deep: #100c13;
+  --surface: #1e1822;
+  --surface-raised: #261e2b;
+  --surface-soft: #2d2332;
+  --surface-accent: #3c2352;
+  --line: #45364c;
+  --line-strong: #806c89;
+  --accent: #d2a8ff;
+  --accent-hover: #e4c7ff;
+  --accent-soft: #51336a;
+  --secondary: #f0a1c0;
+  --button-ink: #151118;
+  --focus: #e4c7ff;
+  --success: #82d9a8;
+  --danger: #ffa3ad;
+  --code-bg: #100c13;
+  --code-surface: #1e1822;
+  --code-ink: #f7effa;
+  --code-muted: #c9bacf;
+  --code-keyword: #ffa3ad;
+  --code-string: #a9dc76;
+  --code-number: #f2cc60;
+  --code-function: #d2a8ff;
+  --code-shadow:
+    0 0 0 1px oklch(1 0 0 / 0.09),
+    0 12px 30px -18px oklch(0 0 0 / 0.88);
+  --chart-1: #d2a8ff;
+  --chart-2: #f0a1c0;
+  --chart-3: #f2cc60;
+  --chart-4: #8fc7ff;
+  --chart-5: #82d9a8;
+  --image-outline: oklch(1 0 0 / 0.1);
+  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
+  --shadow-paper:
+    0 0 0 1px oklch(1 0 0 / 0.06),
+    0 24px 80px -36px oklch(0 0 0 / 0.92);
+}
+
+/* teach:palette:graphite */
+/* Low-chroma neutral paper with restrained slate interaction colors. */
+:root[data-palette="graphite"] {
+  color-scheme: light;
+  --ink: #222322;
+  --ink-soft: #3e403f;
+  --muted: #626865;
+  --muted-strong: #505452;
+  --paper: #f6f6f5;
+  --paper-deep: #eaeae8;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-soft: #efefee;
+  --surface-accent: #e8edf2;
+  --soft: var(--surface-soft);
+  --line: #d3d5d3;
+  --line-strong: #858c88;
+  --accent: #3f5f73;
+  --accent-hover: #2f4858;
+  --accent-soft: #c7d6df;
+  --secondary: #6e5b7b;
+  --button-ink: #ffffff;
+  --focus: #3f5f73;
+  --success: #2f754c;
+  --danger: #b53f46;
+  --code-bg: #0c0e0d;
+  --code-surface: #1a1d1b;
+  --code-ink: #f1f3f2;
+  --code-muted: #c2c8c4;
+  --code-keyword: #ff9ea5;
+  --code-string: #a9dc76;
+  --code-number: #e8c66a;
+  --code-function: #8eb8cf;
+  --code-shadow:
+    0 0 0 1px oklch(0 0 0 / 0.2),
+    0 10px 28px -18px oklch(0 0 0 / 0.72);
+  --code-tools-line: oklch(1 0 0 / 0.08);
+  --code-control-bg: oklch(1 0 0 / 0.06);
+  --code-control-border: oklch(1 0 0 / 0.09);
+  --code-control-hover-bg: oklch(1 0 0 / 0.1);
+  --code-control-hover-border: oklch(1 0 0 / 0.16);
+  --code-control-hover-ink: #ffffff;
+  --chart-1: #3f5f73;
+  --chart-2: #6e5b7b;
+  --chart-3: #806300;
+  --chart-4: #2f6f69;
+  --chart-5: #8f4650;
+  --image-outline: oklch(0 0 0 / 0.1);
+  --shadow-border:
+    0 0 0 1px oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06),
+    0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0 0 0 1px oklch(0 0 0 / 0.08), 0 1px 2px -1px oklch(0 0 0 / 0.08),
+    0 4px 10px -2px oklch(0 0 0 / 0.08);
+  --shadow-paper:
+    0 0 0 1px oklch(0 0 0 / 0.035), 0 3px 8px -4px oklch(0 0 0 / 0.12),
+    0 22px 70px -34px oklch(0 0 0 / 0.26);
+}
+
+:root[data-palette="graphite"][data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #f1f3f2;
+  --ink-soft: #d7dbd8;
+  --muted: #c2c8c4;
+  --muted-strong: #cfd4d1;
+  --paper: #111312;
+  --paper-deep: #0c0e0d;
+  --surface: #121413;
+  --surface-raised: #212522;
+  --surface-soft: #292e2b;
+  --surface-accent: #24343d;
+  --line: #363c38;
+  --line-strong: #747d78;
+  --accent: #8eb8cf;
+  --accent-hover: #b0d0e1;
+  --accent-soft: #314c5a;
+  --secondary: #c3a7d1;
+  --button-ink: #111312;
+  --focus: #b0d0e1;
+  --success: #83d6a4;
+  --danger: #ff9ea5;
+  --code-bg: #0c0e0d;
+  --code-surface: #1a1d1b;
+  --code-ink: #f1f3f2;
+  --code-muted: #c2c8c4;
+  --code-keyword: #ff9ea5;
+  --code-string: #a9dc76;
+  --code-number: #e8c66a;
+  --code-function: #8eb8cf;
+  --code-shadow:
+    0 0 0 1px oklch(1 0 0 / 0.09),
+    0 12px 30px -18px oklch(0 0 0 / 0.88);
+  --chart-1: #8eb8cf;
+  --chart-2: #c3a7d1;
+  --chart-3: #e8c66a;
+  --chart-4: #79c9c0;
+  --chart-5: #ff9ea5;
+  --image-outline: oklch(1 0 0 / 0.1);
+  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
+  --shadow-paper:
+    0 0 0 1px oklch(1 0 0 / 0.06),
+    0 24px 80px -36px oklch(0 0 0 / 0.92);
+}

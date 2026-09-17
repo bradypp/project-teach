@@ -1,0 +1,104 @@
+/* teach:palette:forest */
+/* Sage paper, evergreen actions, and a cool-green dark canvas. */
+:root[data-palette="forest"] {
+  color-scheme: light;
+  --ink: #1f2923;
+  --ink-soft: #34443a;
+  --muted: #5c6b61;
+  --muted-strong: #46564c;
+  --paper: #f4f7f2;
+  --paper-deep: #e7eee4;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-soft: #edf3ea;
+  --surface-accent: #e3f2e1;
+  --soft: var(--surface-soft);
+  --line: #cbd8c7;
+  --line-strong: #82927f;
+  --accent: #247a43;
+  --accent-hover: #195c31;
+  --accent-soft: #aed7b6;
+  --secondary: #2e6f6a;
+  --button-ink: #ffffff;
+  --focus: #247a43;
+  --success: #1e7040;
+  --danger: #b83243;
+  --code-bg: #0b110d;
+  --code-surface: #172019;
+  --code-ink: #eef7f0;
+  --code-muted: #b9c8bd;
+  --code-keyword: #ff9c9c;
+  --code-string: #9be7b6;
+  --code-number: #f2cc60;
+  --code-function: #8fc7ff;
+  --code-shadow:
+    0 0 0 1px oklch(0 0 0 / 0.2),
+    0 10px 28px -18px oklch(0 0 0 / 0.72);
+  --code-tools-line: oklch(1 0 0 / 0.08);
+  --code-control-bg: oklch(1 0 0 / 0.06);
+  --code-control-border: oklch(1 0 0 / 0.09);
+  --code-control-hover-bg: oklch(1 0 0 / 0.1);
+  --code-control-hover-border: oklch(1 0 0 / 0.16);
+  --code-control-hover-ink: #ffffff;
+  --chart-1: #247a43;
+  --chart-2: #2e6f6a;
+  --chart-3: #8a6500;
+  --chart-4: #7652a8;
+  --chart-5: #a53f50;
+  --image-outline: oklch(0 0 0 / 0.1);
+  --shadow-border:
+    0 0 0 1px oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06),
+    0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0 0 0 1px oklch(0 0 0 / 0.08), 0 1px 2px -1px oklch(0 0 0 / 0.08),
+    0 4px 10px -2px oklch(0 0 0 / 0.08);
+  --shadow-paper:
+    0 0 0 1px oklch(0 0 0 / 0.035), 0 3px 8px -4px oklch(0 0 0 / 0.12),
+    0 22px 70px -34px oklch(0 0 0 / 0.26);
+}
+
+:root[data-palette="forest"][data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #eef7f0;
+  --ink-soft: #d5e2d8;
+  --muted: #b9c8bd;
+  --muted-strong: #c9d7cc;
+  --paper: #0f1712;
+  --paper-deep: #0b110d;
+  --surface: #172019;
+  --surface-raised: #1d2920;
+  --surface-soft: #233027;
+  --surface-accent: #173a25;
+  --line: #2f4435;
+  --line-strong: #6f8575;
+  --accent: #73d99a;
+  --accent-hover: #9be7b6;
+  --accent-soft: #1d5233;
+  --secondary: #79cbc1;
+  --button-ink: #0f1712;
+  --focus: #9be7b6;
+  --success: #7ee2a8;
+  --danger: #ff9c9c;
+  --code-bg: #0b110d;
+  --code-surface: #172019;
+  --code-ink: #eef7f0;
+  --code-muted: #b9c8bd;
+  --code-keyword: #ff9c9c;
+  --code-string: #9be7b6;
+  --code-number: #f2cc60;
+  --code-function: #8fc7ff;
+  --code-shadow:
+    0 0 0 1px oklch(1 0 0 / 0.09),
+    0 12px 30px -18px oklch(0 0 0 / 0.88);
+  --chart-1: #73d99a;
+  --chart-2: #79cbc1;
+  --chart-3: #f2cc60;
+  --chart-4: #c6a6f2;
+  --chart-5: #ff9c9c;
+  --image-outline: oklch(1 0 0 / 0.1);
+  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
+  --shadow-paper:
+    0 0 0 1px oklch(1 0 0 / 0.06),
+    0 24px 80px -36px oklch(0 0 0 / 0.92);
+}

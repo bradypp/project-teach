@@ -21,7 +21,7 @@ Ask your agent for the skill by name, or use its skill picker. Start with the qu
 | Skill | Example request |
 | --- | --- |
 | `teach` | “Use the teach skill. Our search finds the right runbook, but the answer ignores it. Explain how evidence gets from retrieval into the prompt, using this project's code.” |
-| `teach-setup` | “Use the teach-setup skill. I'm building an incident agent with Go and LangGraph. I know HTTP APIs, but queues and graph recovery are new to me. Help me choose a learning goal.” |
+| `teach-setup` | “Use the teach-setup skill. I'm building an incident agent with Go and LangGraph. I know HTTP APIs, but queues and graph recovery are new to me. Help me choose a learning goal and notebook theme.” |
 | `teach-quiz` | “Use the teach-quiz skill. Give me a trace where a useful source disappears before generation. Let me locate the failure before showing the explanation.” |
 | `teach-review` | “Use the teach-review skill. I'm about to add worker retries. Help me check what I understand about leases and what I should revisit first.” |
 | `teach-update` | “Use the teach-update skill. I traced the duplicate investigation to a retry after a lost response. Two tenants can use the same request key, so I think the lookup needs both tenant and key. Check my reasoning against the code and update my notes.” |
@@ -52,7 +52,7 @@ The [Switchboard notebook](https://bradypp.github.io/project-teach/) follows an 
 
 ## Your files, in your project
 
-Open `.learning/index.html` to browse lessons, topics, quizzes and references. Pages support theme switching and Markdown export. The HTML and Markdown files are yours to edit and track in Git; there's no separate learning account or global progress store.
+Open `.learning/index.html` to browse lessons, topics, quizzes and references. Setup offers Parchment, Ocean, Forest, Plum and Graphite palettes. A page dropdown can override that project default in your browser, while the adjacent control switches between light and dark appearance. Pages also support Markdown export. The HTML and Markdown files are yours to edit and track in Git; there's no separate learning account or global progress store.
 
 Lesson follow-up controls prepare a prompt for chat. Quizzes can copy your current responses and revealed feedback. Neither action sends a message or marks a topic as learned. Copy or save your answers before leaving the page.
 

@@ -1,0 +1,104 @@
+/* teach:palette:ocean */
+/* Cool-neutral blue with the original deep navy dark canvas. */
+:root[data-palette="ocean"] {
+  color-scheme: light;
+  --ink: #1f2328;
+  --ink-soft: #343b43;
+  --muted: #656d76;
+  --muted-strong: #4b5563;
+  --paper: #f6f8fa;
+  --paper-deep: #eaeff5;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-soft: #eff3f7;
+  --surface-accent: #eaf2ff;
+  --soft: var(--surface-soft);
+  --line: #d0d7de;
+  --line-strong: #8c959f;
+  --accent: #0969da;
+  --accent-hover: #0550ae;
+  --accent-soft: #b6d7fe;
+  --secondary: #176b87;
+  --button-ink: #ffffff;
+  --focus: #0969da;
+  --success: #1a7f37;
+  --danger: #cf222e;
+  --code-bg: #0b0f14;
+  --code-surface: #161b22;
+  --code-ink: #f0f6fc;
+  --code-muted: #c9d1d9;
+  --code-keyword: #ffa198;
+  --code-string: #a5d6ff;
+  --code-number: #79c0ff;
+  --code-function: #d2a8ff;
+  --code-shadow:
+    0 0 0 1px oklch(0 0 0 / 0.2),
+    0 10px 28px -18px oklch(0 0 0 / 0.72);
+  --code-tools-line: oklch(1 0 0 / 0.08);
+  --code-control-bg: oklch(1 0 0 / 0.06);
+  --code-control-border: oklch(1 0 0 / 0.09);
+  --code-control-hover-bg: oklch(1 0 0 / 0.1);
+  --code-control-hover-border: oklch(1 0 0 / 0.16);
+  --code-control-hover-ink: #ffffff;
+  --chart-1: #0969da;
+  --chart-2: #176b87;
+  --chart-3: #9a6700;
+  --chart-4: #8250df;
+  --chart-5: #1a7f37;
+  --image-outline: oklch(0 0 0 / 0.1);
+  --shadow-border:
+    0 0 0 1px oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06),
+    0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0 0 0 1px oklch(0 0 0 / 0.08), 0 1px 2px -1px oklch(0 0 0 / 0.08),
+    0 4px 10px -2px oklch(0 0 0 / 0.08);
+  --shadow-paper:
+    0 0 0 1px oklch(0 0 0 / 0.035), 0 3px 8px -4px oklch(0 0 0 / 0.12),
+    0 22px 70px -34px oklch(0 0 0 / 0.26);
+}
+
+:root[data-palette="ocean"][data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #f0f6fc;
+  --ink-soft: #d8dee4;
+  --muted: #c9d1d9;
+  --muted-strong: #d0d7de;
+  --paper: #0d1117;
+  --paper-deep: #0b0f14;
+  --surface: #161b22;
+  --surface-raised: #1c2128;
+  --surface-soft: #21262d;
+  --surface-accent: #172f4f;
+  --line: #30363d;
+  --line-strong: #6e7781;
+  --accent: #79c0ff;
+  --accent-hover: #a5d6ff;
+  --accent-soft: #1f3a5f;
+  --secondary: #76c7c0;
+  --button-ink: #0d1117;
+  --focus: #a5d6ff;
+  --success: #7ee787;
+  --danger: #ffa198;
+  --code-bg: #0b0f14;
+  --code-surface: #161b22;
+  --code-ink: #f0f6fc;
+  --code-muted: #c9d1d9;
+  --code-keyword: #ffa198;
+  --code-string: #a5d6ff;
+  --code-number: #79c0ff;
+  --code-function: #d2a8ff;
+  --code-shadow:
+    0 0 0 1px oklch(1 0 0 / 0.09),
+    0 12px 30px -18px oklch(0 0 0 / 0.88);
+  --chart-1: #79c0ff;
+  --chart-2: #76c7c0;
+  --chart-3: #f2cc60;
+  --chart-4: #d2a8ff;
+  --chart-5: #7ee787;
+  --image-outline: oklch(1 0 0 / 0.1);
+  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
+  --shadow-paper:
+    0 0 0 1px oklch(1 0 0 / 0.06),
+    0 24px 80px -36px oklch(0 0 0 / 0.92);
+}

@@ -26,7 +26,7 @@ When no usable mission exists, briefly note that setup has not run and continue 
 | `records/` | Meaningful insights and their supporting evidence |
 | `references/*.html` | Concise lookup pages, glossary vocabulary and annotated resource collections |
 | `lessons/`, `quizzes/`, `references/` | Browsable teaching and practice artifacts |
-| `assets/`, `index.html` | Shared components and generated library navigation |
+| `assets/`, `index.html` | Shared components, the generated palette bundle and project default in `assets/theme.css`, and library navigation |
 | `topics/`, `research/` | Optional current synthesis and durable HTML investigations |
 
 Create optional files when they earn content. Use the [state template](templates/LEARNING_STATE.md) and [mission template](templates/MISSION.md) without retaining empty sections.

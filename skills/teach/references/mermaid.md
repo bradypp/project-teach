@@ -66,7 +66,7 @@ These chart values are illustrative. Use supported syntax for the bundled versio
 
 ## Shared theming and export
 
-- [components.js](../assets/components.js) configures Mermaid from the active CSS tokens at render time and re-renders when the theme changes. Agents author the diagram, not a new palette.
+- [components.js](../assets/components.js) configures Mermaid from the active CSS tokens at render time and re-renders when the palette or light/dark appearance changes. Agents author the diagram, not a new palette.
 - Keep colour settings and theme directives out of individual diagram definitions. Improve shared configuration when a diagram family needs additional tokens.
 - The renderer uses natural size when it fits and scales down to the available width otherwise. There is no horizontal scroll region or minimum-scale cutoff. Markdown flowchart labels wrap using shared configuration; ordinary plain labels should be converted to Markdown form when long.
 - Captions explain the visual's meaning. Markdown export retains the Mermaid source and caption; it does not preserve an interactive renderer.
@@ -74,7 +74,7 @@ These chart values are illustrative. Use supported syntax for the bundled versio
 
 ## Check and repair
 
-- Check rendering and readability in both themes after introducing a new diagram form or changing shared rendering code. Routine diagrams need a quick visual/content check.
+- Check rendering and readability in both appearances and affected palettes after introducing a new diagram form or changing shared rendering code. Routine diagrams need a quick visual/content check.
 - If parsing fails, inspect the visible source fallback. Check diagram type, arrows, quoted labels and HTML escaping first; reduce to a small valid example before restoring complexity.
 - Inspect a new diagram at its actual reading width and a narrow viewport. Labels must be readable without browser zoom, remain inside their nodes, and have no overlaps or clipped arrowheads. Confirm the complete diagram fits the column without horizontal scrolling.
 - If a visual is too wide, shorten or wrap labels, change direction, or split the diagram. Check the result rather than assuming `TD` or a larger font fixes the layout. Keep the caption useful as a textual explanation of the complete diagram.

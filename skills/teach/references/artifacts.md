@@ -26,10 +26,12 @@ python3 /path/to/teach/scripts/library.py new /project/.learning quiz queue-prac
 python3 /path/to/teach/scripts/library.py new /project/.learning reference queues --title "Queue reference"
 python3 /path/to/teach/scripts/library.py new /project/.learning research retry-identity --title "Which retry identity should we preserve?"
 python3 /path/to/teach/scripts/library.py index /project/.learning
+python3 /path/to/teach/scripts/library.py theme /project/.learning ocean
 ```
 
 - `new` creates a shell, copies missing shared assets and refreshes the index, preserving existing pages and assets. When upgrading a library, review and deliberately copy updated shared files.
 - `init ROOT` creates an empty library. `index ROOT` regenerates navigation from actual HTML files. Keep authored material in content pages; generated index content is replaceable.
+- `theme ROOT {parchment,ocean,forest,plum,graphite}` selects the project default, compiles the five built-ins into one managed bundle, preserves an unmarked custom theme and adds the stylesheet to legacy pages. New libraries default to Parchment. The legacy names `warm` and `blue` remain aliases for Parchment and Ocean. Setup owns the default; it is not a teaching-style preference.
 
 ## Compose the page
 
@@ -76,7 +78,7 @@ This creates `references/resources.html`. Use a descriptive slug for a useful ca
 
 ## Shared controls and export
 
-- All pages share theme controls, defaulting to the system preference. Local-file storage is best-effort; internal HTML links carry the selected theme.
+- All pages start with the setup-selected project palette. The palette dropdown can store a browser-local override or return to the project default; internal HTML links carry an active override. The adjacent appearance control defaults to the system preference and switches light/dark independently. Local-file storage is best-effort.
 - Content pages include a notebook link in the footer toolbar and Copy/Save Markdown. The home page omits this toolbar.
 
 ### Markdown export

@@ -247,6 +247,8 @@
             item.source.hidden = true;
             item.figure.dataset.renderedTheme =
               document.documentElement.dataset.theme;
+            item.figure.dataset.renderedPalette =
+              document.documentElement.dataset.palette || "custom";
           } catch (_) {
             item.view.textContent =
               "Diagram could not render; source shown below.";

@@ -257,9 +257,105 @@
   const themes = document.createElement("div");
   themes.className = "theme-controls";
   themes.dataset.exportUi = "";
-  themes.innerHTML = `<button type="button" class="secondary skip-icon-transition" data-theme-toggle>${iconSwap("moon", "sun")}</button>`;
+  const paletteMenu = window.teachTheme.hasPaletteMenu()
+    ? `<div class="palette-picker" data-palette-picker>
+        <button type="button" class="secondary" id="palette-menu-button" data-palette-button aria-label="Choose notebook palette" aria-haspopup="menu" aria-expanded="false" aria-controls="palette-menu">
+          <span data-palette-label></span><span class="sort-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="palette-menu" id="palette-menu" data-palette-menu role="menu" hidden>
+          <button type="button" class="palette-option" data-palette-option data-palette-value="" role="menuitemradio" aria-checked="false">Project default</button>
+          ${window.teachTheme.palettes.map(({ id, label }) => `<button type="button" class="palette-option" data-palette-option data-palette-value="${id}" role="menuitemradio" aria-checked="false">${label}</button>`).join("")}
+        </div>
+      </div>`
+    : "";
+  themes.innerHTML = `${paletteMenu}<button type="button" class="secondary skip-icon-transition" data-theme-toggle>${iconSwap("moon", "sun")}</button>`;
   navigation.append(themes);
   const toggle = themes.querySelector("[data-theme-toggle]");
+  const paletteButton = themes.querySelector("[data-palette-button]");
+  const paletteMenuElement = themes.querySelector("[data-palette-menu]");
+  const paletteOptions = [
+    ...themes.querySelectorAll("[data-palette-option]"),
+  ];
+  const paletteLabel = themes.querySelector("[data-palette-label]");
+  const paletteName = (id) =>
+    window.teachTheme.palettes.find((palette) => palette.id === id)?.label ||
+    id;
+  function setPaletteOpen(open, focusOption = false) {
+    if (!paletteButton || !paletteMenuElement) return;
+    paletteButton.setAttribute("aria-expanded", open);
+    paletteMenuElement.hidden = !open;
+    if (open && focusOption)
+      (
+        paletteOptions.find(
+          (option) => option.getAttribute("aria-checked") === "true",
+        ) || paletteOptions[0]
+      )?.focus();
+  }
+  function showPalette() {
+    if (!paletteButton || !paletteLabel) return;
+    const active = window.teachTheme.getPalette();
+    const preference = window.teachTheme.getPalettePreference();
+    const defaultName = paletteName(window.teachTheme.getDefaultPalette());
+    paletteLabel.textContent = paletteName(active);
+    paletteButton.setAttribute(
+      "aria-label",
+      `Choose notebook palette. Current: ${paletteName(active)}`,
+    );
+    paletteButton.title = `Palette: ${paletteName(active)}`;
+    paletteOptions.forEach((option) => {
+      if (!option.dataset.paletteValue)
+        option.textContent = `Project default (${defaultName})`;
+      option.setAttribute(
+        "aria-checked",
+        preference
+          ? option.dataset.paletteValue === preference
+          : option.dataset.paletteValue === "",
+      );
+    });
+  }
+  if (paletteButton && paletteMenuElement && paletteOptions.length) {
+    paletteButton.addEventListener("click", () =>
+      setPaletteOpen(paletteButton.getAttribute("aria-expanded") !== "true"),
+    );
+    paletteButton.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault();
+        setPaletteOpen(true, true);
+      } else if (event.key === "Escape") setPaletteOpen(false);
+    });
+    paletteOptions.forEach((option, index) => {
+      option.addEventListener("click", () => {
+        window.teachTheme.setPalette(option.dataset.paletteValue || null);
+        setPaletteOpen(false);
+        paletteButton.focus();
+      });
+      option.addEventListener("keydown", (event) => {
+        const last = paletteOptions.length - 1;
+        const next =
+          event.key === "ArrowDown"
+            ? Math.min(index + 1, last)
+            : event.key === "ArrowUp"
+              ? Math.max(index - 1, 0)
+              : event.key === "Home"
+                ? 0
+                : event.key === "End"
+                  ? last
+                  : -1;
+        if (next >= 0) {
+          event.preventDefault();
+          paletteOptions[next].focus();
+        } else if (event.key === "Escape") {
+          event.preventDefault();
+          setPaletteOpen(false);
+          paletteButton.focus();
+        }
+      });
+    });
+    document.addEventListener("click", (event) => {
+      if (!themes.querySelector("[data-palette-picker]").contains(event.target))
+        setPaletteOpen(false);
+    });
+  }
   function showTheme() {
     const dark = document.documentElement.dataset.theme === "dark";
     toggle.classList.toggle("is-swapped", dark);
@@ -272,7 +368,11 @@
       document.documentElement.dataset.theme === "dark" ? "light" : "dark",
     ),
   );
-  window.addEventListener("teach-theme-change", showTheme);
+  window.addEventListener("teach-theme-change", () => {
+    showTheme();
+    showPalette();
+  });
+  showPalette();
   showTheme();
   requestAnimationFrame(() =>
     requestAnimationFrame(() =>

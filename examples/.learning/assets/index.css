@@ -1,55 +1,10 @@
 /*
  * Personal learning notebook
  *
- * Shared tokens and components live here; lesson layouts remain authored per page.
- * The visual model is a warm sheet of paper on a quiet desk, with a charcoal dark mode.
+ * Shared structure and components live here; theme.css supplies colour tokens.
+ * Lesson layouts remain authored per page.
  */
 :root {
-  color-scheme: light;
-  --ink: #29231f;
-  --ink-soft: #413934;
-  --muted: #756a61;
-  --muted-strong: #5e544c;
-  --paper: #eee8de;
-  --paper-deep: #e3dacd;
-  --surface: #fffdf8;
-  --surface-raised: #ffffff;
-  --surface-soft: #f7f1e8;
-  --surface-accent: #f7e5dc;
-  --soft: var(--surface-soft);
-  --line: #ded3c5;
-  --line-strong: #cfc1b0;
-  --accent: #9f452f;
-  --accent-hover: #823624;
-  --accent-soft: #efc7b7;
-  --secondary: #315f61;
-  --button-ink: #fffaf5;
-  --focus: #c45b36;
-  --success: #2f6b4f;
-  --danger: #9b3b32;
-  --code-bg: #262321;
-  --code-surface: #302c29;
-  --code-ink: #f6efe7;
-  --code-muted: #aaa097;
-  --code-keyword: #f3a7c7;
-  --code-string: #d8ca83;
-  --code-number: #f0a47c;
-  --code-function: #9dc7e8;
-  --chart-1: #a34b34;
-  --chart-2: #376d70;
-  --chart-3: #9a712c;
-  --chart-4: #7660a0;
-  --chart-5: #4f7654;
-  --image-outline: oklch(0 0 0 / 0.1);
-  --shadow-border:
-    0 0 0 1px oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06),
-    0 2px 4px oklch(0 0 0 / 0.04);
-  --shadow-border-hover:
-    0 0 0 1px oklch(0 0 0 / 0.08), 0 1px 2px -1px oklch(0 0 0 / 0.08),
-    0 4px 10px -2px oklch(0 0 0 / 0.08);
-  --shadow-paper:
-    0 0 0 1px oklch(0 0 0 / 0.035), 0 3px 8px -4px oklch(0 0 0 / 0.12),
-    0 22px 70px -34px oklch(0 0 0 / 0.26);
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 22px;
@@ -63,48 +18,6 @@
     sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --ink: #f3ece3;
-  --ink-soft: #ddd3c9;
-  --muted: #b8ada2;
-  --muted-strong: #ccc0b5;
-  --paper: #171614;
-  --paper-deep: #11110f;
-  --surface: #211f1c;
-  --surface-raised: #292622;
-  --surface-soft: #2b2824;
-  --surface-accent: #3a2923;
-  --line: #413b35;
-  --line-strong: #554c44;
-  --accent: #efa07e;
-  --accent-hover: #ffc0a2;
-  --accent-soft: #6b3d2f;
-  --secondary: #8fc4c3;
-  --button-ink: #281711;
-  --focus: #ffc09a;
-  --success: #8dc8a3;
-  --danger: #f29a91;
-  --code-bg: #11110f;
-  --code-surface: #1b1a18;
-  --code-ink: #f2ebe3;
-  --code-muted: #a99f96;
-  --code-keyword: #f0a6c8;
-  --code-string: #d9c77f;
-  --code-number: #f0a17b;
-  --code-function: #9dc9eb;
-  --chart-1: #efa07e;
-  --chart-2: #8fc4c3;
-  --chart-3: #e1bd70;
-  --chart-4: #bdace3;
-  --chart-5: #9bc4a0;
-  --image-outline: oklch(1 0 0 / 0.1);
-  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
-  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
-  --shadow-paper:
-    0 0 0 1px oklch(1 0 0 / 0.06), 0 24px 80px -36px oklch(0 0 0 / 0.9);
 }
 
 * {
@@ -980,7 +893,8 @@ footer {
   transition: transform 120ms ease-out;
 }
 
-#library-sort[aria-expanded="true"] .sort-chevron {
+#library-sort[aria-expanded="true"] .sort-chevron,
+#palette-menu-button[aria-expanded="true"] .sort-chevron {
   transform: rotate(225deg) translate(-1px, -1px);
 }
 
@@ -996,7 +910,8 @@ footer {
   box-shadow: var(--shadow-border-hover);
 }
 
-.library-sort-option {
+.library-sort-option,
+.palette-option {
   width: 100%;
   min-height: 34px;
   justify-content: flex-start;
@@ -1011,14 +926,17 @@ footer {
 }
 
 .library-sort-option:hover:not(:disabled),
-.library-sort-option:focus-visible {
+.library-sort-option:focus-visible,
+.palette-option:hover:not(:disabled),
+.palette-option:focus-visible {
   background: var(--surface-accent);
   box-shadow: none;
   color: var(--ink);
   transform: none;
 }
 
-.library-sort-option[aria-checked="true"] {
+.library-sort-option[aria-checked="true"],
+.palette-option[aria-checked="true"] {
   color: var(--accent);
   font-weight: 750;
 }
@@ -1236,15 +1154,7 @@ pre {
   overflow: hidden;
   border-radius: var(--radius-lg);
   background: var(--code-bg);
-  box-shadow:
-    0 0 0 1px oklch(0 0 0 / 0.18),
-    0 10px 28px -18px oklch(0 0 0 / 0.7);
-}
-
-:root[data-theme="dark"] .code-block {
-  box-shadow:
-    0 0 0 1px oklch(1 0 0 / 0.09),
-    0 12px 30px -18px oklch(0 0 0 / 0.85);
+  box-shadow: var(--code-shadow);
 }
 
 .code-tools {
@@ -1253,7 +1163,7 @@ pre {
   justify-content: space-between;
   min-height: 46px;
   padding: 0.45rem 0.55rem 0.45rem 1rem;
-  border-bottom: 1px solid oklch(1 0 0 / 0.08);
+  border-bottom: 1px solid var(--code-tools-line);
   background: var(--code-surface);
   color: var(--code-muted);
 }
@@ -1268,16 +1178,16 @@ pre {
 .code-tools button.secondary {
   min-height: 34px;
   padding: 0.35rem 0.65rem;
-  background: oklch(1 0 0 / 0.06);
-  box-shadow: 0 0 0 1px oklch(1 0 0 / 0.09);
+  background: var(--code-control-bg);
+  box-shadow: 0 0 0 1px var(--code-control-border);
   color: var(--code-ink);
   font-size: 0.7rem;
 }
 
 .code-tools button.secondary:hover:not(:disabled) {
-  background: oklch(1 0 0 / 0.1);
-  box-shadow: 0 0 0 1px oklch(1 0 0 / 0.16);
-  color: #fff;
+  background: var(--code-control-hover-bg);
+  box-shadow: 0 0 0 1px var(--code-control-hover-border);
+  color: var(--code-control-hover-ink);
 }
 
 .code-block pre {
@@ -1442,12 +1352,38 @@ tbody tr:hover {
   margin-left: auto;
 }
 
-.theme-controls button {
+.theme-controls [data-theme-toggle] {
   width: 40px;
   height: 40px;
   min-height: 40px;
   padding: 0;
   font-size: 0.72rem;
+}
+
+.palette-picker {
+  position: relative;
+}
+
+#palette-menu-button {
+  min-width: 112px;
+  height: 40px;
+  min-height: 40px;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.4rem 0.72rem;
+  font-size: 0.72rem;
+}
+
+.palette-menu {
+  position: absolute;
+  inset-block-start: calc(100% + 0.35rem);
+  inset-inline-end: 0;
+  z-index: 25;
+  min-width: 190px;
+  padding: 0.3rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-border-hover);
 }
 
 .skip-icon-transition .icon-swap > * {
@@ -1679,25 +1615,25 @@ body[data-notebook-home][data-animate-entry] main > footer {
 @media print {
   :root,
   :root[data-theme] {
-    color-scheme: light;
-    --ink: #000;
-    --ink-soft: #111;
-    --muted: #444;
-    --paper: #fff;
-    --paper-deep: #fff;
-    --surface: #fff;
-    --surface-raised: #fff;
-    --surface-soft: #f4f4f4;
-    --surface-accent: #f4f4f4;
-    --line: #ccc;
-    --line-strong: #aaa;
-    --accent: #000;
-    --accent-hover: #000;
-    --button-ink: #fff;
-    --image-outline: oklch(0 0 0 / 0.1);
-    --shadow-border: none;
-    --shadow-border-hover: none;
-    --shadow-paper: none;
+    color-scheme: light !important;
+    --ink: #000 !important;
+    --ink-soft: #111 !important;
+    --muted: #444 !important;
+    --paper: #fff !important;
+    --paper-deep: #fff !important;
+    --surface: #fff !important;
+    --surface-raised: #fff !important;
+    --surface-soft: #f4f4f4 !important;
+    --surface-accent: #f4f4f4 !important;
+    --line: #ccc !important;
+    --line-strong: #aaa !important;
+    --accent: #000 !important;
+    --accent-hover: #000 !important;
+    --button-ink: #fff !important;
+    --image-outline: oklch(0 0 0 / 0.1) !important;
+    --shadow-border: none !important;
+    --shadow-border-hover: none !important;
+    --shadow-paper: none !important;
   }
 
   body {

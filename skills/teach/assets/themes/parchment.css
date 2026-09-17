@@ -1,0 +1,104 @@
+/* teach:palette:parchment */
+/* Warm paper and terracotta, retained from the original notebook palette. */
+:root[data-palette="parchment"] {
+  color-scheme: light;
+  --ink: #29231f;
+  --ink-soft: #413934;
+  --muted: #756a61;
+  --muted-strong: #5e544c;
+  --paper: #eee8de;
+  --paper-deep: #e3dacd;
+  --surface: #fffdf8;
+  --surface-raised: #ffffff;
+  --surface-soft: #f7f1e8;
+  --surface-accent: #f7e5dc;
+  --soft: var(--surface-soft);
+  --line: #ded3c5;
+  --line-strong: #cfc1b0;
+  --accent: #9f452f;
+  --accent-hover: #823624;
+  --accent-soft: #efc7b7;
+  --secondary: #315f61;
+  --button-ink: #fffaf5;
+  --focus: #c45b36;
+  --success: #2f6b4f;
+  --danger: #9b3b32;
+  --code-bg: #262321;
+  --code-surface: #302c29;
+  --code-ink: #f6efe7;
+  --code-muted: #aaa097;
+  --code-keyword: #f3a7c7;
+  --code-string: #d8ca83;
+  --code-number: #f0a47c;
+  --code-function: #9dc7e8;
+  --code-shadow:
+    0 0 0 1px oklch(0 0 0 / 0.18),
+    0 10px 28px -18px oklch(0 0 0 / 0.7);
+  --code-tools-line: oklch(1 0 0 / 0.08);
+  --code-control-bg: oklch(1 0 0 / 0.06);
+  --code-control-border: oklch(1 0 0 / 0.09);
+  --code-control-hover-bg: oklch(1 0 0 / 0.1);
+  --code-control-hover-border: oklch(1 0 0 / 0.16);
+  --code-control-hover-ink: #ffffff;
+  --chart-1: #a34b34;
+  --chart-2: #376d70;
+  --chart-3: #9a712c;
+  --chart-4: #7660a0;
+  --chart-5: #4f7654;
+  --image-outline: oklch(0 0 0 / 0.1);
+  --shadow-border:
+    0 0 0 1px oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06),
+    0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0 0 0 1px oklch(0 0 0 / 0.08), 0 1px 2px -1px oklch(0 0 0 / 0.08),
+    0 4px 10px -2px oklch(0 0 0 / 0.08);
+  --shadow-paper:
+    0 0 0 1px oklch(0 0 0 / 0.035), 0 3px 8px -4px oklch(0 0 0 / 0.12),
+    0 22px 70px -34px oklch(0 0 0 / 0.26);
+}
+
+:root[data-palette="parchment"][data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #f3ece3;
+  --ink-soft: #ddd3c9;
+  --muted: #b8ada2;
+  --muted-strong: #ccc0b5;
+  --paper: #171614;
+  --paper-deep: #11110f;
+  --surface: #211f1c;
+  --surface-raised: #292622;
+  --surface-soft: #2b2824;
+  --surface-accent: #3a2923;
+  --line: #413b35;
+  --line-strong: #554c44;
+  --accent: #efa07e;
+  --accent-hover: #ffc0a2;
+  --accent-soft: #6b3d2f;
+  --secondary: #8fc4c3;
+  --button-ink: #281711;
+  --focus: #ffc09a;
+  --success: #8dc8a3;
+  --danger: #f29a91;
+  --code-bg: #11110f;
+  --code-surface: #1b1a18;
+  --code-ink: #f2ebe3;
+  --code-muted: #a99f96;
+  --code-keyword: #f0a6c8;
+  --code-string: #d9c77f;
+  --code-number: #f0a17b;
+  --code-function: #9dc9eb;
+  --code-shadow:
+    0 0 0 1px oklch(1 0 0 / 0.09),
+    0 12px 30px -18px oklch(0 0 0 / 0.85);
+  --chart-1: #efa07e;
+  --chart-2: #8fc4c3;
+  --chart-3: #e1bd70;
+  --chart-4: #bdace3;
+  --chart-5: #9bc4a0;
+  --image-outline: oklch(1 0 0 / 0.1);
+  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.13);
+  --shadow-paper:
+    0 0 0 1px oklch(1 0 0 / 0.06),
+    0 24px 80px -36px oklch(0 0 0 / 0.9);
+}
