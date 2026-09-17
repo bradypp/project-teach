@@ -64,7 +64,7 @@ Use a Deferred section for deliberately postponed learning, with the reason and 
 
 Keep useful unknown unknowns in the state's Opportunities section unless the user opts out. Each names the concept, discovery context, why it could matter and a useful link if available—including useful ideas beyond this project’s current scope. Deduplicate them; there are no deadlines or implied obligations. The mission owns user-stated goals.
 
-Glossary pages in `references/`, tagged `glossary`, are the authoritative vocabulary aid. Add a term once the user can use it meaningfully; definitions introduced by a lesson can remain there until then. Give a concise definition, project-specific meaning or ambiguity where useful, and a lesson link. Revise definitions in place; do not maintain a parallel Markdown glossary. A glossary entry is not a duplicate record of its evidence. Follow [artifact guidance](artifacts.md#glossary) for the page mechanics.
+Glossary pages in `references/`, tagged `glossary`, are the authoritative vocabulary aid. When a lesson introduces vocabulary worth returning to, add or refine those terms alongside the lesson and create the default glossary on demand when none exists. Give a concise definition, project-specific meaning or ambiguity where useful, and a lesson link. Revise definitions in place; do not maintain a parallel Markdown glossary. A glossary entry records useful vocabulary, not evidence that the user understands it. Follow [artifact guidance](artifacts.md#glossary) for the page mechanics.
 
 ## Retain and connect
 
@@ -82,7 +82,7 @@ Use descriptive Markdown links and relative paths. HTML can target real anchors 
 | `records/` | Meaningful user insight, corrected misconception or useful self-report: create/enrich evidence using the record criteria. Artifact creation alone does not qualify. |
 | `LEARNING_STATE.md` | New exposure, study intent/activity, changed understanding or a discovered gap: update the affected concept and link its artifact or evidence. Distinguish introduced material, self-report and demonstrated understanding. |
 | Deferred / Opportunities | Later prerequisites: record why deferred and when to revisit. Useful related ideas: retain as optional opportunities. Reconcile existing entries when context changes. |
-| Glossary pages | Useful vocabulary the user can use meaningfully: add or refine the definition and lesson link. |
+| Glossary pages | A lesson introduces useful reusable vocabulary, or later work changes its meaning: create the glossary on demand, then add or refine the definition and lesson link. |
 | `topics/*.html` | Related lessons/application need consolidation or the current synthesis has materially changed: create or update one topic page. |
 | Lessons and references | Correct an error, add a useful cross-link or connect new material; avoid rewriting unrelated historical lessons. |
 | Resource pages | Reusable sources added, superseded or found unsuitable: reconcile affected entries using [collection guidance](#reference-collections). |
