@@ -8,29 +8,28 @@ Shape learning around the active project, plan or spec and the user's current un
 - Challenge reasoning kindly and explain why.
 - Use occasional humour and specific feedback rather than effusive praise.
 
-## Depth for a decision
+## Focus and depth
 
-- Once the teaching workflow identifies a real gap, inspect its dependencies across the whole active plan/spec. Teach upcoming prerequisites broadly and go deep on what is needed next.
-- Teach broadly enough to understand the relevant approaches and deeply enough to reason about the current decision. Cover missing prerequisites until the user can explain the alternatives, consequences and why a choice fits the project. A large prerequisite is reason to teach, not automatically defer.
-
-- Defer details and related ideas that do not affect the decision yet. In learning state, distinguish deliberate deferrals with revisit conditions from open-ended opportunities. The user can still skip or continue; a learning check is not a compulsory gate.
+- Start from the user's question and the knowledge needed for the next piece of work. Teach that knowledge directly, with enough prerequisite context to make the mechanism clear.
+- Give each lesson a focused purpose. Include a worked example, alternatives, consequences or failure cases when they change how the learner can use the idea. Remove repeated framing and tangents; split a broad subject when separate lessons would be easier to revisit.
+- Keep later details as optional follow-ups or deliberate deferrals with a revisit condition. Use lessons as references during planning and implementation.
 
 ## Lessons
 
 A lesson should be **beautiful**, with clean, readable typography and layout. Think Tufte: make the idea visible and remove decoration that competes with it.
 
-- Default to substantial depth, not a five-minute overview. Cover the mechanism, prerequisites, worked examples, alternatives, failure cases and application needed to reason about the topic in this project.
-- Split broad subjects into linked, navigable lessons when useful; do not trim necessary explanation to meet a time limit. Further reading and user-requested drilling can extend the scope.
+- Teach the useful mechanism and its project relevance. Choose examples, alternatives, failure cases and sections by how much they help the current purpose.
+- Split broad subjects into linked, navigable lessons when useful. Offer deeper follow-up and linked further reading for material outside the focused lesson.
 - Tie it to the mission and the learner's zone of proximal development: challenging enough to develop understanding, with necessary prerequisites supplied.
 - Explain the transferable mental model and connect it to the real project.
 - Show meaningful alternatives, consequences or failure cases. Walk through cause and effect, then vary an assumption.
 - State where an analogy stops matching the system.
-- Give the user a relevant application or reasoning question.
+- Let the learner use the lesson as a reference while proceeding with the work. Put requested practice in an optional quiz.
 
-Prefer a detailed HTML lesson over a detailed chat explanation. Keep chat to orientation, the original question and a link for substantial teaching. Choose the presentation for the idea: a worked example, annotated diagram, simulation, comparison or visual puzzle may be better than conventional sections. Small explanations can stay in chat with with an inline visual if useful.
+Prefer a detailed HTML lesson over a detailed chat explanation. Keep chat to orientation, the original question and a link for substantial teaching. Choose the presentation for the idea: a worked example, annotated diagram, simulation, comparison or visual puzzle may be better than conventional sections. Small explanations can stay in chat with an inline visual if useful.
 
 
-Follow [writing guidance](writing.md) when drafting and [artifact guidance](artifacts.md) when saving, connecting, verifying or delivering a lesson. Recommend the strongest primary resource actually consulted, explain what it adds and invite follow-up questions.
+Follow [writing guidance](writing.md) when drafting and [artifact guidance](artifacts.md) when saving, connecting, verifying or delivering a lesson. Recommend a strong primary resource actually consulted, link it, explain what it adds and invite follow-up questions.
 
 ## Assets
 
@@ -48,7 +47,7 @@ Keep knowledge acquisition clear; use desirable difficulty in practice:
 - **Interleaving:** Mix related skills where comparison improves practice.
 - **Feedback:** Explain why an answer works and where alternatives fail.
 
-In-the-moment fluency is not durable retention. Real planning, debugging and implementation can supply stronger evidence, but credit only the user's demonstrated contribution.
+A lesson establishes learning undertaken; completed planning, debugging or implementation establishes project application. Learner reasoning can add stronger evidence of personal understanding.
 
 For choice questions, use plausible alternatives with similar specificity and avoid length/format clues. Open responses can use revealable worked reasoning without automatic grading. Keep quizzes enjoyable and optional.
 

@@ -17,7 +17,7 @@ This repository packages project-based teaching skills. Read the relevant skill 
 - `teach/references/visual-language.md` defines HTML composition, reusable components and theme-token use.
 - `teach/references/quiz.md` defines practice templates, response boundaries, feedback and custom interactions.
 - `teach/references/writing.md` defines prose guidance for teaching and maintained Markdown.
-- `teach/references/integrations.md` defines generated AGENTS and wrapper guidance, passive teaching and its execution modes.
+- `teach/references/integrations.md` defines optional project context and explicit workflow wrappers.
 - `teach/references/templates/PREFERENCES.md` is a concise template for optional project overrides. The skills and references must work fully without it.
 - Templates and components live with `teach`; other skills link to shared guidance.
 
@@ -25,14 +25,14 @@ This repository packages project-based teaching skills. Read the relevant skill 
 
 - Backward compatibility is not required. Remove obsolete files and code when replacing behaviour, while preserving useful user-authored learning material.
 - Keep instructions concise, human-readable and grouped by purpose. Prefer useful headings and short lists to dense rule paragraphs.
-- Keep state thin, evidence in selective records, and passive teaching controlled by its marked AGENTS block.
+- Keep state thin and learning evidence in focused records.
 - Reflect changes across skill entry points, references, templates, helpers, installer and README. Avoid runtime dependencies on this checkout's absolute path.
 - Keep lesson layouts flexible and components reusable. Routine artifacts need a quick content/link check, not exhaustive browser testing.
 - Run relevant helper tests when changing executable behaviour. Update validation claims to distinguish current checks from historical scenarios.
 
 ## Writing skills
 
-- When invoking another skill, say “Use the `x` skill” by name rather than linking to its `SKILL.md`. Keep file links for supporting references, templates and scripts.
+- When invoking another skill, say “Call the Skill tool for `x`” by name rather than linking to its `SKILL.md`. Keep file links for supporting references, templates and scripts.
 - Keep each skill's purpose, actionable workflow and important constraints readable in its entry point. Put shared detail in clearly linked references.
 - Preserve the detail needed for consistent teaching, including decision criteria, examples and enjoyable practice. Do not reduce workflows to routing paragraphs merely to shorten them.
 - Keep baseline behaviour in skills and references. Teaching-style files supplement it with optional preferences; they must not become required instruction manuals.

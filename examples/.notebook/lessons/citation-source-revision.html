@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="created" content="2026-09-19T19:17:37+00:00" />
+    <meta name="tags" content="context,rag,reliability" />
+    <title>A citation needs the source revision</title>
+    <link rel="stylesheet" href="../assets/index.css" />
+    <link rel="stylesheet" href="../assets/theme.css" data-teach-theme />
+
+    <script src="../assets/theme.js"></script>
+    <script src="../assets/vendor/turndown.js" defer></script>
+    <script src="../assets/vendor/turndown-plugin-gfm.js" defer></script>
+    <script src="../assets/index.js" defer></script>
+    <script src="../assets/vendor/mermaid.js" defer></script>
+    <script src="../assets/vendor/highlight.js" defer></script>
+    <script src="../assets/components.js" defer></script>
+  </head>
+  <body data-page-kind="lesson">
+    <a class="skip" href="#main">Skip to content</a>
+    <nav class="site-nav" aria-label="Library">
+      <a href="../index.html">My learning notebook</a>
+    </nav>
+    <main id="main">
+      <header class="page-header">
+        <p class="eyebrow">Lesson</p>
+        <h1>A citation needs the source revision</h1>
+        <p class="page-date">
+          Created <time datetime="2026-09-19T19:17:37+00:00">19th Sept 2026 · 19:17</time>
+        </p>
+      </header>
+      <div class="page-intro">
+        <div class="page-tags" data-page-tags aria-label="Subjects" hidden></div>
+        <p>Switchboard cites the runbook passage behind an incident answer. If that runbook changes before anyone reviews the answer, the citation must still identify the words the agent used. Follow the source revision from retrieval to the saved result.</p>
+        <nav class="page-contents" aria-label="On this page"><a href="#identity">What a citation identifies</a><a href="#flow">Carry the revision</a><a href="#decision">Choose a storage policy</a></nav>
+      </div>
+      <section id="identity">
+        <h2>What a citation identifies</h2>
+        <p>Imagine Switchboard retrieves section 4 of the checkout runbook at revision 7. It says a saturated connection pool can cause errors after a release. The on-call engineer later opens the citation, but the runbook is now at revision 8 and recommends a different diagnostic step. A link to the live page is useful for current operations; by itself, it cannot show what supported the earlier answer.</p>
+        <p>The evidence packet should keep a stable document ID, section ID, revision or content digest, access scope, and the selected passage. The result should cite that same identity. A content digest is useful when a source has no reliable revision number; it identifies bytes, while the document and section IDs tell a person where they came from. This extends the <a href="evidence-before-answers.html">evidence selection lesson</a>: a passage must survive context packing with its identity attached.</p>
+      </section>
+      <figure class="diagram">
+        <pre class="mermaid">flowchart LR
+  R["`Runbook v7`"] --&gt; E["`Evidence
+packet`"] --&gt; D["`Draft claim`"] --&gt; S["`Support
+check`"] --&gt; A["`Answer +
+citation`"]</pre>
+        <figcaption>The five-stage view: check the draft claim against the evidence packet, then save an answer whose citation identifies the same runbook revision.</figcaption>
+      </figure>
+      <section id="flow">
+        <h2>Carry the revision across boundaries</h2>
+        <p>The detailed flow has two jobs. Retrieval first freezes the selected source identity in an evidence envelope. Answer generation then saves a claim and citation together. If the worker retries after a checkpoint, it must either reuse the saved envelope or deliberately retrieve again and record the new revision. <a href="replay-is-not-resume.html">Replay can change a read result</a>, even when the read has no side effect.</p>
+      </section>
+      <figure class="diagram">
+        <pre class="mermaid">flowchart TD
+  subgraph Retrieval
+    S["`Runbook section
+at revision 7`"] --&gt; E["`Evidence envelope
+with source identity`"]
+  end
+  subgraph Answer
+    E --&gt; P["`Packed passage`"] --&gt; G["`Claim and citation`"]
+  end
+  G --&gt; V["`Open archived revision`"]</pre>
+        <figcaption>Retrieval fixes the source identity; answer generation carries it into the saved claim and citation. A later reader can open the revision that supported the claim.</figcaption>
+      </figure>
+      <section id="decision">
+        <h2>Choose a storage policy</h2>
+        <p>If runbook storage retains immutable revisions, save their stable IDs and resolve citations through the revision store. If revisions can disappear, keep an authorised snapshot or the exact cited passage with a digest. A snapshot improves reproducibility but adds retention, access-control and deletion obligations. The result can link to both the archived evidence and the live page, with their roles labelled clearly.</p>
+        <p>For the fictional <a href="../../PROJECT_PLAN.md">Switchboard project brief</a>, a small fixture corpus can model two revisions of one runbook. An evaluation can generate an answer from revision 7, update the live source to revision 8, and check that the saved citation still opens the passage used by the answer. That verifies provenance rather than merely checking that a URL still works.</p>
+        <p>For a broader vocabulary of entities, activities and revisions, see the <a href="https://www.w3.org/TR/prov-primer/">W3C PROV Primer</a>. It helps describe how a result was derived; this lesson uses only the source identity needed to audit a cited answer.</p>
+      </section>
+      <footer><a href="../references/glossary.html#source-version">Source version in the glossary</a> · <a href="../references/investigation-contract.html">Investigation contract</a></footer>
+    </main>
+  </body>
+</html>

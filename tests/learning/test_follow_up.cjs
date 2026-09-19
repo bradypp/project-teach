@@ -108,7 +108,7 @@ const assert = require("node:assert/strict");
       );
       await page.locator("[data-chat]").click();
       const lines = [
-        "Use the `teach` skill to help me explore this existing material more deeply.",
+        "Call the Skill tool for `teach` to help me explore this existing material more deeply.",
         "",
         `Type: ${item.kind}`,
         `Title: ${item.title}`,
@@ -139,7 +139,7 @@ const assert = require("node:assert/strict");
     assert.equal(await page.locator("#export-text").isVisible(), true);
     assert.match(
       await page.locator("#export-text").inputValue(),
-      /Local file: .*learning follow-up-.*resources\.html/,
+      /Local file: .*learning follow-up-.*retry-ownership\.html/,
     );
     assert.equal(
       await page.locator(".export-fallback label").textContent(),

@@ -4,7 +4,6 @@ Build enough verified understanding to explain the mechanism, compare relevant a
 
 ## When to research
 
-- **Setup:** Investigate the project and supplied topics before proposing the mission and learning opportunities. Provide a concise, source-linked orientation to core concepts, prerequisites, major approaches and current developments. Reuse sound existing research when revising setup.
 - **Teaching:** Let sound existing research satisfy covered, current claims. Investigate the uncovered mechanism, alternatives and consequential uncertainty before drafting new teaching.
 - **Updates:** Research claims or topic syntheses needing verification; otherwise reconcile the available account and evidence.
 - **Reviews and quizzes:** Reuse existing lessons and evidence, checking current developments when they affect the assessment or answer.
@@ -15,7 +14,7 @@ Build enough verified understanding to explain the mechanism, compare relevant a
 2. **Discover evidence.** For those claims, find primary grounding, meaningful alternatives and complementary experience using the source guidance below. Use discovery workers where appropriate; broaden searches beyond the user's initial terminology to expose missing concepts.
 3. **Inspect and verify.** Read the actual source content. Check consequential claims against the relevant documentation, specification, research or source code; retain the exact supporting URL and useful section. A title or search snippet is a discovery lead, not verification.
 4. **Compare and synthesise.** Explain mechanisms, alternatives, trade-offs and the scope of agreement or disagreement. Resolve discrepancies in version, context or assumptions before treating sources as conflicting.
-5. **Check readiness.** Proceed when the core mechanism and prerequisites can be explained, relevant alternatives compared, consequential claims supported, and important limitations identified. Investigate unresolved issues that could change the lesson or recommendation. Stop when these needs are covered and further searching adds little.
+5. **Check coverage.** Proceed when the core mechanism and prerequisites can be explained, relevant alternatives compared, consequential claims supported, and important limitations identified. Investigate unresolved issues that could change the lesson or recommendation. Stop when these needs are covered and further searching adds little.
 
 ## Freshness
 
@@ -46,7 +45,7 @@ Build enough verified understanding to explain the mechanism, compare relevant a
 
 - Internal learning artifacts provide context and lineage; they complement rather than replace inspected external evidence. When adapting them, carry forward sources relevant to reused claims and inspect appropriate sources for new, changed or time-sensitive claims.
 - Link important factual claims to the inspected source that supports them, preferably its relevant section. “The docs say” without checking and linking the documentation is insufficient.
-- Provide useful, inspectable further reading in setup orientations and substantive lessons, especially for core topics and fast-moving spaces. Explain what each selected source adds; avoid an unannotated link dump.
+- Provide useful, inspectable further reading in substantive lessons, especially for core topics and fast-moving spaces. Link each selected source and explain what it adds; avoid an unannotated link dump.
 - Distinguish supported facts from project inference and attributed opinion. Preserve relevant version scope and meaningful uncertainty.
 - If suitable sources cannot be accessed, state the limitation and narrow unsupported claims. Never invent citations or claim to have read unavailable material.
 
@@ -60,5 +59,5 @@ Build enough verified understanding to explain the mechanism, compare relevant a
 
 ## Retention and efficiency
 
-- Keep discovery bounded by the readiness criteria and synthesise findings rather than collecting sources indefinitely.
+- Keep discovery bounded by the coverage criteria and synthesise findings when the claims needed for teaching are supported.
 - After research, apply [retention and connection guidance](learning-system.md#retain-and-connect) to decide whether the investigation or unused sources earn a durable home.

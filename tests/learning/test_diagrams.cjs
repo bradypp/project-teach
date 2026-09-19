@@ -13,18 +13,20 @@ const assert = require('node:assert/strict');
   execFileSync('python3', [resolve('skills/teach/scripts/library.py'), 'new', root, 'lesson', 'diagrams', '--title', 'Readable diagrams']);
   const source = `flowchart LR
  A["Authenticate the caller"] --> B["Persist the investigation"] --> C["Retrieve authorised evidence"] --> D["Deduplicate candidates"] --> E["Pack the model context"] --> F["Generate a supported answer"] --> G["Persist the result"]`;
-  const compact = 'flowchart LR\n A[Request] --> B[Retrieve] --> C[Pack] --> D[Answer] --> E[Check]';
+  const compact = 'flowchart LR\n A[Request] --> B[Retrieve] --> C[Pack] --> D[Answer]';
   const wrapped = 'flowchart TD\n A["`Retrieve authorised evidence while retaining source identity and version`"] --> B["`Check support`"]';
+  const linebreak = 'flowchart TD\n A["`OTLP\nencoding + transport`"] --> B["`Collector`"]';
+  const cluster = 'flowchart TD\n subgraph Sources\n A[Telemetry]\n B[History]\n end\n A --> B';
   const file = join(root, 'lessons/diagrams.html');
   const figure = (id, text) => `<figure class="diagram" id="${id}"><pre class="mermaid">${text}</pre><figcaption>${id} caption</figcaption></figure>`;
-  writeFileSync(file, readFileSync(file,'utf8').replace('</main>', figure('wide',source)+figure('compact',compact)+figure('wrapped',wrapped)+'</main>'));
+  writeFileSync(file, readFileSync(file,'utf8').replace('</main>', figure('wide',source)+figure('compact',compact)+figure('wrapped',wrapped)+figure('linebreak',linebreak)+figure('cluster',cluster)+'</main>'));
   const page=await browser.newPage({viewport:{width:1100,height:900}});
   const errors=[]; page.on('pageerror', e=>errors.push(e.message));
   for (const width of [1100,390]) {
    await page.setViewportSize({width,height:900});
    for(const theme of ['light','dark']) {
     await page.goto(pathToFileURL(file).href+'?theme='+theme);
-    await page.waitForSelector(`#wrapped[data-rendered-theme="${theme}"]`);
+    await page.waitForSelector(`#cluster[data-rendered-theme="${theme}"]`);
     const dimensions=await page.locator('#wide').evaluate(figure=>{
      const svg=figure.querySelector('svg'), view=figure.querySelector('.diagram-view');
      return {rendered:svg.getBoundingClientRect().width,natural:svg.viewBox.baseVal.width,scroll:view.scrollWidth,available:view.clientWidth,
@@ -50,13 +52,24 @@ const assert = require('node:assert/strict');
     });
     assert.ok(label.height>label.font*2,'Markdown label must wrap');
     assert.ok(label.width<=181,'Wrapped label must respect shared width');
+    const explicitBreak=await page.locator('#linebreak .nodeLabel').first().evaluate(n=>n.innerHTML);
+    assert.match(explicitBreak,/<br\s*\/?\s*>/i,'A real line break in a Markdown label must render as a break');
+    assert.doesNotMatch(explicitBreak,/\\n/,'A literal backslash-n must not leak into the label');
+    const clusterGap=await page.locator('#cluster').evaluate(figure=>{
+     const border=figure.querySelector('.cluster > rect').getBoundingClientRect();
+     const title=figure.querySelector('.cluster-label').getBoundingClientRect();
+     const firstNode=figure.querySelector('.node').getBoundingClientRect();
+     return {above:title.top-border.top,below:firstNode.top-title.bottom};
+    });
+    assert.ok(clusterGap.above>=5.5,'Cluster title needs space below the border');
+    assert.ok(clusterGap.below>=10,'Cluster title needs space before the nodes');
     const markdown=await page.evaluate(()=>learningExportMarkdown(document));
-    assert.ok(markdown.includes(source)); assert.ok(markdown.includes(wrapped));
+    assert.ok(markdown.includes(source)); assert.ok(markdown.includes(wrapped)); assert.ok(markdown.includes(linebreak));
     assert.ok(!markdown.includes('Scroll horizontally'));
     await page.screenshot({path:`/tmp/teach-diagrams-${width}-${theme}.png`,fullPage:true});
    }
   }
-  // A five-stage horizontal flow can fit with slight shrinking, then grow
+  // A four-stage horizontal flow can fit with slight shrinking, then grow
   // back to natural size when room is available without changing direction.
   await page.setViewportSize({width:1100,height:900});
   await page.locator('#compact .diagram-view').evaluate(view=>{

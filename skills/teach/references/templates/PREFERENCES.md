@@ -1,6 +1,6 @@
 # Preferences
 
-Optional project preferences. Create this file only when customising; keep the entries you change. The skills and references contain the full teaching guidance; `default` inherits it. Change only the preferences you want to override. Missing entries or a missing file leave baseline behaviour intact. Accuracy and learning-evidence rules still apply.
+Optional project preferences. Setup can create this starter for later editing, or you can create it yourself under `.notebook/`. The skills and references contain the full teaching guidance. Replace only the `default` values you want to change; unchanged or missing entries inherit the baseline. Accuracy and learning-evidence rules still apply.
 
 ## Explanation preferences
 
@@ -20,3 +20,7 @@ Optional project preferences. Create this file only when customising; keep the e
 ## Additional preferences
 
 None yet.
+
+## Example overrides
+
+Replace a `default` above with a specific request such as “show one worked example before comparing alternatives,” “use diagrams only when they clarify a mechanism,” or “put practice in a separate quiz.” Remove this example section once you have chosen your preferences.

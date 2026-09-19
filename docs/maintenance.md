@@ -27,7 +27,7 @@ Python 3 runs the library helper. Generated pages open directly in a browser. Ma
 
 ```sh
 python3 -m unittest discover -s tests/learning -p 'test_*.py'
-python3 skills/teach/scripts/check_links.py examples/.learning
+python3 skills/teach/scripts/check_links.py examples/.notebook
 ```
 
 The `test_*.cjs` scripts under `tests/learning/` cover browser controls, palette families and overrides, light/dark appearance, notebook navigation, components, practice and exports. `test_diagrams.cjs` creates a fresh template-based fixture and checks bounded shrink-to-fit, wrapped labels, keyboard scrolling, resize/theme behaviour and source export. They require Playwright and Chromium; `CHROMIUM_PATH` can select a browser executable. Routine authored pages need content and link checks. New interactions also need response/export checks before and after feedback, as described in the artifact guidance.
@@ -36,12 +36,12 @@ The examples are synthetic teaching artifacts, not learning evidence or backend 
 
 ## Publishing
 
-[The Pages workflow](../.github/workflows/examples-pages.yml) checks local links and publishes `examples/.learning/` at the site root on relevant pushes to `main`. It can also be run manually. Repository Pages settings must use GitHub Actions. The archived Lantern notebook and repository instruction files are outside the published artifact.
+[The Pages workflow](../.github/workflows/examples-pages.yml) checks local links and publishes `examples/.notebook/` at the site root on relevant pushes to `main`. It can also be run manually. Repository Pages settings must use GitHub Actions. Repository instruction files are outside the published artifact.
 
 Rebuild the notebook index after changing page titles, tags or membership:
 
 ```sh
-python3 skills/teach/scripts/library.py index examples/.learning
+python3 skills/teach/scripts/library.py index examples/.notebook
 ```
 
 Keep README screenshots in `docs/images/` representative of the live pages. The title card combines browser captures of the notebook, architecture lesson and context lab.

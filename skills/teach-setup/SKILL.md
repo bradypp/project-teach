@@ -1,30 +1,25 @@
 ---
 name: teach-setup
-description: Set up or revise a project's learning mission, notebook theme, preferences and optional integrations.
+description: Set up or revise a project's learning mission, notebook theme, optional preferences and integrations.
 disable-model-invocation: true
 ---
 
-Make a new or existing project learning-aware with a small local setup.
-
-Read [writing guidance](../teach/references/writing.md) before drafting project Markdown or wrappers.
+Make a new or existing project learning-aware with a small local setup. Read [writing guidance](../teach/references/writing.md) before drafting project Markdown or wrappers.
 
 ## Propose the setup
 
-1. Read [project storage](../teach/references/learning-system.md) and inspect the project and any existing learning files.
-2. Establish the starting point: topic-first, project-first, or both. Complete the setup path in [research guidance](../teach/references/research.md), share a concise source-linked orientation, then propose a concrete mission and observable capabilities. When no project exists yet, agree on a small real outcome or experiment.
-3. Offer optional customisation through the [teaching-style template](../teach/references/templates/PREFERENCES.md). Preserve an existing project style; when customisation is skipped, rely on the complete baseline and create no preferences file.
-4. Offer a notebook palette: Parchment (the default), Ocean, Forest, Plum or Graphite. Infer an existing project default from the `teach:theme` marker in `.learning/assets/theme.css`; treat legacy `warm` and `blue` markers as Parchment and Ocean. Keep this choice separate from teaching preferences. The notebook dropdown can apply a browser-local palette override, while the adjacent control switches light/dark appearance independently.
-5. Ask whether `.learning/` should be tracked or git ignored. Use [integration guidance](../teach/references/integrations.md) to offer the learning-project AGENTS integration and user-selected workflow wrappers. When either is selected, offer one project-wide execution choice: Inline (the default) or Background. Explain that Background needs available subagents and later result delivery.
+1. Read [project storage](../teach/references/learning-system.md) and inspect the user's request, relevant project files and any existing notebook. Use project code, plans or documentation as mission context when they contain a substantive goal. When the project has only scaffolding or boilerplate, use supplied user context or offer a small generic mission that the user can refine.
+2. Propose a short mission and observable capabilities from that context. When the project is not yet built, use the user's intended outcome or a small real experiment.
+3. Offer three preference choices: no file, a starter `.notebook/PREFERENCES.md` to fill in later, or preferences customised now. Use the [preferences template](../teach/references/templates/PREFERENCES.md) for either file. Its `default` entries inherit the complete baseline; preserve an existing file and never turn the template into required teaching instructions.
+4. Offer a notebook palette: Parchment (the default), Ocean, Forest, Plum or Graphite. Infer an existing project default from the `teach:theme` marker in `.notebook/assets/theme.css`. Keep this choice separate from teaching preferences. The browser dropdown can override the palette; the adjacent control switches light/dark appearance.
+5. Ask whether `.notebook/` should be tracked or git ignored. Offer the independent [integration choices](../teach/references/integrations.md): no integration, a persistent AGENTS.md project-learning section, selected workflow wrappers, or both. For wrappers, offer Inline (default) or Background teaching. The AGENTS.md section carries context only.
 
-Use the research to inform scope and learning opportunities without turning setup into a compulsory curriculum.
+## Apply the choices
 
-## Apply agreed choices
+- Show the concrete mission and unresolved configuration choices before applying them. Honour choices already authorised.
+- Create `.notebook/MISSION.md` from its template. Create `PREFERENCES.md` only when the user chooses the starter or customised file. Leave `default` entries intact in a starter and keep only useful overrides in a customised file. Preserve existing manual content. Other notebook files appear when they have useful content.
+- Apply the selected project default with `library.py theme ROOT {parchment,ocean,forest,plum,graphite}`. The helper preserves an unmarked custom `theme.css`; show a targeted replacement and ask before changing one.
+- Add or revise only the selected AGENTS.md section and wrappers. Keep the AGENTS.md section to the mission and two project-learning principles. Preserve unrelated AGENTS.md instructions, original workflow skills and manual wrapper content. Use readable headings to identify generated sections; show a targeted merge when an existing section is ambiguous.
+- Keep one Inline or Background choice across the selected wrappers. Background requires available subagents and later result delivery.
 
-- Show the concrete mission, preferences, notebook palette and integration/wrapper changes before applying unresolved configuration choices. Honour choices already authorised.
-- Create `.learning/MISSION.md` from its template. Create `PREFERENCES.md` only when the user supplies custom preferences, keeping only useful overrides. Preserve existing manual content. Other files appear when they have useful content.
-- Apply the selected project default with `library.py theme ROOT {parchment,ocean,forest,plum,graphite}`. The helper may replace a recognised setup-generated bundle, canonicalise legacy theme markers and migrate legacy page links. Preserve an unmarked custom `theme.css`; show the targeted replacement and ask before changing it.
-- Generate every selected integration in the same execution mode. Keep the choice in the generated AGENTS and wrapper guidance, not in `PREFERENCES.md`; missing mode guidance means Inline.
-- When revising an earlier setup, infer the current mode from the generated execution comments, treating legacy integrations without one as Inline, then reconcile the chosen AGENTS integration and setup-generated wrappers. Preserve unrelated instructions and manual wrapper content. Convert a legacy generated wrapper only when its old teaching sections are unambiguous; otherwise show the targeted merge and ask before editing it.
-- Create only selected new wrappers or reconcile existing setup-generated wrappers; leave original workflow skills untouched. Setup works without wrappers or AGENTS integration.
-
-Finish when the project has a usable mission and defaults. Report the created files, selected notebook palette, available teach commands and selected integration mode, rather than treating an empty directory tree as progress.
+Finish when the project has a usable mission and selected defaults. Report created files, the notebook palette, available teach commands and the selected integration choices.

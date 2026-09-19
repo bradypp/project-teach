@@ -4,12 +4,14 @@ Read before drafting explanations, practice, feedback or maintained Markdown. Th
 
 ## Principles
 
+- **Use clear English by default.** Explain in familiar words first, define necessary technical terms and keep sentences easy to follow without flattening important distinctions.
 - **Write for the task.** Lessons explain an idea; records preserve what happened and what it supports. Apply any explicit project preferences for personality and depth.
 - **Keep the meaning.** Preserve scope, uncertainty, citations and technical details. Editing prose must not change commands, code, identifiers, configuration or link targets.
 - **Make the mechanism concrete.** Use an accurate project example or a clearly labelled hypothetical. Never invent measurements or learner achievements to make a sentence more persuasive.
 - **Preserve useful character.** Keep a telling analogy, honest qualification or enjoyable aside when it helps the learner. Formality is not the goal.
 - **Explain precisely.** Introduce necessary terminology and reuse it consistently. Shorten tangled wording without stripping away the distinction being taught.
 - **Use structure deliberately.** Headings, bullets and tables should help someone find or compare information. Sentence length and paragraph shape should follow the explanation.
+- **Make references usable.** Link a local file when possible, or give its usable location. Link recommended reading and say what each resource helps the learner understand.
 
 ## Patterns
 

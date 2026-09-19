@@ -15,7 +15,7 @@ const { mkdirSync } = require('node:fs');
     const images = resolve('docs/images');
     mkdirSync(images, { recursive: true });
     async function open(file) {
-      await page.goto(pathToFileURL(resolve('examples/.learning', file)).href + '?theme=light');
+      await page.goto(pathToFileURL(resolve('examples/.notebook', file)).href + '?theme=light');
       await page.evaluate(() => document.fonts.ready);
     }
     await open('index.html');

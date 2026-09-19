@@ -1,15 +1,15 @@
 ---
 name: teach
-description: Teach in project context when requested, reached by a learning-aware workflow, or enabled by project passive-teaching settings.
+description: Teach in project context when requested or called by an explicit learning-aware workflow.
 ---
 
 Help the user understand the project they are planning or building, including the prerequisites behind its decisions.
 
 ## 1. Inspect the work and learning context
 
-- Read the current question, relevant project files and the whole active plan or spec. Identify conceptual dependencies across the work, not just the next task.
-- Read [learning system](references/learning-system.md). Follow the project context section for storage, evidence and the no-setup path. Use the mission for direction and constraints.
-- Consult `LEARNING_STATE.md`, relevant records, and learning artifacts. Distinguish demonstrated understanding, exposure and uncertainty.
+- Read the current question and relevant project files, plan or spec. Identify the knowledge needed for this lesson and the work it supports.
+- Read [learning system](references/learning-system.md). Follow its project context and evidence guidance. Use an existing mission for direction and constraints, or establish provisional context from the request and project.
+- Consult `LEARNING_STATE.md`, relevant records and learning artifacts. Distinguish subjects taught, applied in project work, explained by the learner and still uncertain.
 - Find related lessons, topics, references and retained research by concept, aliases, titles, tags and links. For a follow-up, read the complete supplied page and relevant linked material.
 - Apply explicit teaching-style overrides when present. Teaching works without a preferences file or completed setup.
 
@@ -20,16 +20,16 @@ Before teaching or authoring, use this heuristic and combine responses where use
 - **Reuse directly:** Link current material when it fits both the concept and the present problem.
 - **Adapt or extend:** Build on a sound foundation when the current problem needs different depth, framing, examples, trade-offs or application. Link earlier artifacts for context and lineage, and follow [source guidance](references/research.md#sources-and-further-reading) when reusing their claims.
 - **Author anew:** Create a new explanation when existing material offers no coherent foundation or adapting it would distort its original purpose.
-- Honour explicit requests to revisit or deepen material. Without one, continue the original work when current evidence supports enough understanding for the decision.
+- Honour explicit requests to revisit or deepen material. Keep teaching supplementary to the original work.
 - Keep small clarifications inline. Create or update a lesson or topic when a durable project-grounded explanation would help.
 
 Continue with the teaching needs that merit attention, or return to the original work with useful existing links.
 
 ## 3. Select prerequisites and depth
 
-- Follow explicit topics within the selected teaching needs. Otherwise map prerequisites across the active plan/spec: teach upcoming concepts broadly and go deeply into what is needed next.
-- Apply [teaching guidance](references/teaching.md) for depth, lesson design and practice. Supply missing prerequisites for the current decision, even when they form a substantial topic.
-- Retain later prerequisites as deferred topics with a reason and revisit condition. Keep valuable unknown unknowns as opportunities, without creating a compulsory curriculum.
+- Follow explicit topics. Otherwise select the concept that most helps the active question or next piece of work. Supply prerequisites needed to make that explanation understandable; defer tangents and later concepts.
+- Apply [teaching guidance](references/teaching.md) for focused depth and lesson design. Split a broad subject when separate lessons will be easier to use.
+- Retain later prerequisites as deferred topics only when a revisit condition is useful. Keep valuable related ideas as opportunities, without creating a compulsory curriculum.
 - If context provides no useful topic, ask what work to explore.
 
 ## 4. Research and ground the needs
@@ -42,15 +42,11 @@ Continue with the teaching needs that merit attention, or return to the original
 - Prefer a substantial HTML lesson over a long chat explanation. Follow [artifact guidance](references/artifacts.md) for page creation, maintenance, verification and delivery with the [library helper](scripts/library.py).
 - Keep topic pages as current syntheses and lessons as reusable snapshots. Use [page selection guidance](references/artifacts.md#choose-a-page) for lessons, topics, glossary vocabulary and annotated resource collections.
 - In chat, present the original question, a brief orientation and the lesson link. Small clarifications can stay inline.
-- Make the explanation project-grounded and complete enough for the current decision. The user can ask to drill down further or follow the reading links.
-- Teach generously during exploration; supplement delivery workflows without displacing their purpose. Ask a contextual application question; the pending planning question can serve as practice.
-- Let the user answer or continue without finishing the artifact.
+- Make the explanation project-grounded, directly useful and deep enough to explain its mechanism and consequential choices. The user can ask to drill down further or follow the reading links.
+- Teach generously during exploration while preserving the delivery workflow. Offer optional practice through `teach-quiz` when requested.
+- Let the user use the lesson as a reference while continuing the original work.
 
 ## 6. Reconcile and return to the work
 
-- After new teaching or meaningful evidence, use the `teach-update` skill to reconcile exposure, study intent, links, gaps and actual user evidence. Follow its no-change path when the account supports no update.
+- After new teaching or meaningful completed work, call the Skill tool for `teach-update` to create or enrich the subject record and reconcile affected links and state. Follow its no-change path when nothing useful changed.
 - Finish with the relevant question, lesson link and a clear return to the original workflow.
-
-## Passive teaching
-
-During ordinary development, teach only when the [marked AGENTS block](references/integrations.md#passive-teaching) enables it and a significant transferable gap affects an imminent decision or failure. Follow the block's Inline or Background execution mode, treating an unmarked legacy block as Inline. Routine syntax, unfamiliar APIs and boilerplate do not qualify; otherwise continue quietly.

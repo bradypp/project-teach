@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'examples/.learning/**'
+      - 'examples/.notebook/**'
       - 'skills/teach/scripts/check_links.py'
       - '.github/workflows/examples-pages.yml'
   workflow_dispatch:
@@ -28,11 +28,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check notebook links
-        run: python3 skills/teach/scripts/check_links.py examples/.learning
+        run: python3 skills/teach/scripts/check_links.py examples/.notebook
       - name: Prepare public notebook
         run: |
           mkdir -p _site
-          cp -a examples/.learning/. _site/
+          cp -a examples/.notebook/. _site/
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

@@ -13,13 +13,13 @@ Read when authoring learning HTML or changing shared assets. This file owns page
 
 | Primitive | Use |
 | --- | --- |
-| `page-intro` | Opening summary, metadata tags and optional section links. The helper inserts the [page-intro template](../assets/templates/page-intro.html). Write the summary as an ordinary paragraph inside the shared surface; omit contents on short pages. |
+| `page-intro` | Opening summary, metadata tags and optional section links. The helper inserts the [page-intro template](../assets/templates/page-intro.html). Write the summary as an ordinary paragraph inside the shared surface; fill its contents navigation for useful sections, including reference, resource and glossary entries. |
 | `callout` | One high-value definition, warning, decision rule or application prompt that deserves a pause in the reading flow. |
 | `blockquote` | A short learner statement or source excerpt whose voice matters. Attribute sources and respect quotation limits. |
 | `table` | A real comparison or repeated field mapping. Use row and column headers that make the relationship explicit. |
 | `details` | Optional hints, worked reasoning or secondary detail that benefits from progressive disclosure. |
 | `muted` | Supporting metadata or guidance that should remain readable without competing with the main explanation. |
-| `page-list` | A compact list of navigational links, such as glossary terms or a reference index. |
+| `page-list` | A compact list of related links within the page body; use the page-intro contents navigation for a page's own sections or terms. |
 | `actions` | A wrapping row of related buttons. Use the `secondary` button class for the less prominent action. |
 | `footer` | End with one to three useful continuation routes: the previous or next lesson, the current topic, the glossary or a working reference. Omit generic and link-dump footers. |
 
@@ -36,7 +36,7 @@ Choose the element by meaning. A central takeaway can be a paragraph; genuinely 
 ## Enhanced components
 
 - **Code:** Start from the [code-block template](../assets/templates/code-block.html). Use `language-*` on the `code` element; `language-text` keeps plain text or ASCII unhighlighted. The component script adds the label and Copy code control.
-- **Diagrams:** Start from the [diagram template](../assets/templates/diagram.html) and follow [Mermaid guidance](mermaid.md). Use compact horizontal flows when they fit, and vertical or split flows when they become crowded. Wrap labels where useful; the renderer shrinks to fit without horizontal scrolling. Keep horizontal paths to four or five stages; use vertical or split layouts beyond that. Follow the Mermaid guidance for composition and readability checks. Keep themes and palette directives out of individual diagrams.
+- **Diagrams:** Start from the [diagram template](../assets/templates/diagram.html) and follow [Mermaid guidance](mermaid.md). Start flows horizontally, then choose local scrolling, a vertical flow or connected figures by what explains the idea best. More than five columns prompts a layout check. Wrap labels at word boundaries or use a real line break inside a Markdown label. Keep themes and palette directives out of individual diagrams.
 - **Practice:** Read [quiz practice guidance](quiz.md) when composing quizzes, exercises embedded in other pages, or custom practice interactions.
 - **Custom interactions:** Keep the core explanation usable without JavaScript. Put reusable behaviour in `assets/components.js`; use semantic HTML and shared tokens for its static state.
 

@@ -6,7 +6,7 @@ Use the bundled shell to create and deliver directly browsable learning material
 
 | Page | Use it for |
 | --- | --- |
-| Lesson | A substantial explanation with mechanisms, examples and application |
+| Lesson | A focused explanation with enough mechanism, examples and context to be useful |
 | Topic | One current synthesis across accumulated lessons and application |
 | Research | A reusable, question-driven investigation with evidence, implications and limitations |
 | Quiz | Optional retrieval and transfer practice with feedback |
@@ -21,12 +21,12 @@ Glossary and resource pages belong to the Reference section. Use their dedicated
 Resolve [library helper](../scripts/library.py) from the installed teach skill:
 
 ```sh
-python3 /path/to/teach/scripts/library.py new /project/.learning lesson queue-backpressure --title "Queues and backpressure"
-python3 /path/to/teach/scripts/library.py new /project/.learning quiz queue-practice --title "Queue practice"
-python3 /path/to/teach/scripts/library.py new /project/.learning reference queues --title "Queue reference"
-python3 /path/to/teach/scripts/library.py new /project/.learning research retry-identity --title "Which retry identity should we preserve?"
-python3 /path/to/teach/scripts/library.py index /project/.learning
-python3 /path/to/teach/scripts/library.py theme /project/.learning ocean
+python3 /path/to/teach/scripts/library.py new /project/.notebook lesson queue-backpressure --title "Queues and backpressure"
+python3 /path/to/teach/scripts/library.py new /project/.notebook quiz queue-practice --title "Queue practice"
+python3 /path/to/teach/scripts/library.py new /project/.notebook reference queues --title "Queue reference"
+python3 /path/to/teach/scripts/library.py new /project/.notebook research retry-identity --title "Which retry identity should we preserve?"
+python3 /path/to/teach/scripts/library.py index /project/.notebook
+python3 /path/to/teach/scripts/library.py theme /project/.notebook ocean
 ```
 
 - `new` creates a shell, copies missing shared assets and refreshes the index, preserving existing pages and assets. When upgrading a library, review and deliberately copy updated shared files.
@@ -35,7 +35,7 @@ python3 /path/to/teach/scripts/library.py theme /project/.learning ocean
 
 ## Compose the page
 
-The helper inserts the shared page opening after the title and creation date. Follow the [artifact visual language](visual-language.md) for its summary, optional contents, callouts, tables, code, diagrams, practice components and theme tokens. Use stable IDs on useful sections and keep quiz introductions free of answer-bearing links.
+The helper inserts the shared page opening after the title and creation date. Give the page a title based on its actual lesson or reference content. Follow the [artifact visual language](visual-language.md) for its summary, optional contents, callouts, tables, code, diagrams, practice components and theme tokens. Use the page-intro contents navigation for reference, resource and glossary sections or terms. Use stable IDs on useful sections and keep quiz introductions free of answer-bearing links.
 
 A worthwhile chat explanation can be saved as a compact HTML lesson using the same shell. This keeps one browsable version without a Markdown-rendering pipeline. Tiny clarifications need not be saved; consolidate related material only when it improves the explanation.
 
@@ -44,7 +44,7 @@ A worthwhile chat explanation can be saved as a compact HTML lesson using the sa
 Create a current synthesis with the [topic shell](../assets/templates/topic.html):
 
 ```sh
-python3 /path/to/teach/scripts/library.py new /project/.learning topic queues --title "Understanding queues"
+python3 /path/to/teach/scripts/library.py new /project/.notebook topic queues --title "Understanding queues"
 ```
 
 It lives under `topics/`. Follow [topic synthesis guidance](learning-system.md#topic-synthesis) for content and maintenance; update the existing page rather than generating competing summaries.
@@ -54,20 +54,20 @@ It lives under `topics/`. Follow [topic synthesis guidance](learning-system.md#t
 Create the vocabulary page with the [library helper](../scripts/library.py):
 
 ```sh
-python3 /path/to/teach/scripts/library.py new /project/.learning glossary glossary --title "My glossary"
+python3 /path/to/teach/scripts/library.py new /project/.notebook glossary glossary --title "My glossary"
 ```
 
-The [glossary shell](../assets/templates/glossary.html) creates `references/glossary.html` by default with the command above. Fill its term navigation and stable term sections with actual vocabulary. Update entries in place and link directly to term anchors from lessons or learning state. For a useful category split, use a descriptive slug such as `glossary-networking`.
+The [glossary shell](../assets/templates/glossary.html) creates `references/glossary.html` by default with the command above. Fill the page-intro contents navigation and stable term sections with actual vocabulary. Update entries in place and link directly to term anchors from lessons or learning state. For a useful category split, use a descriptive slug such as `glossary-networking`.
 
 ### Resource pages
 
 Create an annotated collection with the [resource shell](../assets/templates/resource.html):
 
 ```sh
-python3 /path/to/teach/scripts/library.py new /project/.learning resource resources --title "Useful resources"
+python3 /path/to/teach/scripts/library.py new /project/.notebook resource resources --title "Useful resources"
 ```
 
-This creates `references/resources.html`. Use a descriptive slug for a useful category split. Follow [collection guidance](learning-system.md#reference-collections) for selection, annotations and maintenance.
+This creates `references/resources.html`. Put useful collection section links in the page-intro contents navigation and use a descriptive slug for a useful category split. Follow [collection guidance](learning-system.md#reference-collections) for selection, annotations and maintenance.
 
 ## Metadata and navigation
 
@@ -78,7 +78,7 @@ This creates `references/resources.html`. Use a descriptive slug for a useful ca
 
 ## Shared controls and export
 
-- All pages start with the setup-selected project palette. The palette dropdown can store a browser-local override or return to the project default; internal HTML links carry an active override. The adjacent appearance control defaults to the system preference and switches light/dark independently. Local-file storage is best-effort.
+- All pages start with the setup-selected project palette. The dropdown lists each palette once by name. Choosing the project default's palette clears a browser-local override; internal HTML links carry an active override. The adjacent appearance control defaults to the system preference and switches light/dark independently. Local-file storage is best-effort.
 - Content pages include a notebook link in the footer toolbar and Copy/Save Markdown. The home page omits this toolbar.
 
 ### Markdown export
@@ -102,7 +102,7 @@ A textual snapshot cannot preserve an interactive simulation. Check new/custom w
 
 The user pastes the copied prompt into an existing conversation or a new local chat:
 
-- **Copy follow-up** on lessons, topics, references, resource and research pages asks to use the `teach` skill with the page kind, title, optional tags and absolute local file path. The receiving chat needs access to that file.
+- **Copy follow-up** on lessons, topics, references, resource and research pages asks to call the Skill tool for `teach` with the page kind, title, optional tags and absolute local file path. The receiving chat needs access to that file.
 - **Copy for chat** on quizzes includes a discussion prompt, the absolute local HTML file path and the current responses.
 
 Both actions offer manual copying if clipboard access fails. They do not send messages or update learning records. Glossaries retain only the Markdown actions.
@@ -114,7 +114,7 @@ Both actions offer manual copying if clipboard access fails. They do not send me
 After changing an authored HTML page, local link or ID:
 
 1. Quickly check the content and any answer keys.
-2. Run the [link checker](../scripts/check_links.py) with `python3 /path/to/teach/scripts/check_links.py /project/.learning` and repair missing files, broken HTML anchors and duplicate IDs. The checker does not verify external URLs or decide which reciprocal links are useful.
+2. Run the [link checker](../scripts/check_links.py) with `python3 /path/to/teach/scripts/check_links.py /project/.notebook` and repair missing files, broken HTML anchors and duplicate IDs. The checker does not verify external URLs or decide which reciprocal links are useful.
 3. Rebuild the index after manually adding, moving, renaming or removing pages, or changing page titles or tags. The `new` command already refreshes it; content-only edits do not require a rebuild.
 
 Routine artifacts need no exhaustive browser testing. After changing shared helpers, components or presentation, run the relevant helper or browser tests and the additional visual checks in [visual-language.md](visual-language.md#extend-deliberately).

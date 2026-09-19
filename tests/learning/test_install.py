@@ -20,8 +20,10 @@ class InstallTests(unittest.TestCase):
             integrations = destination / 'teach/references/integrations.md'
             self.assertTrue(integrations.is_file())
             integration_text = integrations.read_text()
-            self.assertEqual(integration_text.count('<!-- teach:execution:inline -->'), 1)
-            self.assertEqual(integration_text.count('<!-- teach:execution:background -->'), 1)
+            self.assertIn('## Project-learning context', integration_text)
+            self.assertIn('### Inline wrapper', integration_text)
+            self.assertIn('### Background wrapper', integration_text)
+            self.assertNotIn('<!-- teach:', integration_text)
             self.assertTrue((destination / 'teach/assets/templates/lesson.html').is_file())
             for palette in ('parchment', 'ocean', 'forest', 'plum', 'graphite'):
                 self.assertTrue((destination / f'teach/assets/themes/{palette}.css').is_file())
@@ -29,9 +31,17 @@ class InstallTests(unittest.TestCase):
             wrapper = destination / 'teach/references/templates/wrapper.md'
             self.assertTrue(wrapper.is_file())
             wrapper_text = wrapper.read_text()
-            self.assertEqual(wrapper_text.count('<!-- teach:integration:start -->'), 1)
-            self.assertEqual(wrapper_text.count('<!-- teach:integration:end -->'), 1)
-            self.assertEqual(wrapper_text.count('<!-- teach:execution:{{inline|background}} -->'), 1)
+            self.assertIn('## Teaching supplement', wrapper_text)
+            self.assertIn('Call the Skill tool for `{{original-skill-name}}`', wrapper_text)
+            self.assertNotIn('<!-- teach:', wrapper_text)
+            setup_text = (destination / 'teach-setup/SKILL.md').read_text()
+            self.assertIn('a starter `.notebook/PREFERENCES.md`', setup_text)
+            self.assertIn('no file', setup_text)
+            self.assertIn('preferences customised now', setup_text)
+            self.assertIn("inspect the user's request, relevant project files", setup_text)
+            preferences = (destination / 'teach/references/templates/PREFERENCES.md').read_text()
+            self.assertIn('**Depth:** default', preferences)
+            self.assertIn('## Example overrides', preferences)
             # New component assets remain available from an installed bundle.
             for name in ('multi-step-question', 'scenario-question', 'visual-experiment', 'resource', 'research'):
                 self.assertTrue((destination / f'teach/assets/templates/{name}.html').is_file())

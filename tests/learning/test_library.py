@@ -1,6 +1,7 @@
 """Portable library behavior; run with python -m unittest discover -s tests/learning."""
 import importlib.util
 from pathlib import Path
+import shutil
 import tempfile
 import unittest
 
@@ -30,6 +31,25 @@ class LibraryTests(unittest.TestCase):
             self.assertIn(f':root[data-palette="{palette}"]', theme)
         self.assertIn('href="lessons/queues.html"', (self.root / 'index.html').read_text())
         self.assertNotIn('<Queues>', (self.root / 'index.html').read_text())
+
+    def test_preferences_can_be_skipped_started_or_customised(self):
+        library.init(self.root)
+        preferences = self.root / 'PREFERENCES.md'
+        self.assertFalse(preferences.exists())
+
+        template = SCRIPT.parent.parent / 'references/templates/PREFERENCES.md'
+        shutil.copyfile(template, preferences)
+        starter = preferences.read_text()
+        self.assertIn('**Depth:** default', starter)
+        self.assertIn('**Practice:** default', starter)
+        self.assertIn('## Example overrides', starter)
+
+        preferences.write_text(starter.replace('**Depth:** default', '**Depth:** show a worked example first'))
+        library.init(self.root)
+        customised = preferences.read_text()
+        self.assertIn('**Depth:** show a worked example first', customised)
+        self.assertIn('**Practice:** default', customised)
+        self.assertIn('unchanged or missing entries inherit the baseline', customised)
 
     def test_theme_can_be_selected_before_pages_and_switched_globally(self):
         theme = library.set_theme(self.root, 'ocean')
@@ -108,7 +128,8 @@ class LibraryTests(unittest.TestCase):
         page = library.new(self.root, 'glossary', 'glossary', 'My glossary', 'reference, terminology')
         self.assertEqual(page, self.root / 'references/glossary.html')
         content = page.read_text()
-        self.assertIn('aria-label="Terms"', content)
+        self.assertIn('<nav class="page-contents" aria-label="On this page"></nav>', content)
+        self.assertNotIn('class="page-list"', content)
         for asset in ('index.css', 'theme.css', 'theme.js', 'index.js', 'vendor/turndown.js'):
             self.assertIn('../assets/' + asset, content)
             self.assertTrue((self.root / 'assets' / asset).is_file())
@@ -118,6 +139,16 @@ class LibraryTests(unittest.TestCase):
         self.assertIn('<section class="library-section" data-library-section="references"><h2>Reference</h2>', index)
         self.assertIn('data-tag="terminology"', index)
         self.assertFalse((self.root / 'GLOSSARY.md').exists())
+
+    def test_reference_and_resource_shells_put_contents_in_page_intro(self):
+        for kind in ('reference', 'resource'):
+            page = library.new(self.root, kind, kind, kind.title())
+            content = page.read_text()
+            intro = content.index('<div class="page-intro">')
+            contents = content.index('<nav class="page-contents"', intro)
+            end = content.index('</div>', contents)
+            self.assertLess(intro, contents)
+            self.assertLess(contents, end)
 
     def test_multiple_collections_have_required_tags_and_one_section(self):
         for kind in ('glossary', 'resource'):
