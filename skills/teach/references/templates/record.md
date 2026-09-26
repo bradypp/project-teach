@@ -1,12 +1,12 @@
 # {{Subject learned}}
 
-A subject taught or applied and its supporting evidence. Replace the prompts and omit unused sections.
+A subject taught or applied and its supporting evidence. Replace the prompts and omit unused sections. Use bullet points where applicable.
 
 Date: {{date}}
 
 ## Learning
 
-{{The useful idea or mental model taught, applied or revised.}}
+{{The useful idea or mental model taught, applied or revised. }}
 
 ## Evidence
 

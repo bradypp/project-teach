@@ -28,7 +28,6 @@ A lesson should be **beautiful**, with clean, readable typography and layout. Th
 
 Prefer a detailed HTML lesson over a detailed chat explanation. Keep chat to orientation, the original question and a link for substantial teaching. Choose the presentation for the idea: a worked example, annotated diagram, simulation, comparison or visual puzzle may be better than conventional sections. Small explanations can stay in chat with an inline visual if useful.
 
-
 Follow [writing guidance](writing.md) when drafting and [artifact guidance](artifacts.md) when saving, connecting, verifying or delivering a lesson. Recommend a strong primary resource actually consulted, link it, explain what it adds and invite follow-up questions.
 
 ## Assets

@@ -28,11 +28,11 @@ Call other skills through the Skill tool by name rather than embedding SKILL.md 
 
 ### Inline wrapper
 
-Under the wrapper's Teaching supplement heading, explain relevant concepts in the primary workflow. Present a pending question alongside its explanation when useful; call the Skill tool for `teach` for substantial gaps, then resume the original workflow. Call the Skill tool for `teach-update` to reconcile new lessons and relevant completed work.
+Under the wrapper's Teaching supplement heading, explain relevant concepts in the primary workflow. Present a pending question alongside its explanation when useful; call the Skill tool for `teach` to discover any substantial gaps or prerequisites before creating a lesson if needed, then resume the original workflow. Call the Skill tool for `teach-update` to reconcile new lessons and relevant completed work.
 
 ### Background wrapper
 
-Under the same heading, say that teaching runs in Background mode. The selected original skill stays in the primary context. Start or reuse one teaching owner when a relevant concept needs substantial explanation. Give it the user goal, whole active plan or spec, relevant project decisions and files, learner context, notebook locators, expected outputs and authorisation constraints. Ask it to call the Skill tool for `teach` and return absolute artifact links and unresolved limitations.
+Under the same heading, say that teaching runs in Background mode. The selected original skill stays in the primary context. Start or reuse one teaching subagent when a relevant concept needs substantial explanation. Give it the user goal, whole active plan or spec, relevant project decisions and files, learner context, notebook locators, expected outputs and authorisation constraints. Ask it to call the Skill tool for `teach` and return absolute artifact links and unresolved limitations.
 
 Continue the original workflow without waiting. Forward later decisions and results to the same teaching owner, then surface its result when available. The teaching owner owns notebook changes for this task. If background subagents or later result delivery are unavailable, complete the original workflow and report the skipped teaching opportunity. Do not switch to inline teaching without the user's choice.
 

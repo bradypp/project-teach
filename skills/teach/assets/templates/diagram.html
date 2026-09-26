@@ -1,7 +1,7 @@
-<!-- Start flows with LR. For a wide result, compare local scrolling, TD and
-     connected figures by readability and purpose; five columns is a cue to
-     check the layout, not a limit. Markdown labels wrap at the shared width;
-     an intentional break needs a real newline inside the quoted label, not \n. -->
+<!-- Use LR for compact flows up to five nodes; prefer TD beyond five nodes.
+     Scroll locally if one continuous diagram remains best, or split when
+     distinct stages read better separately. Markdown labels wrap at the shared
+     width; an intentional break needs a real newline, not \n. -->
 <figure class="diagram">
   <pre class="mermaid">flowchart LR
     Input["`Input`"] --> Process["`Process`"] --> Output["`Output`"]</pre>

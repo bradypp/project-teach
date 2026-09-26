@@ -4,6 +4,7 @@
 Requires youtube-transcript-api installation: https://github.com/jdepoix/youtube-transcript-api
 No cache or learning-state writes. Video metadata is not inferred from captions.
 """
+
 import argparse
 import re
 import sys
@@ -36,10 +37,15 @@ def video_id(value):
 
 def render(transcript, identifier):
     url = f"https://www.youtube.com/watch?v={identifier}"
-    lines = ["# Video transcript", "", f"Source: {url}",
-             f"Language: {transcript.language_code}",
-             f"Automatically generated: {transcript.is_generated}",
-             "Title, channel and publication date: not retrieved.", ""]
+    lines = [
+        "# Video transcript",
+        "",
+        f"Source: {url}",
+        f"Language: {transcript.language_code}",
+        f"Automatically generated: {transcript.is_generated}",
+        "Title, channel and publication date: not retrieved.",
+        "",
+    ]
     for segment in transcript:
         seconds = max(0, int(segment.start))
         stamp = f"{seconds // 3600:02}:{seconds // 60 % 60:02}:{seconds % 60:02}"
@@ -51,7 +57,9 @@ def render(transcript, identifier):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("video", help="YouTube URL or video ID")
-    parser.add_argument("--languages", nargs="+", default=["en"], help="Preferred language codes")
+    parser.add_argument(
+        "--languages", nargs="+", default=["en"], help="Preferred language codes"
+    )
     args = parser.parse_args(argv)
     try:
         identifier = video_id(args.video)
@@ -60,12 +68,18 @@ def main(argv=None):
     try:
         from youtube_transcript_api import YouTubeTranscriptApi
     except ImportError:
-        print("Optional dependency unavailable: youtube-transcript-api. Use supplied captions or another source; see research.md.", file=sys.stderr)
+        print(
+            "Optional dependency unavailable: youtube-transcript-api. Use supplied captions or another source; see research.md.",
+            file=sys.stderr,
+        )
         return 2
     try:
         transcript = YouTubeTranscriptApi().fetch(identifier, languages=args.languages)
     except Exception as error:
-        print(f"Transcript unavailable ({type(error).__name__}). Use supplied captions or another source.", file=sys.stderr)
+        print(
+            f"Transcript unavailable ({type(error).__name__}). Use supplied captions or another source.",
+            file=sys.stderr,
+        )
         return 1
     print(render(transcript, identifier), end="")
     return 0

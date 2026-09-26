@@ -72,7 +72,7 @@ This creates `references/resources.html`. Put useful collection section links in
 ## Metadata and navigation
 
 - The helper records creation time in UTC and displays it beneath the title. Keep it stable when editing; there is no updated-time field.
-- Add subject tags with `--tags "queues,reliability"`; maintain the comma-separated `tags` meta value as content changes. Reuse a small set of existing tags. The helper adds mandatory `glossary` and `resource` tags for those page kinds; preserve them during edits and include them on manually authored pages.
+- Add subject tags with `--tags "queues,reliability"`; maintain the comma-separated `tags` meta value as content changes. Reuse the notebook's existing spellings for the same subject, and check related pages for meaningful tags omitted from a new lesson. Tag what a page substantively teaches, not every product it names. The helper adds mandatory `glossary` and `resource` tags for those page kinds; preserve them during edits and include them on manually authored pages.
 - Keep descriptive filenames stable.
 - The home page uses collection labels Lessons, Topics, Quizzes, Reference and Research for sections and type filters. Research appears last when retained investigations exist. Individual page labels stay singular. It groups actual HTML files by folder; all glossary and resource pages appear under Reference and can be filtered by their mandatory tags.
 
@@ -114,8 +114,9 @@ Both actions offer manual copying if clipboard access fails. They do not send me
 After changing an authored HTML page, local link or ID:
 
 1. Quickly check the content and any answer keys.
-2. Run the [link checker](../scripts/check_links.py) with `python3 /path/to/teach/scripts/check_links.py /project/.notebook` and repair missing files, broken HTML anchors and duplicate IDs. The checker does not verify external URLs or decide which reciprocal links are useful.
-3. Rebuild the index after manually adding, moving, renaming or removing pages, or changing page titles or tags. The `new` command already refreshes it; content-only edits do not require a rebuild.
+2. Run the [content checker](../scripts/check_content.py) with `python3 /path/to/teach/scripts/check_content.py /project/.notebook` and repair structural errors. It checks that `diagram` belongs on `<figure>` and each `pre.mermaid` sits inside one; add new page rules as needed.
+3. Run the [link checker](../scripts/check_links.py) with `python3 /path/to/teach/scripts/check_links.py /project/.notebook` and repair missing files, broken HTML anchors and duplicate IDs. The checker does not verify external URLs or decide which reciprocal links are useful.
+4. Rebuild the index after manually adding, moving, renaming or removing pages, or changing page titles or tags. The `new` command already refreshes it; content-only edits do not require a rebuild.
 
 Routine artifacts need no exhaustive browser testing. After changing shared helpers, components or presentation, run the relevant helper or browser tests and the additional visual checks in [visual-language.md](visual-language.md#extend-deliberately).
 

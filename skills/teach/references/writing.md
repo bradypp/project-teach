@@ -10,8 +10,9 @@ Read before drafting explanations, practice, feedback or maintained Markdown. Th
 - **Make the mechanism concrete.** Use an accurate project example or a clearly labelled hypothetical. Never invent measurements or learner achievements to make a sentence more persuasive.
 - **Preserve useful character.** Keep a telling analogy, honest qualification or enjoyable aside when it helps the learner. Formality is not the goal.
 - **Explain precisely.** Introduce necessary terminology and reuse it consistently. Shorten tangled wording without stripping away the distinction being taught.
-- **Use structure deliberately.** Headings, bullets and tables should help someone find or compare information. Sentence length and paragraph shape should follow the explanation.
-- **Make references usable.** Link a local file when possible, or give its usable location. Link recommended reading and say what each resource helps the learner understand.
+- **Use structure deliberately.** Break a paragraph that enumerates distinct responsibilities, steps, alternatives or failure cases into a semantic list; use a table for repeated comparisons. Keep a paragraph when its sentences build one explanation. Headings, lists and whitespace should make the reading path scannable without turning every paragraph into bullets.
+- **Make references usable.** Link a local file when possible, or give its usable location. Link recommended reading and say what each resource helps the learner understand. In notebook HTML, give every external HTTP(S) link `target="_blank" rel="noopener noreferrer"` so it opens in a new tab without access to the notebook tab; leave local links in the same tab.
+- **Code blocks.** Use plenty of relevant code blocks when explaining a completed task implementation or breaking down existing code.
 
 ## Patterns
 
